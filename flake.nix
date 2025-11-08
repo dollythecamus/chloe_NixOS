@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "Chloe's NixOS Configuration Flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
@@ -14,13 +14,12 @@
   	upkgs = inputs.nixpkgs.pkgs.x86_64-linux; 
   in
   {
-	nixosConfiguration.nixos = nixpkgs.lib.nixosSystem {
+	chloe = pkgs.lib.nixosSystem {
 		specialArgs = { inherit inputs; };
 
 		modules = [
-			./configuration.nix
-			./hardware-configuration.nix
-
+			./chloe-nixos.nix
+			/etc/nixos/hardware-configuration.nix
 		];
 	};
   };

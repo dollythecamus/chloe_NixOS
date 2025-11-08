@@ -3,14 +3,6 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, inputs, ... }:
-let
-	unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
-in {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      # <home-manager/nixos>
-    ];
 
   # enable automatic update of system versions. # i put this when i updated from 24.11 -> 25.05
   system.autoUpgrade.enable = true;
