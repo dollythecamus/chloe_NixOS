@@ -14,7 +14,7 @@
 
 		modules = [
 			./chloe-nixos.nix
-			/etc/nixos/hardware-configuration.nix
+			./hardware-configuration.nix
 		];
 	};
   };
