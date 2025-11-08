@@ -4,10 +4,7 @@
 
 { config, pkgs, inputs, ... }:
 
-  # enable automatic update of system versions. # i put this when i updated from 24.11 -> 25.05
-  system.autoUpgrade.enable = true;
-  system.autoUpgrade.allowReboot = true;
-
+{
   # enable systemd-boot again
   boot.loader.systemd-boot.enable = true;
 
@@ -304,24 +301,6 @@
 
   #enable bluetooth manager
   services.blueman.enable = true;
-
-
-  # To edit use your text editor application, for example Nano
-  services.ollama = {
-    # package = pkgs.unstable.ollama; # If you want to use the unstable channel package for example
-    enable = true;
-    acceleration = "cuda"; # Or "rocm"
-    package = unstable.ollama;
-  };
-
-  # The Ollama environment variables, as mentioned in the comments section
-  systemd.services.ollama.serviceConfig = {
-    Environment = [ "OLLAMA_HOST=0.0.0.0:11434" ];
-  };
-
-  services.open-webui = {
-    enable = true;
-  };
 
   # Enabling syncthing to synchronize my folders across devices
   services.syncthing = {

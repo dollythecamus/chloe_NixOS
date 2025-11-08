@@ -2,19 +2,14 @@
   description = "Chloe's NixOS Configuration Flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    nixpkgsStable.url = "github:nixos/nixpkgs?ref=nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgsStable";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = {self, ...} @ inputs: 
-  let
-  	pkgs = inputs.nixpkgsStable.pkgs.x86_64-linux;
-  	upkgs = inputs.nixpkgs.pkgs.x86_64-linux; 
-  in
+  outputs = {self, nixpkgs, ...} @ inputs: 
   {
-	chloe = pkgs.lib.nixosSystem {
+	nixosConfigurations.chloe = nixpkgs.lib.nixosSystem {
 		specialArgs = { inherit inputs; };
 
 		modules = [
