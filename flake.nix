@@ -15,7 +15,7 @@
 
 		modules = [
 			./hosts/chloe-laptop/configuration.nix
-			./modules/hardware/nvidia.nix
+			./hardware/nvidia.nix
 
 			# desktop modules 
 			./modules/desktop/space-home.nix
