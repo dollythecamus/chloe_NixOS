@@ -7,7 +7,8 @@
       description = "Dr. Chloe Inventor";
       extraGroups = [ "networkmanager" "wheel" "dialout" "bluetooth" "input"];
       packages = with pkgs; [
-      # Gaming  ddd              
+      
+      # Gaming             
         prismlauncher
         ckan
         lutris
@@ -16,40 +17,31 @@
       # Mic
         discord
         qbittorrent
-        element-desktop
-        drawpile # collaborative drawing :3
+        drawpile 
 
       # Productivity
         obsidian
-        libreoffice # office pack
+        libreoffice 
       
       # Creation
-        polyphone
         krita
-        godot # godot with Orchestrator
+        godot
         #unstable.godot
         #unstable.godot-mono
 
         libresprite
-
-        librewolf
-
         blender
         audacity
         lmms
-        # reaper # sound design # it is NOT FREE ! OH NO !
         freecad
-        inkscape # FOSS Vector Graphics
-        gimp # FOSS Image Editor
+        inkscape 
+        gimp 
         gmic-qt
         gmic
-        # unstable.cura-appimage # Ultimaker Cura for 3D prints
-          # seems to screw up nixos rebuild as well as cudatoolkit
         pureref
 
       # Development
-        thonny # rpi pico dev
-      	vscode # VSCode!
+      	vscode
         github-desktop
       ];
   };

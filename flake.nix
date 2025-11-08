@@ -18,15 +18,15 @@
 			./modules/hardware/nvidia.nix
 
 			# desktop modules 
-			./modules/desktop/space-home.nix # abstract
+			./modules/desktop/space-home.nix
 
 			# services, programs and system packages
 			./modules/system-packages.nix
-			./modules/services.nix # abstract
-			./modules/programs.nix # abstract
+			./modules/services.nix 
+			./modules/programs.nix 
 		
 			./modules/users/chloe-inventor.nix
-			./modules/users/chloe-games.nix # abstract
+			# ./modules/users/chloe-games.nix # abstract
 		];
 	};
   };

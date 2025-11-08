@@ -12,6 +12,7 @@
   # Enable NTFS to use files in external hard drive
   boot.supportedFilesystems = [ "ntfs" ];
 
+  # Enable Grub
   boot.loader = {
   	grub.enable = true;
   	grub.device = "nodev";
@@ -21,8 +22,8 @@
   	efi.canTouchEfiVariables = true;
   };
   
-  networking.hostName = "chloe-laptop"; # Define your hostname
-  
+  networking.hostName = "chloe-laptop"; # Define your hostname.
+
   # Enable networking
   networking.networkmanager.enable = true;
 
@@ -44,73 +45,10 @@
     LC_TIME = "pt_BR.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Enable Hyprland
-  programs.hyprland.enable = true;
-
-  # Enable Electron apps for wayland
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us,br";
-    variant = "";
-  };
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  # override blender for CUDA hardware acceleration
-  nixpkgs.overlays = [
-  	 (final : prev: {
-		  blender = prev.blender.override {
-			  cudaSupport = true;
-		 	  };
-	   }
-	)];
-	# overrides blender to use CUDA hardware acceleration (render with NVIDIA GPU)
-
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Services
-
-  # enable flatpak
-  services.flatpak.enable = true;
-
-  #enable bluetooth manager
-  services.blueman.enable = true;
-
-  # Programs
-
-  # Install Steam.
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-  };
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
   
-  programs.git = {
-  	enable = true;
-    config = {
-        credential.helper = "${ pkgs.git.override { withLibsecret = true; } }/bin/git-credential-libsecret";
-      };	
-  };
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
