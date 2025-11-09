@@ -37,7 +37,13 @@
 			./hosts/chloe-laptop/configuration.nix
 			./hardware/nvidia.nix
 
-			.modules/desktop/space-home.nix
+			home-manager.nixosModules.home-manager {
+            			home-manager.useGlobalPkgs = true;
+           			home-manager.useUserPackages = true;
+            			home-manager.users.chloe-inventor = ./modules/home/space-home.nix;
+         		}
+			./modules/desktop/space-home.nix
+            		stylix.nixosModules.stylix
 
 			# services, programs and system packages
 			./modules/system-packages.nix

@@ -1,10 +1,36 @@
 {config, pkgs, inputs, ...}:
 
 {
-  
+    
+    stylix = {
+    
+    autoEnable = true;
+    enable = true;
+
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/black-metal-mayhem.yaml";
+
+    cursor = {
+      package = pkgs.simp1e-cursors;
+      name = "Simp1e-Nord-Dark";
+      size = 15;
+    };
+
+    fonts = {
+    # serif = config.stylix.fonts.monospace;
+    # sansSerif = config.stylix.fonts.monospace;
+    # emoji = config.stylix.fonts.monospace;
+    };
+
+    #image = ./wallpaper/puffy-stars.jpg;
+
+    polarity = "dark";
+    
+    };
+
   home = {
     stateVersion = "25.05";
-    username = "chloe-inventor:";
+    username = "chloe-inventor";
+    homeDirectory = "/home/chloe-inventor";
     packages = with pkgs; [
       
       # Gaming             
@@ -44,7 +70,8 @@
       	vscode
         github-desktop
       ];
-
   };
+
+
 
 }

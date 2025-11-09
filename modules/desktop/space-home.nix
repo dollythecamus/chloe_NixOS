@@ -15,9 +15,9 @@
     };
 
     fonts = {
-      serif = config.stylix.fonts.monospace;
-      sansSerif = config.stylix.fonts.monospace;
-      emoji = config.stylix.fonts.monospace;
+    # serif = config.stylix.fonts.monospace;
+    # sansSerif = config.stylix.fonts.monospace;
+    # emoji = config.stylix.fonts.monospace;
     };
 
     image = ./wallpaper/puffy-stars.jpg;
