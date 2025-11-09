@@ -1,7 +1,6 @@
 {config, pkgs, inputs, ...}:
 
 {
-      
   # themed everything, easy
   stylix = {
     autoEnable = true;

@@ -37,6 +37,8 @@
 			./hosts/chloe-laptop/configuration.nix
 			./hardware/nvidia.nix
 
+			.modules/desktop/space-home.nix
+
 			# services, programs and system packages
 			./modules/system-packages.nix
 			./modules/services.nix 
