@@ -2,19 +2,19 @@
 
 {
     imports = [
-	./fish.nix
     ];
     
     stylix = {
 
+    autoEnable = true;
+    enable = true;
+    
     targets = {
 	fish.enable = true;
 	kitty.enable = true;
 	wofi.enable = true;
+    	waybar.enable = true;
     };
-    
-    autoEnable = true;
-    enable = true;
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/black-metal-mayhem.yaml";
 
@@ -39,7 +39,7 @@
   # ...
   programs.home-manager.enable = true;
 
-  nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.allowUnfree = true;
 
   home = {
     stateVersion = "25.05";

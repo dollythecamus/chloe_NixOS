@@ -38,6 +38,7 @@
 			./hardware/nvidia.nix
 
 			home-manager.nixosModules.home-manager {
+				home-manager.backupFileExtension = "backup";
             			home-manager.useGlobalPkgs = true;
            			home-manager.useUserPackages = true;
             			home-manager.users.chloe-inventor = ./home/space-home.nix;
