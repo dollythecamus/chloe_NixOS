@@ -5,10 +5,8 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
 
-    # oxidise - Rust packages
     uutils-coreutils # GNU coreutils
     fish # command line shell
-    # nushell # another command line shell
     fd # alternative to find
     bat # cat, but better (idk what cat is
     eza # alternative to ls
@@ -20,7 +18,6 @@
     yazi # interesting file manager
     bacon # rust compiler
     cargo-info # get data about rust packages from the internet without going through the browser
-    #unstable.ncspot # spotify, but awesome # unstable because it is broken in stable
     rusty-man # rust docs in cli
     wiki-tui # wikipedia in cli! how queer!
     mask # command runner in a markdown file, woa

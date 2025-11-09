@@ -2,16 +2,26 @@
   description = "Chloe's NixOS Configuration Flake";
 
   inputs = {
+    
     unstable_nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    stylix.url = "github:nix-community/stylix";
+    
+    home-manager = {
+    	url = "github:nix-community/home-manager";
+    	inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    stylix = {
+      url = "github:nix-community/stylix?ref=release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {self, nixpkgs, ...} @ inputs: 
   {
-	nixosConfigurations.chloe-laptop = nixpkgs.lib.nixosSystem {
+	nixosConfigurations = {
+	  chloe-laptop = nixpkgs.lib.nixosSystem {
 		specialArgs = { inherit inputs; };
 
 		modules = [
@@ -19,8 +29,9 @@
 			./hardware/nvidia.nix
 
 			# desktop modules 
-			./modules/desktop/space-home.nix
 			inputs.stylix.nixosModules.stylix
+			inputs.home-manager.nixosModules.home-manager
+			./modules/desktop/space-home.nix
 
 			# services, programs and system packages
 			./modules/system-packages.nix
@@ -30,6 +41,6 @@
 			./modules/users/chloe-inventor.nix
 			# ./modules/users/chloe-games.nix # abstract
 		];
+	};};
 	};
-  };
 }
