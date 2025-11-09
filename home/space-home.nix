@@ -1,8 +1,17 @@
 {config, pkgs, inputs, ...}:
 
 {
+    imports = [
+	./hyprland.nix
+    ];
     
     stylix = {
+
+    targets = {
+	fish.enable = true;
+	kitty.enable = true;
+	wofi.enable = true;
+    };
     
     autoEnable = true;
     enable = true;
@@ -21,11 +30,16 @@
     # emoji = config.stylix.fonts.monospace;
     };
 
-    #image = ./wallpaper/puffy-stars.jpg;
+    image = ./wallpaper/puffy-stars.jpg;
 
     polarity = "dark";
     
     };
+
+  # ...
+  programs.home-manager.enable = true;
+
+  nixpkgs.config.allowUnfree = true;
 
   home = {
     stateVersion = "25.05";
@@ -71,7 +85,5 @@
         github-desktop
       ];
   };
-
-
 
 }

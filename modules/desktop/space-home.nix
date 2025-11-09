@@ -44,6 +44,8 @@
   # Enable Hyprland
   programs.hyprland.enable = true;
 
+  # programs.home-manager.enable = true;
+
   # Enable Electron apps for wayland
   # environment.sessionVariables.NIXOS_OZONE_WL = "1";
 

@@ -24,7 +24,7 @@
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
             stylix.homeModules.stylix
-            ./modules/home/space-home.nix
+            ./home/space-home.nix
           ];
         };
 
@@ -40,7 +40,7 @@
 			home-manager.nixosModules.home-manager {
             			home-manager.useGlobalPkgs = true;
            			home-manager.useUserPackages = true;
-            			home-manager.users.chloe-inventor = ./modules/home/space-home.nix;
+            			home-manager.users.chloe-inventor = ./home/space-home.nix;
          		}
 			./modules/desktop/space-home.nix
             		stylix.nixosModules.stylix
