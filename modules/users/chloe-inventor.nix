@@ -21,7 +21,8 @@
 
       # Productivity
         obsidian
-        libreoffice 
+        librewolf
+	libreoffice 
       
       # Creation
         krita

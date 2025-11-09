@@ -1,12 +1,23 @@
 {config, pkgs, lib, inputs, ...}:
 
 {
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # login manager
+  services.displayManager.ly = {
+    enable = true;
+    # can configure more :3
+  };
 
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  # themed everything, easy
+  inputs.stylix = {
+    enable = true;
+
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/black-metal-mayhem.yaml";
+
+    cursor.package = pkgs.simp1e-cursors;
+    cursor.name = Simp1e-Nord-Dark;
+
+    # image = ;
+  };
 
   # Enable Hyprland
   programs.hyprland.enable = true;

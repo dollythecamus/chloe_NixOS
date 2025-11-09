@@ -6,6 +6,7 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    stylix.url = "github:nix-community/stylix";
   };
 
   outputs = {self, nixpkgs, ...} @ inputs: 
@@ -19,6 +20,7 @@
 
 			# desktop modules 
 			./modules/desktop/space-home.nix
+			inputs.stylix.nixosModules.stylix
 
 			# services, programs and system packages
 			./modules/system-packages.nix
