@@ -1,13 +1,15 @@
 {config, pkgs, inputs, ...}:
 
 {
-    imports = [
-    ];
-    
-    stylix = {
 
-    autoEnable = true;
+  imports = [
+    ./hyprland.nix	
+  ];
+    
+  home.stylix = {
+
     enable = true;
+    autoEnable = true;
     
     targets = {
 	fish.enable = true;
@@ -16,7 +18,7 @@
     	waybar.enable = true;
     };
 
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/black-metal-mayhem.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/zenbones.yaml";
 
     cursor = {
       package = pkgs.simp1e-cursors;
@@ -34,12 +36,10 @@
 
     polarity = "dark";
     
-    };
+  };
 
   # ...
   programs.home-manager.enable = true;
-
-  # nixpkgs.config.allowUnfree = true;
 
   home = {
     stateVersion = "25.05";
@@ -85,5 +85,4 @@
         github-desktop
       ];
   };
-
 }

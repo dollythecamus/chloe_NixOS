@@ -5,6 +5,7 @@
 
   # enable flatpak
   # services.flatpak.enable = true;
+  # xdg.portal.enable = true;
 
   #enable bluetooth manager
   services.blueman.enable = true;

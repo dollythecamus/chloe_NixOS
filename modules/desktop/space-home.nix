@@ -1,11 +1,11 @@
 {config, pkgs, inputs, ...}:
 
 {
-  # themed everything, easy
   stylix = {
-    autoEnable = true;
-    enable = true;
 
+    enable = true;
+    autoEnable = true;
+    
     base16Scheme = "${pkgs.base16-schemes}/share/themes/black-metal-mayhem.yaml";
 
     cursor = {
@@ -27,13 +27,22 @@
 
   environment.systemPackages = with pkgs; [
 
+    grim 
+    slurp
+
     kitty
     fish
-    waybar
+    dunst
+    wofi
+    swww
    
     killall
 
     base16-schemes
+ 
+    playerctl
+    brightnessctl
+
   ];
 
   # login manager
@@ -41,13 +50,6 @@
     enable = true;
     # can configure more :3
   };
-  # Enable Hyprland
-  programs.hyprland.enable = true;
-
-  # programs.home-manager.enable = true;
-
-  # Enable Electron apps for wayland
-  # environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # Configure keymap in X11
   services.xserver.xkb = {
