@@ -2,7 +2,7 @@
 
 {
     imports = [
-	./hyprland.nix
+	./fish.nix
     ];
     
     stylix = {
