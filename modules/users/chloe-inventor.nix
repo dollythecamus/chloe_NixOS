@@ -1,14 +1,6 @@
 { config, pkgs, inputs, ...}:
 
 {
-  /*
-  home-manager = {
-    stateVersion = "25.05";
-    users.chloe-inventor = {
-  
-
-  };};
-  */
 
   users.users.chloe-inventor= {
       isNormalUser = true;

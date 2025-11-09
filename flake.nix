@@ -6,9 +6,9 @@
     unstable_nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
-    
+
     home-manager = {
-    	url = "github:nix-community/home-manager";
+    	url = "github:nix-community/home-manager?ref=release-25.05";
     	inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -18,28 +18,31 @@
     };
   };
 
-  outputs = {self, nixpkgs, ...} @ inputs: 
+  outputs = {self, nixpkgs, home-manager, stylix, ...} @ inputs: 
   {
+	homeConfigurations.chloe-inventor = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          modules = [
+            stylix.homeModules.stylix
+            ./modules/home/space-home.nix
+          ];
+        };
+
 	nixosConfigurations = {
 	  chloe-laptop = nixpkgs.lib.nixosSystem {
+
 		specialArgs = { inherit inputs; };
 
 		modules = [
 			./hosts/chloe-laptop/configuration.nix
 			./hardware/nvidia.nix
 
-			# desktop modules 
-			inputs.stylix.nixosModules.stylix
-			inputs.home-manager.nixosModules.home-manager
-			./modules/desktop/space-home.nix
-
 			# services, programs and system packages
 			./modules/system-packages.nix
 			./modules/services.nix 
-			./modules/programs.nix 
-		
+			./modules/programs.nix
+
 			./modules/users/chloe-inventor.nix
-			# ./modules/users/chloe-games.nix # abstract
 		];
 	};};
 	};

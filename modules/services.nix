@@ -4,7 +4,7 @@
   # Services
 
   # enable flatpak
-  services.flatpak.enable = true;
+  # services.flatpak.enable = true;
 
   #enable bluetooth manager
   services.blueman.enable = true;
