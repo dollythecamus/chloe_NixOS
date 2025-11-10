@@ -48,6 +48,7 @@
 			stylix.nixosModules.stylix
 
 			# services, programs and system packages
+			./modules/system-packages.nix
 			./modules/services.nix 
 			./modules/programs.nix
 

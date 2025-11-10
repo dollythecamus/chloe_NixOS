@@ -12,7 +12,7 @@
     
     settings = {
     	
-	monitor = ",preferred,auto,0.95";
+	monitor = ",preferred,auto,1";
 
 	"$terminal" = "kitty fish";
 	"$mod" = "SUPER";
