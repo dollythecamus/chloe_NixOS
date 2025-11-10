@@ -20,9 +20,12 @@
       url = "github:nix-community/stylix?ref=release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    bongocat.url = "github:furudbat/wayland-vpets";
+  
   };
 
-  outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, stylix, ...} @ inputs: 
+  outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, stylix, bongocat, ...} @ inputs: 
   let
       system = "x86_64-linux";
       unstablePkgs = import nixpkgs-unstable {
@@ -66,7 +69,19 @@
 				        #stylix.homeModules.stylix
              				inputs.nixcord.homeModules.nixcord
            			];
-			}
+			}		
+
+			bongocat.nixosModules.default {
+          			programs.wayland-bongocat = {
+            			enable = true;
+            			autoStart = true;
+					inputDevices = [
+						"/dev/input/event4"
+					];
+          			};
+        		}
+			
+			# style thing
 			./modules/desktop/space-home.nix
 			stylix.nixosModules.stylix
 

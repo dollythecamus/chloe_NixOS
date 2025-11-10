@@ -103,8 +103,6 @@
         adwaita-icon-theme
         font-awesome
 
-	
-
       #   rice over  #
 
 	 # rust bullcrap
