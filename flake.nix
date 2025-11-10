@@ -39,15 +39,14 @@
 
 			home-manager.nixosModules.home-manager {
 				home-manager.backupFileExtension = "backup";
-            			home-manager.useGlobalPkgs = true;
-           			home-manager.useUserPackages = true;
-            			home-manager.users.chloe-inventor = ./home/space-home.nix;
-         		}
+				home-manager.useGlobalPkgs = true;
+				home-manager.useUserPackages = true;
+				home-manager.users.chloe-inventor = ./home/space-home.nix;
+			}
 			./modules/desktop/space-home.nix
-            		stylix.nixosModules.stylix
+			stylix.nixosModules.stylix
 
 			# services, programs and system packages
-			./modules/system-packages.nix
 			./modules/services.nix 
 			./modules/programs.nix
 

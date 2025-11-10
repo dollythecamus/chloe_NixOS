@@ -3,8 +3,6 @@
 {config, pkgs, inputs, ...}:
 
 {
-
-
     settings = {
       # Define all your devices here using their actual Syncthing Device IDs
       devices = {

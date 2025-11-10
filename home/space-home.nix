@@ -1,24 +1,26 @@
 {config, pkgs, inputs, ...}:
 
 {
-
   imports = [
-    ./hyprland.nix	
+    ./hyprland.nix
+    #./fish.nix
   ];
-    
-  home.stylix = {
+  
+  stylix = {
 
     enable = true;
     autoEnable = true;
     
     targets = {
+    	hyprland.enable = true;
 	fish.enable = true;
 	kitty.enable = true;
 	wofi.enable = true;
     	waybar.enable = true;
+	neovim.enable = true;
     };
 
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/zenbones.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
 
     cursor = {
       package = pkgs.simp1e-cursors;
@@ -32,13 +34,16 @@
     # emoji = config.stylix.fonts.monospace;
     };
 
-    image = ./wallpaper/puffy-stars.jpg;
+    #image = ./wallpaper/puffy-stars.jpg;
 
     polarity = "dark";
-    
   };
 
+  # not good, but it's fine
+  nixpkgs.config.allowUnfree = true;
+
   # ...
+  programs.kitty.enable = true;
   programs.home-manager.enable = true;
 
   home = {
@@ -46,7 +51,61 @@
     username = "chloe-inventor";
     homeDirectory = "/home/chloe-inventor";
     packages = with pkgs; [
-      
+     
+      # # # rice # # # 
+
+        home-manager
+
+        kitty
+        fish
+        dunst
+        wofi
+        swww
+
+        base16-schemes
+
+        playerctl
+        brightnessctl
+
+        grim
+        slurp
+
+        glow
+
+        neofetch
+        neocities
+        neovim
+
+        vlc
+        wl-clipboard
+
+        adwaita-icon-theme
+        font-awesome 
+
+      #   rice over  #
+
+	 # rust bullcrap
+	
+    uutils-coreutils # GNU coreutils
+    fish # command line shell
+    fd # alternative to find
+    bat # cat, but better (idk what cat is
+    eza # alternative to ls
+    zoxide # smarter cd
+    zellij # interesting ui
+    gitui # git ui 
+    dust # pretty disk analyzer
+    starship # customizeable prompts for any shell
+    yazi # interesting file manager
+    bacon # rust compiler
+    cargo-info # get data about rust packages from the internet without going through the browser
+    rusty-man # rust docs in cli
+    wiki-tui # wikipedia in cli! how queer!
+    mask # command runner in a markdown file, woa
+    presenterm # terminal slides presentation tool 
+
+	 ## bullcrap end
+
       # Gaming             
         prismlauncher
         ckan
