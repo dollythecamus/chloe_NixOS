@@ -1,0 +1,29 @@
+warning: Git tree '/home/chloe/NixOS' is dirty
+building the system configuration...
+warning: Git tree '/home/chloe/NixOS' is dirty
+error:
+       … while calling the 'head' builtin
+         at /nix/store/g9863dnbpnfa7vz8c1s1idwbg7c5j0bb-source/lib/attrsets.nix:1571:13:
+         1570|           if length values == 1 || pred here (elemAt values 1) (head values) then
+         1571|             head values
+             |             ^
+         1572|           else
+
+       … while evaluating the attribute 'value'
+         at /nix/store/g9863dnbpnfa7vz8c1s1idwbg7c5j0bb-source/lib/modules.nix:1083:7:
+         1082|     // {
+         1083|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
+             |       ^
+         1084|       inherit (res.defsFinal') highestPrio;
+
+       … while evaluating the option `system.build.toplevel':
+
+       … while evaluating definitions from `/nix/store/g9863dnbpnfa7vz8c1s1idwbg7c5j0bb-source/nixos/modules/system/activation/top-level.nix':
+
+       … while evaluating the option `assertions':
+
+       … while evaluating definitions from `/nix/store/a4la088hi5id7sw77gy9zdvwn83dgczz-source/nixos/common.nix':
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: path '/nix/store/xh74q4sxc2na85c2n2qsn1l88w01fwrq-source/home/yazi.nix' does not exist

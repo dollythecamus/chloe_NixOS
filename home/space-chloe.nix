@@ -5,6 +5,7 @@
     ./hyprland.nix
     ./eww.nix
     ./fish.nix
+    ./yazi.nix
   ];
   
   stylix = {
@@ -24,6 +25,7 @@
 	vscode.enable = true;
 	firefox.enable = true;
 	bat.enable = true;
+	yazi.enable = true;
     };
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
