@@ -3,6 +3,9 @@
 {
   # Services
 
+  # Enable OpenTabletDriver
+  hardware.opentabletdriver.enable = true;
+
   # enable flatpak
   services.flatpak.enable = true;
   xdg.portal.enable = true;

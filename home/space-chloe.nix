@@ -4,7 +4,7 @@
   imports = [
     ./hyprland.nix
     ./eww.nix
-    #./fish.nix
+    ./fish.nix
   ];
   
   stylix = {
@@ -95,7 +95,9 @@
         wl-clipboard
 
         adwaita-icon-theme
-        font-awesome 
+        font-awesome
+
+	
 
       #   rice over  #
 
