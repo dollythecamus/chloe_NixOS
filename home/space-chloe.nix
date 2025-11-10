@@ -19,6 +19,11 @@
 	wofi.enable = true;
     	waybar.enable = true;
 	neovim.enable = true;
+	nixcord.enable = true;
+	blender.enable = true;
+	vscode.enable = true;
+	firefox.enable = true;
+	bat.enable = true;
     };
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
@@ -30,18 +35,27 @@
     };
 
     fonts = {
-      # serif = config.stylix.fonts.monospace;
-      # sansSerif = config.stylix.fonts.monospace;
-      # emoji = config.stylix.fonts.monospace;
+      serif = config.stylix.fonts.monospace;
+      sansSerif = config.stylix.fonts.monospace;
+      emoji = config.stylix.fonts.monospace;
     };
 
-    #image = ./wallpaper/puffy-stars.jpg;
+    image = ./wallpaper/puffy-stars.jpg;
 
     polarity = "dark";
   };
 
   # not good, but it's fine
-  nixpkgs.config.allowUnfree = true;
+  # rebuild is screaming at me to remove this
+  # nixpkgs.config.allowUnfree = true;
+
+  
+  programs.nixcord = {
+    enable = true;          # Enable Nixcord (It also installs Discord)
+    vesktop.enable = true;  # Vesktop
+    dorion.enable = true;   # Dorion
+  };
+
 
   # ...
   programs.kitty.enable = true;
@@ -103,7 +117,8 @@
     rusty-man # rust docs in cli
     wiki-tui # wikipedia in cli! how queer!
     mask # command runner in a markdown file, woa
-    presenterm # terminal slides presentation tool 
+    presenterm # terminal slides presentation tool
+    ncspot # spotify but good
 
 	 ## bullcrap end
 
@@ -114,7 +129,7 @@
         wine
 
       # Mic
-        discord
+        # nixcord
         qbittorrent
         drawpile 
 
@@ -126,7 +141,7 @@
       # Creation
         krita
         godot # 4.4
-        # inputs.unstable_nixpkgs.pkgs.godot # 4.5
+        # unstable_nixpkgs.pkgs.godot # 4.5
         #unstable.godot-mono
 
         libresprite

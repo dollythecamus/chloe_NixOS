@@ -3,9 +3,13 @@
 
   inputs = {
     
-    unstable_nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
+
+    nixcord = {
+      url = "github:kaylorben/nixcord";
+    };
 
     home-manager = {
     	url = "github:nix-community/home-manager?ref=release-25.05";
@@ -18,7 +22,14 @@
     };
   };
 
-  outputs = {self, nixpkgs, home-manager, stylix, ...} @ inputs: 
+  outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, stylix, ...} @ inputs: 
+  let
+      system = "x86_64-linux";
+      unstablePkgs = import nixpkgs-unstable {
+        inherit system; 
+      };
+  in
+
   {
 	homeConfigurations.chloe-inventor = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
@@ -37,12 +48,24 @@
 			./hosts/chloe-laptop/configuration.nix
 			./hardware/nvidia.nix
 
+			{ # weird but alright
+           		 # Here you mix a package from unstable
+            		 environment.systemPackages = [
+          		    unstablePkgs.godot
+        		    ];
+        		}
+
 			home-manager.nixosModules.home-manager {
 				home-manager.backupFileExtension = "backup";
 				home-manager.useGlobalPkgs = true;
 				home-manager.useUserPackages = true;
 				home-manager.users.chloe-inventor = ./home/space-home.nix;
 				home-manager.users.chloe = ./home/space-chloe.nix;
+
+				home-manager.sharedModules = [
+				        #stylix.homeModules.stylix
+             				inputs.nixcord.homeModules.nixcord
+           			];
 			}
 			./modules/desktop/space-home.nix
 			stylix.nixosModules.stylix

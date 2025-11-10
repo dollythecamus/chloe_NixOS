@@ -17,6 +17,12 @@
 	"$terminal" = "kitty fish";
 	"$mod" = "SUPER";
 	"$menu" = "wofi --show drun";
+	"$fileManager" = "kitty yazi";
+
+	exec-once = [
+		"$terminal"
+
+	];
 
 	general = {
 		gaps_in = 0;
@@ -40,6 +46,7 @@
 	  "$mod, 0, workspace, 10"
 
 	  "$mod, Q, exec, $terminal"
+	  "$mod, F, exec, $fileManager"
 	  "$mod, S, exec, $menu"
 	  "$mod, C, killactive"
 	];

@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-	eww;
+	eww
   ];
   # i guess there is no way to acctually configure this with home-manager, kinda sad :| 
 }

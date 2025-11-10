@@ -3,9 +3,12 @@
 {
   stylix = {
     enable = true;
-    autoEnable = true;
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/solarized-dark.yaml";
+
+    targets = {
+    	grub.enable = false;
+    };
 
   };
   
@@ -14,6 +17,13 @@
   # login manager
   services.displayManager.ly = {
     enable = true;
+    
+    settings = {
+      clock = "%c";
+      bigclock = true;
+      animate = true;
+      animation = "matrix";
+    };
     # can configure more :3
   };
 
