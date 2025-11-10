@@ -58,8 +58,10 @@
     dorion.enable = true;   # Dorion
   };
 
+  # neovim waow
+  programs.neovim.enable = true;
+  programs.neovim.defaultEditor = true;
 
-  # ...
   programs.kitty.enable = true;
   programs.home-manager.enable = true;
 
@@ -93,7 +95,7 @@
 
         neofetch
         neocities
-        neovim
+        #neovim
 
         vlc
         wl-clipboard
