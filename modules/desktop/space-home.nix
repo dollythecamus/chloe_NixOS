@@ -1,6 +1,13 @@
 {config, pkgs, inputs, ...}:
 
 {
+  stylix = {
+    enable = true;
+    autoEnable = true;
+
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/solarized-dark.yaml";
+
+  };
   
   programs.hyprland.enable = true;
 

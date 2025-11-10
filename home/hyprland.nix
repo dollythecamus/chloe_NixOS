@@ -12,11 +12,19 @@
     
     settings = {
     	
-	monitor = ",preferred,auto,1";
+	monitor = ",preferred,auto,0.95";
 
 	"$terminal" = "kitty fish";
 	"$mod" = "SUPER";
 	"$menu" = "wofi --show drun";
+
+	general = {
+		gaps_in = 0;
+		gaps_out = 0;
+		border_size = 0;
+
+		resize_on_border = true;
+	};
 
 	bind = [
 

@@ -42,6 +42,7 @@
 				home-manager.useGlobalPkgs = true;
 				home-manager.useUserPackages = true;
 				home-manager.users.chloe-inventor = ./home/space-home.nix;
+				home-manager.users.chloe = ./home/space-chloe.nix;
 			}
 			./modules/desktop/space-home.nix
 			stylix.nixosModules.stylix
@@ -51,6 +52,7 @@
 			./modules/programs.nix
 
 			./modules/users/chloe-inventor.nix
+			./modules/users/chloe.nix
 		];
 	};};
 	};

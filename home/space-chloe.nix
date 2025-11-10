@@ -48,8 +48,8 @@
 
   home = {
     stateVersion = "25.05";
-    username = "chloe-inventor";
-    homeDirectory = "/home/chloe-inventor";
+    username = "chloe";
+    homeDirectory = "/home/chloe";
     packages = with pkgs; [
      
       # # # rice # # # 
@@ -145,3 +145,4 @@
       ];
   };
 }
+
