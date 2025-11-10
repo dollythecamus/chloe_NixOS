@@ -71,6 +71,8 @@
      
       # # # rice # # # 
 
+	terminaltexteffects # cool
+
         home-manager
 
         kitty

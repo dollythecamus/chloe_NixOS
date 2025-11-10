@@ -1,29 +1,31 @@
 warning: Git tree '/home/chloe/NixOS' is dirty
 building the system configuration...
 warning: Git tree '/home/chloe/NixOS' is dirty
-error:
-       … while calling the 'head' builtin
-         at /nix/store/g9863dnbpnfa7vz8c1s1idwbg7c5j0bb-source/lib/attrsets.nix:1571:13:
-         1570|           if length values == 1 || pred here (elemAt values 1) (head values) then
-         1571|             head values
-             |             ^
-         1572|           else
-
-       … while evaluating the attribute 'value'
-         at /nix/store/g9863dnbpnfa7vz8c1s1idwbg7c5j0bb-source/lib/modules.nix:1083:7:
-         1082|     // {
-         1083|       value = addErrorContext "while evaluating the option `${showOption loc}':" value;
-             |       ^
-         1084|       inherit (res.defsFinal') highestPrio;
-
-       … while evaluating the option `system.build.toplevel':
-
-       … while evaluating definitions from `/nix/store/g9863dnbpnfa7vz8c1s1idwbg7c5j0bb-source/nixos/modules/system/activation/top-level.nix':
-
-       … while evaluating the option `assertions':
-
-       … while evaluating definitions from `/nix/store/a4la088hi5id7sw77gy9zdvwn83dgczz-source/nixos/common.nix':
-
-       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
-
-       error: path '/nix/store/xh74q4sxc2na85c2n2qsn1l88w01fwrq-source/home/yazi.nix' does not exist
+these 7 derivations will be built:
+  /nix/store/npnplllpkpcj6728x727a06v2yhvxzfa-config.fish.drv
+  /nix/store/b65w1ssy139jvdaq29kkfvi83flq6liz-home-manager-files.drv
+  /nix/store/8bhjaqah336w1wiwfbdpzwvisrc5bckl-home-manager-generation.drv
+  /nix/store/25hrj36r011arqjaszx4dndx7qf0i9iv-unit-home-manager-chloe.service.drv
+  /nix/store/nnn4y2jwzk5sxzc22w7z20c3ysvl9xjr-system-units.drv
+  /nix/store/0y353y12wf8w3pk5a558bb1zzgxmmy60-etc.drv
+  /nix/store/cis33jy9ahjdj38pi7lmxmirc0ljmlxr-nixos-system-chloe-laptop-25.05.20251107.6faeb06.drv
+building '/nix/store/npnplllpkpcj6728x727a06v2yhvxzfa-config.fish.drv'...
+building '/nix/store/b65w1ssy139jvdaq29kkfvi83flq6liz-home-manager-files.drv'...
+building '/nix/store/8bhjaqah336w1wiwfbdpzwvisrc5bckl-home-manager-generation.drv'...
+building '/nix/store/25hrj36r011arqjaszx4dndx7qf0i9iv-unit-home-manager-chloe.service.drv'...
+building '/nix/store/nnn4y2jwzk5sxzc22w7z20c3ysvl9xjr-system-units.drv'...
+building '/nix/store/0y353y12wf8w3pk5a558bb1zzgxmmy60-etc.drv'...
+building '/nix/store/cis33jy9ahjdj38pi7lmxmirc0ljmlxr-nixos-system-chloe-laptop-25.05.20251107.6faeb06.drv'...
+updating GRUB 2 menu...
+Warning: os-prober will be executed to detect other bootable partitions.
+Its output will be used to detect bootable binaries on them and create new boot entries.
+lsblk: /dev/mapper/no*[0-9]: not a block device
+lsblk: /dev/mapper/block*[0-9]: not a block device
+lsblk: /dev/mapper/devices*[0-9]: not a block device
+lsblk: /dev/mapper/found*[0-9]: not a block device
+activating the configuration...
+setting up /etc...
+reloading user units for chloe...
+restarting sysinit-reactivation.target
+the following new units were started: NetworkManager-dispatcher.service
+Done. The new configuration is /nix/store/6fp7z9mm63kj24jxp7yskbasc15bk6xv-nixos-system-chloe-laptop-25.05.20251107.6faeb06
