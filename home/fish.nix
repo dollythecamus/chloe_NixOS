@@ -23,6 +23,10 @@
 			rm -f -- "$tmp"
 			''; 
 		};
+
+		matrix = {
+		  body = ''echo "i'll show you how deep the rabbit hole goes" | tte matrix'';
+	        };
 	};
 	
   };

@@ -22,6 +22,7 @@
 	neovim.enable = true;
 	nixcord.enable = true;
 	blender.enable = true;
+	dunst.enable = true;
 	vscode.enable = true;
 	firefox.enable = true;
 	bat.enable = true;
@@ -42,7 +43,7 @@
       emoji = config.stylix.fonts.monospace;
     };
 
-    image = ./wallpaper/puffy-stars.jpg;
+    # image = ./wallpaper/puffy-stars.jpg;
 
     polarity = "dark";
   };
@@ -57,6 +58,8 @@
     vesktop.enable = true;  # Vesktop
     dorion.enable = true;   # Dorion
   };
+
+  programs.vscode.enable = true;
 
   # neovim waow
   programs.neovim.enable = true;
@@ -121,10 +124,12 @@
     bacon # rust compiler
     cargo-info # get data about rust packages from the internet without going through the browser
     rusty-man # rust docs in cli
-    wiki-tui # wikipedia in cli! how queer!
+    #wiki-tui # wikipedia in cli! how queer!
     mask # command runner in a markdown file, woa
     presenterm # terminal slides presentation tool
-    ncspot # spotify but good
+    #ncspot # spotify but good
+
+	kew # music player
 
 	 ## bullcrap end
 
@@ -162,7 +167,7 @@
         pureref
 
       # Development
-      	vscode
+      	#vscode
         github-desktop
       ];
   };

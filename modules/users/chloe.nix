@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ...}:
+{ config, pkgs, unstablePkgs, inputs, ...}:
 
 {
 
@@ -6,5 +6,10 @@
       isNormalUser = true;
       description = "Dr. Chloe Inventor";
       extraGroups = [ "networkmanager" "wheel" "dialout" "bluetooth" "input"];
-       };
+
+	# need some unstable package? do it here!
+	packages = with unstablePkgs; [
+		godot
+	];
+  };
 }

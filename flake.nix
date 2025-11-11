@@ -21,11 +21,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    bongocat.url = "github:furudbat/wayland-vpets";
+    # bongocat.url = "github:furudbat/wayland-vpets";
   
   };
 
-  outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, stylix, bongocat, ...} @ inputs: 
+  outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, stylix, ...} @ inputs: 
   let
       system = "x86_64-linux";
       unstablePkgs = import nixpkgs-unstable {
@@ -45,18 +45,11 @@
 	nixosConfigurations = {
 	  chloe-laptop = nixpkgs.lib.nixosSystem {
 
-		specialArgs = { inherit inputs; };
+		specialArgs = { inherit inputs unstablePkgs; };
 
 		modules = [
 			./hosts/chloe-laptop/configuration.nix
 			./hardware/nvidia.nix
-
-			{ # weird but alright
-           		 # Here you mix a package from unstable
-            		 environment.systemPackages = [
-          		    unstablePkgs.godot
-        		    ];
-        		}
 
 			home-manager.nixosModules.home-manager {
 				home-manager.backupFileExtension = "backup";
@@ -70,8 +63,11 @@
              				inputs.nixcord.homeModules.nixcord
            			];
 			}		
+			
+			/*
+			# not working :(
 
-			bongocat.nixosModules.default {
+			inputs.bongocat.nixosModules.default {
           			programs.wayland-bongocat = {
             			enable = true;
             			autoStart = true;
@@ -80,6 +76,8 @@
 					];
           			};
         		}
+
+			*/
 			
 			# style thing
 			./modules/desktop/space-home.nix
