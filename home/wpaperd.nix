@@ -4,8 +4,8 @@
   services.wpaperd = {
     enable = true;
     settings = {
-	default = {
-	  path = "${HOME}/Mix/Media/Images/";
+	eDP-1 = {
+	  path = "</home/chloe/Mix/Media/Images/>";
 	  recursive = true;
 	  sorting = "random";
 	  duration = "835msec"; 
