@@ -1,6 +1,16 @@
 {config, pkgs, inputs, ...} :
 
 {
+
+  home.file.start = {
+  	enable = true;
+	executable = true;
+	target = ".config/hypr/start.sh"
+ 	text = ''
+	
+	'';
+  };
+
   wayland.windowManager.hyprland = {
     # Whether to enable Hyprland wayland compositor
     enable = true;
@@ -21,6 +31,10 @@
 
 	exec-once = [
 		"$terminal"
+		"$fileManager"
+		"$terminal kew"
+		"sh ${start.target}"
+		"wpaperd"
 
 	];
 

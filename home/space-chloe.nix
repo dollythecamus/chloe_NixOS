@@ -7,6 +7,9 @@
     ./fish.nix
     ./yazi.nix
     ./neofetch.nix
+    ./wpaperd.nix
+    ./dunst.nix
+    ./wofi.nix
   ];
   
   stylix = {
@@ -14,6 +17,7 @@
     enable = true;
     autoEnable = true;
     
+    # honestly dunno why i have to enable each one individually since autoEnable is true but whatevs;
     targets = {
     	hyprland.enable = true;
 	fish.enable = true;
@@ -28,6 +32,7 @@
 	firefox.enable = true;
 	bat.enable = true;
 	yazi.enable = true;
+	wpaperd.enable = true;
     };
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
@@ -44,7 +49,7 @@
       emoji = config.stylix.fonts.monospace;
     };
 
-    image = ./wallpaper/puffy-stars.jpg;
+    # image = ./wallpaper/puffy-stars.jpg;
 
     polarity = "dark";
   };
@@ -79,13 +84,13 @@
 
 	terminaltexteffects # cool
 
-        home-manager
+        # home-manager
 
-        kitty
+        # kitty
         fish
-        dunst
+        # dunst
         wofi
-        swww
+        # wpaperd 
 
         base16-schemes
 
