@@ -8,7 +8,7 @@
 	settings = {
 	  
 	  eDP-1 = {
-    	    path = "/home/chloe/Mix/Media/Images/";
+    	    path = "/home/chloe/Mix/Media/Images/silly/";
     	    apply-shadow = true;
 	    recursive = true;
 	    mode = "center";
