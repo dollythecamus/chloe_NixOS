@@ -4,8 +4,11 @@
   services.wpaperd = {
     enable = true;
     settings = {
+        display = {
+	  path = "/home/chloe/Mix/Media/Images/";
+	};
+	
 	eDP-1 = {
-	  path = "</home/chloe/Mix/Media/Images/>";
 	  recursive = true;
 	  sorting = "random";
 	  duration = "835msec"; 
