@@ -4,7 +4,9 @@
   # Services
 
   # Enable OpenTabletDriver
-  hardware.opentabletdriver.enable = true;
+  #hardware.opentabletdriver.enable = true;
+
+  services.xserver.wacom.enable = true;
 
   # enable flatpak
   services.flatpak.enable = true;

@@ -6,6 +6,7 @@
     ./eww.nix
     ./fish.nix
     ./yazi.nix
+    ./neofetch.nix
   ];
   
   stylix = {
@@ -43,7 +44,7 @@
       emoji = config.stylix.fonts.monospace;
     };
 
-    # image = ./wallpaper/puffy-stars.jpg;
+    image = ./wallpaper/puffy-stars.jpg;
 
     polarity = "dark";
   };
@@ -56,7 +57,7 @@
   programs.nixcord = {
     enable = true;          # Enable Nixcord (It also installs Discord)
     vesktop.enable = true;  # Vesktop
-    dorion.enable = true;   # Dorion
+    #dorion.enable = true;   # Dorion
   };
 
   programs.vscode.enable = true;

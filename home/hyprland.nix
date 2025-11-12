@@ -24,6 +24,11 @@
 
 	];
 
+	input = {
+		kb_layout = "us,ua";
+		kb_options = "grp:win_space_toggle";
+	};
+
 	general = {
 		gaps_in = 0;
 		gaps_out = 0;

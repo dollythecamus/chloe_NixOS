@@ -1,24 +1,45 @@
 warning: Git tree '/home/chloe/NixOS' is dirty
-error:
-       … while calling the 'seq' builtin
-         at /nix/store/g9863dnbpnfa7vz8c1s1idwbg7c5j0bb-source/lib/modules.nix:359:18:
-          358|         options = checked options;
-          359|         config = checked (removeAttrs config [ "_module" ]);
-             |                  ^
-          360|         _module = checked (config._module);
-
-       … while calling the 'throw' builtin
-         at /nix/store/g9863dnbpnfa7vz8c1s1idwbg7c5j0bb-source/lib/modules.nix:331:13:
-          330|           else
-          331|             throw baseMsg
-             |             ^
-          332|         else
-
-       error: The option `_bongocat' does not exist. Definition values:
-       - In `/nix/store/fgzpv6zfjy6qcs5i4qg1593jcr9a5sb2-source/nix/common.nix':
-           {
-             cfg = {
-               autostart = false;
-               catHeight = 40;
-               catXOffset = 120;
-           ...
+building the system configuration...
+warning: Git tree '/home/chloe/NixOS' is dirty
+these 14 derivations will be built:
+  /nix/store/7wa2fimbdmzn1q48h53845hsw16wlbjf-hm_hyprhyprland.conf.drv
+  /nix/store/byrfpcyfbqn4bl9z693l9ldm6mlwjrpm-user-dbus-services.drv
+  /nix/store/24190vc4f0zl3rqhr430789b637s1a9x-home-manager-files.drv
+  /nix/store/6h6sqsclkjfy9zm7xkzn9qwaxpmdxzab-activation-script.drv
+  /nix/store/rm774rgiipz3cnrajhahf4f7gmrd88yd-home-manager-generation.drv
+  /nix/store/28chqxhac5hka714dcjmhhar5yh4ddwd-unit-home-manager-chloe.service.drv
+  /nix/store/chyv4n4sxqbi5rrwyc6qfhnpsvjdsk7c-activation-script.drv
+  /nix/store/pficf10xw2bkbv4h234f6kvda0za6bpq-hm_hyprhyprland.conf.drv
+  /nix/store/y6dhvcwh3bxs0423b85awg6pci2m911b-home-manager-files.drv
+  /nix/store/jiirr45asxlqsnqzbcrlmbli4x8y75q2-home-manager-generation.drv
+  /nix/store/3aq5x8wrq1d0jrgsylnd4g7vngnc9051-unit-home-manager-chloe-x2dinventor.service.drv
+  /nix/store/ig9nbdfyih75yml1lqlhpg6vi4hmyg0j-system-units.drv
+  /nix/store/3diyp0yd9zv1845gnqp5wmprs06jbw6c-etc.drv
+  /nix/store/1hgqpk91lnlc0zaqwz48ixs61n6gzz8p-nixos-system-chloe-laptop-25.05.20251107.6faeb06.drv
+building '/nix/store/6h6sqsclkjfy9zm7xkzn9qwaxpmdxzab-activation-script.drv'...
+building '/nix/store/chyv4n4sxqbi5rrwyc6qfhnpsvjdsk7c-activation-script.drv'...
+building '/nix/store/7wa2fimbdmzn1q48h53845hsw16wlbjf-hm_hyprhyprland.conf.drv'...
+building '/nix/store/pficf10xw2bkbv4h234f6kvda0za6bpq-hm_hyprhyprland.conf.drv'...
+building '/nix/store/byrfpcyfbqn4bl9z693l9ldm6mlwjrpm-user-dbus-services.drv'...
+building '/nix/store/24190vc4f0zl3rqhr430789b637s1a9x-home-manager-files.drv'...
+building '/nix/store/y6dhvcwh3bxs0423b85awg6pci2m911b-home-manager-files.drv'...
+building '/nix/store/rm774rgiipz3cnrajhahf4f7gmrd88yd-home-manager-generation.drv'...
+building '/nix/store/jiirr45asxlqsnqzbcrlmbli4x8y75q2-home-manager-generation.drv'...
+building '/nix/store/28chqxhac5hka714dcjmhhar5yh4ddwd-unit-home-manager-chloe.service.drv'...
+building '/nix/store/3aq5x8wrq1d0jrgsylnd4g7vngnc9051-unit-home-manager-chloe-x2dinventor.service.drv'...
+building '/nix/store/ig9nbdfyih75yml1lqlhpg6vi4hmyg0j-system-units.drv'...
+building '/nix/store/3diyp0yd9zv1845gnqp5wmprs06jbw6c-etc.drv'...
+building '/nix/store/1hgqpk91lnlc0zaqwz48ixs61n6gzz8p-nixos-system-chloe-laptop-25.05.20251107.6faeb06.drv'...
+updating GRUB 2 menu...
+Warning: os-prober will be executed to detect other bootable partitions.
+Its output will be used to detect bootable binaries on them and create new boot entries.
+lsblk: /dev/mapper/no*[0-9]: not a block device
+lsblk: /dev/mapper/block*[0-9]: not a block device
+lsblk: /dev/mapper/devices*[0-9]: not a block device
+lsblk: /dev/mapper/found*[0-9]: not a block device
+activating the configuration...
+setting up /etc...
+reloading user units for chloe...
+restarting sysinit-reactivation.target
+the following new units were started: NetworkManager-dispatcher.service, sysinit-reactivation.target, systemd-tmpfiles-resetup.service
+Done. The new configuration is /nix/store/28g22zckkypy943lb33fss2krp05ndg2-nixos-system-chloe-laptop-25.05.20251107.6faeb06

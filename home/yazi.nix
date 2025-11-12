@@ -6,7 +6,7 @@
 	enable = true;
 	enableFishIntegration = true;
 	settings = {
-		opener.edit = [{ run = "nvim %s"; }];
+		opener.edit = [{ run = "nvim %s"; block = true; }];
 	};
   
   };
