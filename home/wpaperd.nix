@@ -14,7 +14,7 @@
 	    mode = "center";
 	    sorting = "random";
 	    duration = "0167msec";
-	    transition-time = "0msec";
+	    transition-time = 0;
 	  };
 
 	};
