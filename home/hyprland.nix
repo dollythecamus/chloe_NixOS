@@ -25,7 +25,7 @@
 	];
 
 	input = {
-		kb_layout = "us,ua";
+		kb_layout = "us,br";
 		kb_options = "grp:win_space_toggle";
 	};
 
