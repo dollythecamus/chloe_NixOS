@@ -1,23 +1,23 @@
 {config, pkgs, inputs, ...}:
 
 {
+
   services.wpaperd = {
     enable = true;
-    settings = {
-        display = {
-	  path = "/home/chloe/Mix/Media/Images/";
-	};
 	
-	eDP-1 = {
-	  recursive = true;
-	  sorting = "random";
-	  duration = "835msec"; 
-	  # for 60 FPS, each image has 5 frames 
-	  transition-time = "0";
-	  mode = "center";
-	};
-    }; 
+	settings = {
+	  
+	  eDP-1 = {
+    	    path = "/home/chloe/Mix/Media/Images/";
+    	    apply-shadow = true;
+	    recursive = true;
+	    mode = "center";
+	    sorting = "random";
+	    duration = "0167msec";
+	    transition-time = "0msec";
+	  };
 
+	};
 
   };
 
