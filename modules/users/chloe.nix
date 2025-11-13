@@ -10,6 +10,7 @@
 	# need some unstable package? do it here!
 	packages = with unstablePkgs; [
 		godot
+		btop
 	];
   };
 }

@@ -33,6 +33,7 @@
 	bat.enable = true;
 	yazi.enable = true;
 	wpaperd.enable = true;
+	btop.enable = true;
     };
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
@@ -79,7 +80,7 @@
     username = "chloe";
     homeDirectory = "/home/chloe";
     packages = with pkgs; [
-     
+         
       # # # rice # # # 
 
 	terminaltexteffects # cool
@@ -101,6 +102,9 @@
         slurp
 
         glow
+	
+	# btop # unstable is better
+	# nvtopPackages.nvidia
 
         neofetch
         neocities

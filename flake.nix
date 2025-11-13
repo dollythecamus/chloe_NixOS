@@ -34,6 +34,7 @@
   in
 
   {
+  	# no idea if this works actually
 	homeConfigurations.chloe-inventor = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
           modules = [
@@ -52,6 +53,7 @@
 			./hardware/nvidia.nix
 
 			home-manager.nixosModules.home-manager {
+
 				home-manager.backupFileExtension = "backup";
 				home-manager.useGlobalPkgs = true;
 				home-manager.useUserPackages = true;

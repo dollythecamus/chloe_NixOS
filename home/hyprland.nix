@@ -11,6 +11,17 @@
 	'';
   };
 
+  home.file.toggle_eww = {
+  	enable = true;
+	executable = true;
+	target = ".config/hypr/toggle_eww.sh";
+ 	text = ''
+
+	'';
+  };
+
+
+
   wayland.windowManager.hyprland = {
     # Whether to enable Hyprland wayland compositor
     enable = true;
@@ -28,11 +39,13 @@
 	"$mod" = "SUPER";
 	"$menu" = "wofi --show drun";
 	"$fileManager" = "kitty yazi";
+	"$monitor" = "btop";
 
 	exec-once = [
 		"$terminal"
 		"$fileManager"
 		"kitty kew"
+		"$monitor"
 		"sh ./start.sh"
 		"wpaperd"
 	];
@@ -63,12 +76,32 @@
 	  "$mod, 9, workspace, 9"
 	  "$mod, 0, workspace, 10"
 
-	  "$mod, Q, exec, $terminal"
+	  "$mod SHIFT, 1, movetoworkspace, 1"
+	  "$mod SHIFT, 2, movetoworkspace, 2"
+	  "$mod SHIFT, 3, movetoworkspace, 3"
+	  "$mod SHIFT, 4, movetoworkspace, 4"
+	  "$mod SHIFT, 5, movetoworkspace, 5"
+	  "$mod SHIFT, 6, movetoworkspace, 6"
+	  "$mod SHIFT, 7, movetoworkspace, 7"
+	  "$mod SHIFT, 8, movetoworkspace, 8"
+	  "$mod SHIFT, 9, movetoworkspace, 9"
+	  "$mod SHIFT, 0, movetoworkspace, 10"
+
+	  "$mod, Q, exec, $terminal" 
 	  "$mod, F, exec, $fileManager"
 	  "$mod, S, exec, $menu"
 	  "$mod, C, killactive"
 
 	  "$mod, V, togglefloating"
+
+	  ''$mod, PRINT, exec, grim -g "$(slurp)" - | wl-copy''
+
+	
+	];
+
+	bindm = [
+	  "$mod, mouse:272, movewindow"
+	  "$mod, mouse:273, resizewindow"
 	];
 
 	bindl = [

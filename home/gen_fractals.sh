@@ -10,7 +10,7 @@ for i in $(seq 1 5); do
     type=$((RANDOM % 3))
     
     # Random zoom/scale factor between 100 and 800
-    scale=$((100 + RANDOM % 700))
+    scale=$((1 + RANDOM % 7))
     
     # Random viewport coordinates (for zoom/offset variety)
     llx=$(awk -v r=$RANDOM 'BEGIN{srand(r); printf("%.3f", -2 + 4*rand())}')
