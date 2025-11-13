@@ -41,7 +41,7 @@
 
     yuckwin = {
 	enable = true;
-	target = ".config/eww/eww_windowsyuck";
+	target = ".config/eww/eww_windows.yuck";
   	source = builtins.path {
    		 path = ./eww/eww_windows.yuck;
     		 name = "eww_window_yuck";
