@@ -95,6 +95,7 @@
 	  "$mod, V, togglefloating"
 
 	  ''$mod, PRINT, exec, grim -g "$(slurp)" - | wl-copy''
+	  ''$mod SHIFT, PRINT, exec, grim -o eDP-1 - | wl-copy''
 
 	
 	];

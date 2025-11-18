@@ -16,7 +16,7 @@
 
     enable = true;
     autoEnable = true;
-    
+
     # honestly dunno why i have to enable each one individually since autoEnable is true but whatevs;
     targets = {
     	hyprland.enable = true;
@@ -91,7 +91,8 @@
         fish
         # dunst
         wofi
-        # wpaperd 
+        # wpaperd
+	nvtopPackages.nvidia
 
         base16-schemes
 
@@ -115,6 +116,8 @@
 
         adwaita-icon-theme
         font-awesome
+
+	nautilus
 
       #   rice over  #
 
