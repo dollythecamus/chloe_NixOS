@@ -118,6 +118,7 @@
         font-awesome
 
 	nautilus
+	peaclock
 
       #   rice over  #
 
@@ -180,8 +181,8 @@
         pureref
 
       # Development
-      	#vscode
-        github-desktop
+      	# vscode
+        github-desktop # could install via flatpak to solve some issues, let's see
       ];
   };
 }
