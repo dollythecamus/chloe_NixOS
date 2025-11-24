@@ -12,6 +12,16 @@
 
   };
   
+  # does it conflict with the ly dm? idunno
+  # what i know is that many programs won't work reliably without gnome as DE
+  # and i want the reliability
+  # until i can solve the problems relating to authentication and other things
+  # this will have to do
+  
+  # yes it conflicts, disable it works?
+  # services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+
   programs.hyprland.enable = true;
 
   # login manager

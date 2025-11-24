@@ -30,4 +30,14 @@
     pkgs.seahorse
   ];
 
+   # overlay for blender to use GPU in rendering
+   # without this, renders only on iGPU
+   nixpkgs.overlays = [
+  	 (final : prev: {
+		  blender = prev.blender.override {
+			  cudaSupport = true;
+		 	  };
+	   }
+	)];
+
 }
