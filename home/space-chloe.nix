@@ -76,7 +76,7 @@
   programs.home-manager.enable = true;
 
   home = {
-    stateVersion = "25.05";
+    stateVersion = "25.11";
     username = "chloe";
     homeDirectory = "/home/chloe";
     packages = with pkgs; [
@@ -92,7 +92,7 @@
         # dunst
         wofi
         # wpaperd
-	nvtopPackages.nvidia
+	      nvtopPackages.nvidia
 
         base16-schemes
 

@@ -7,6 +7,7 @@
 
   services.ollama = {
     enable = true;
-    package = unstablePkgs.ollama-vulkan;
+    package = unstablePkgs.ollama;
+
   };
 }
