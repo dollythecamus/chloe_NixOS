@@ -3,9 +3,9 @@
 
   inputs = {
     
-    nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
 
     nixcord = {
       inputs.nixpkgs.follows = "nixpkgs";
@@ -13,12 +13,12 @@
     };
 
     home-manager = {
-    	url = "github:nix-community/home-manager?ref=release-25.11";
+    	url = "github:nix-community/home-manager/release-25.11";
     	inputs.nixpkgs.follows = "nixpkgs";
     };
 
     stylix = {
-      url = "github:nix-community/stylix?ref=release-25.11";
+      url = "github:nix-community/stylix/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
