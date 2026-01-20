@@ -19,14 +19,14 @@
   # this will have to do
   
   # yes it conflicts, disable it works?
-  services.xserver.displayManager.gdm.enable = true;
+  #services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
   programs.hyprland.enable = true;
 
   # login manager
   # one time thing, to play games in X11 better
-  /*
+  
   services.displayManager.ly = {
     enable = true;
     
@@ -38,8 +38,6 @@
     };
     # can configure more :3
   };
-  */
-
 
   # Configure keymap in X11
   services.xserver.xkb = {
