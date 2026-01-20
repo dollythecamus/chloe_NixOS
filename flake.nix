@@ -5,19 +5,19 @@
     
     nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.11";
 
     nixcord = {
       url = "github:kaylorben/nixcord";
     };
 
     home-manager = {
-    	url = "github:nix-community/home-manager?ref=release-25.05";
+    	url = "github:nix-community/home-manager?ref=release-25.11";
     	inputs.nixpkgs.follows = "nixpkgs";
     };
 
     stylix = {
-      url = "github:nix-community/stylix?ref=release-25.05";
+      url = "github:nix-community/stylix?ref=release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

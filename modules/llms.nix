@@ -1,15 +1,12 @@
-{config, pkgs, inputs, ...}:
+{config, pkgs, unstablePkgs, inputs, lib,...}:
 
 {
   environment.systemPackages = [
     pkgs.aider-chat-full
-    pkgs.ollama
   ];
 
   services.ollama = {
     enable = true;
-
-    acceleration = "cuda";
+    package = unstablePkgs.ollama-vulkan;
   };
-
 }

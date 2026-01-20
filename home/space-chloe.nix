@@ -25,7 +25,7 @@
 	wofi.enable = true;
     	waybar.enable = true;
 	neovim.enable = true;
-	nixcord.enable = true;
+	#nixcord.enable = true;
 	blender.enable = true;
 	dunst.enable = true;
 	vscode.enable = true;
@@ -60,11 +60,11 @@
   # nixpkgs.config.allowUnfree = true;
 
   
-  programs.nixcord = {
-    enable = true;          # Enable Nixcord (It also installs Discord)
-    vesktop.enable = true;  # Vesktop
+  #programs.nixcord = {
+    #enable = false;          # Enable Nixcord (It also installs Discord)
+    #vesktop.enable = true;  # Vesktop
     #dorion.enable = true;   # Dorion
-  };
+  #};
 
   programs.vscode.enable = true;
 
