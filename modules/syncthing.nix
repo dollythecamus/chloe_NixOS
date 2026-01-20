@@ -3,6 +3,8 @@
 {config, pkgs, inputs, ...}:
 
 {
+  services.syncthing = {
+    enable = true;
     settings = {
       # Define all your devices here using their actual Syncthing Device IDs
       devices = {

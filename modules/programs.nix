@@ -21,6 +21,7 @@
 
   environment.systemPackages = [
     pkgs.winetricks
+    pkgs.protonvpn-gui
 
 	# that's not how u install it
     # pkgs.dotnetCorePackages.runtime_9_0-bin # needs for KSA uwu

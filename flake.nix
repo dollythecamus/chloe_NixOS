@@ -89,6 +89,7 @@
 			./modules/system-packages.nix
 			./modules/services.nix 
 			./modules/programs.nix
+			./modules/syncthing.nix
 
 			./modules/users/chloe-inventor.nix
 			./modules/users/chloe.nix
