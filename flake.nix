@@ -22,8 +22,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # bongocat.url = "github:furudbat/wayland-vpets";
-  
   };
 
   outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, stylix, ...} @ inputs: 
@@ -66,21 +64,6 @@
              				inputs.nixcord.homeModules.nixcord
            			];
 			}		
-			
-			/*
-			# not working :(
-
-			inputs.bongocat.nixosModules.default {
-          			programs.wayland-bongocat = {
-            			enable = true;
-            			autoStart = true;
-					inputDevices = [
-						"/dev/input/event4"
-					];
-          			};
-        		}
-
-			*/
 			
 			# style thing
 			./modules/desktop/space-home.nix

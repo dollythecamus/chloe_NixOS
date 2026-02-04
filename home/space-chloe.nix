@@ -1,4 +1,4 @@
-{config, pkgs, inputs, ...}:
+{config, pkgs, unstablePkgs, inputs, ...}:
 
 {
   imports = [
@@ -10,6 +10,7 @@
     ./wpaperd.nix
     ./dunst.nix
     ./wofi.nix
+    ./vscode.nix
   ];
   
   stylix = {
@@ -20,20 +21,20 @@
     # honestly dunno why i have to enable each one individually since autoEnable is true but whatevs;
     targets = {
     	hyprland.enable = true;
-	fish.enable = true;
-	kitty.enable = true;
-	wofi.enable = true;
+	    fish.enable = true;
+	    kitty.enable = true;
+	    wofi.enable = true;
     	waybar.enable = true;
-	neovim.enable = true;
-	#nixcord.enable = true;
-	blender.enable = true;
-	dunst.enable = true;
-	vscode.enable = true;
-	firefox.enable = true;
-	bat.enable = true;
-	yazi.enable = true;
-	wpaperd.enable = true;
-	btop.enable = true;
+	    neovim.enable = true;
+      nixcord.enable = true;
+      blender.enable = true;
+      dunst.enable = true;
+      #vscode.enable = true;
+      firefox.enable = true;
+      bat.enable = true;
+      yazi.enable = true;
+      wpaperd.enable = true;
+      btop.enable = true;
     };
 
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
@@ -55,18 +56,15 @@
     polarity = "dark";
   };
 
-  # not good, but it's fine
   # rebuild is screaming at me to remove this
   # nixpkgs.config.allowUnfree = true;
 
   
-  #programs.nixcord = {
-    #enable = false;          # Enable Nixcord (It also installs Discord)
-    #vesktop.enable = true;  # Vesktop
+  programs.nixcord = {
+    enable = false;          # Enable Nixcord (It also installs Discord)
+    vesktop.enable = true;  # Vesktop
     #dorion.enable = true;   # Dorion
-  #};
-
-  programs.vscode.enable = true;
+  };
 
   # neovim waow
   programs.neovim.enable = true;
@@ -82,70 +80,48 @@
     packages = with pkgs; [
          
       # # # rice # # # 
-
-	terminaltexteffects # cool
-
-        # home-manager
-
-        # kitty
+	      terminaltexteffects # cool
         fish
-        # dunst
         wofi
-        # wpaperd
 	      nvtopPackages.nvidia
-
         base16-schemes
 
         playerctl
         brightnessctl
-
         grim
         slurp
-
         glow
-	
 	# btop # unstable is better
 	# nvtopPackages.nvidia
 
         neofetch
         neocities
-        #neovim
-
         vlc
         wl-clipboard
-
         adwaita-icon-theme
         font-awesome
-
-	nautilus
-	peaclock
-
-      #   rice over  #
-
-	 # rust bullcrap
+	      nautilus
+	      peaclock
 	
-    uutils-coreutils # GNU coreutils
-    fish # command line shell
-    fd # alternative to find
-    bat # cat, but better (idk what cat is
-    eza # alternative to ls
-    zoxide # smarter cd
-    zellij # interesting ui
-    gitui # git ui 
-    dust # pretty disk analyzer
-    starship # customizeable prompts for any shell
-    yazi # interesting file manager
-    bacon # rust compiler
-    cargo-info # get data about rust packages from the internet without going through the browser
-    rusty-man # rust docs in cli
-    #wiki-tui # wikipedia in cli! how queer!
-    mask # command runner in a markdown file, woa
-    presenterm # terminal slides presentation tool
-    #ncspot # spotify but good
-
-	kew # music player
-
-	 ## bullcrap end
+        uutils-coreutils # GNU coreutils
+        fish # command line shell
+        fd # alternative to find
+        bat # cat, but better (idk what cat is
+        eza # alternative to ls
+        zoxide # smarter cd
+        zellij # interesting ui
+        gitui # git ui 
+        dust # pretty disk analyzer
+        starship # customizeable prompts for any shell
+        yazi # interesting file manager
+        bacon # rust compiler
+        cargo-info # get data about rust packages from the internet without going through the browser
+        rusty-man # rust docs in cli
+        #wiki-tui # wikipedia in cli! how queer!
+        mask # command runner in a markdown file, woa
+        presenterm # terminal slides presentation tool
+        #ncspot # spotify but good
+        kew # music player
 
       # Gaming             
         prismlauncher
@@ -161,7 +137,7 @@
       # Productivity
         obsidian
         librewolf
-	libreoffice 
+	      libreoffice 
       
       # Creation
         krita

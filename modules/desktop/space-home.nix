@@ -19,7 +19,7 @@
   # this will have to do
 
   # services.xserver.displayManager.gdm.enable = true;
-  # services.desktopManager.gnome.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   programs.hyprland.enable = true;
 
