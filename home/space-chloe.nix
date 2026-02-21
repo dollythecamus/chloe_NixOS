@@ -11,8 +11,9 @@
     ./dunst.nix
     ./wofi.nix
     ./vscode.nix
+    #inputs.nixcord.homeModules.nixcord
   ];
-  
+
   stylix = {
 
     enable = true;

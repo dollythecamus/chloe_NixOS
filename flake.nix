@@ -3,13 +3,13 @@
 
   inputs = {
     
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     nixcord = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:kaylorben/nixcord";
+      url = "github:FlameFlag/nixcord";
     };
 
     home-manager = {
@@ -59,9 +59,9 @@
 				#home-manager.users.chloe-inventor = ./home/space-home.nix;
 				home-manager.users.chloe = ./home/space-chloe.nix;
 
-				home-manager.sharedModules = [
+				home-manager.sharedModules = [ # what does this do? who knows ? :)
 				        #stylix.homeModules.stylix
-             				inputs.nixcord.homeModules.nixcord
+             			inputs.nixcord.homeModules.nixcord
            			];
 			}		
 			
