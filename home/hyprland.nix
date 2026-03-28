@@ -56,12 +56,21 @@
 	};
 
 	general = {
+	# changed this but it won't built and idk whyyy
 		gaps_in = 0;
 		gaps_out = 0;
-		border_size = 0;
+		border_size = 2;
 
 		resize_on_border = true;
+
+		"col.active_border" = "rgba(ffffffff)";
+		"col.inactive_border" = "rgba(00000000)";
 	};
+
+	intermediate = {
+    	  # This prevents ghost borders in some edge cases
+    	  "no_focus_fallback" = true; 
+  	};
 
 	bind = [
 
