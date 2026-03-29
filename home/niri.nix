@@ -2,7 +2,7 @@
 
 {
   # niri config file
-  xdg.configFile."niri/config.kdl".source = ./niri/config.kdl;
+  xdg.configFile."niri/config.kdl".source = ./config/niri/config.kdl;
 
   home.packages = with pkgs; [
 

@@ -29,6 +29,8 @@
     pulse.enable = true;
   };
   
+  services.power-profiles-daemon.enable = false;
+
   # laptop battery power savings
   services.tlp = {
   enable = true;
