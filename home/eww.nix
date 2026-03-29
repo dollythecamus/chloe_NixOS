@@ -16,7 +16,7 @@
 	enable = true;
 	target = ".config/eww/eww.yuck";
   	source = builtins.path {
-   		 path = ./eww/eww.yuck;
+   		 path = ./config/eww/eww.yuck;
     		 name = "eww_yuck";
   		};
     };
@@ -25,7 +25,7 @@
 	enable = true;
 	target = ".config/eww/eww_variables.yuck";
   	source = builtins.path {
-   		 path = ./eww/eww_variables.yuck;
+   		 path = ./config/eww/eww_variables.yuck;
     		 name = "ewwvariables_yuck";
   		};
     };
@@ -34,7 +34,7 @@
 	enable = true;
 	target = ".config/eww/eww_widgets.yuck";
   	source = builtins.path {
-   		 path = ./eww/eww_widgets.yuck;
+   		 path = ./config/eww/eww_widgets.yuck;
     		 name = "eww_widgets_yuck";
   		};
     };
@@ -43,7 +43,7 @@
 	enable = true;
 	target = ".config/eww/eww_windows.yuck";
   	source = builtins.path {
-   		 path = ./eww/eww_windows.yuck;
+   		 path = ./config/eww/eww_windows.yuck;
     		 name = "eww_window_yuck";
   		};
     };
@@ -53,7 +53,7 @@
 	executable = true;
 	target = ".config/eww/scripts/search.sh";
   	source = builtins.path {
-   		 path = ./eww/scripts/search.sh;
+   		 path = ./config/eww/scripts/search.sh;
     		 name = "eww_sh_search";
   		};
     };
@@ -63,7 +63,7 @@
 	executable = true;
 	target = ".config/eww/scripts/airplane_mode.sh";
   	source = builtins.path {
-   		 path = ./eww/scripts/airplane_mode.sh;
+   		 path = ./config/eww/scripts/airplane_mode.sh;
     		 name = "eww_sh_airplane";
   		};
     };
@@ -73,7 +73,7 @@
 	executable = true;
 	target = ".config/eww/scripts/screenshot.sh";
   	source = builtins.path {
-   		 path = ./eww/scripts/screenshot.sh;
+   		 path = ./config/eww/scripts/screenshot.sh;
     		 name = "eww_sh_screenshot";
   		};
      };

@@ -12,6 +12,7 @@
     ./dunst.nix
     ./wofi.nix
     ./vscode.nix
+    ./ironbar.nix
     #inputs.nixcord.homeModules.nixcord
   ];
 
