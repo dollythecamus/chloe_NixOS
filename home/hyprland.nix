@@ -64,17 +64,13 @@
 
 		#"col.active_border"   = "rgba(ffffffff)";
 		#"col.inactive_border" = "rgba(ffffff00)";
-		
-		col = {
-        	active_border = "rgba(ffffffff)";
-     	 	inactive_border = "rgba(ffffff00)";
-	    };
+
 	};
 
-	intermediate = {
-    	  # This prevents ghost borders in some edge cases
-    	  "no_focus_fallback" = true; 
-  	};
+	#intermediate = {
+		# This prevents ghost borders in some edge cases
+	#	"no_focus_fallback" = true; 
+	#};
 
 	bind = [
 

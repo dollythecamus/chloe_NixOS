@@ -3,6 +3,7 @@
 {
   imports = [
     ./hyprland.nix
+    ./niri.nix
     ./eww.nix
     ./fish.nix
     ./yazi.nix

@@ -1,8 +1,9 @@
 {config, pkgs, unstablePkgs, inputs, lib,...}:
 
 {
-
-  unsatblePkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+    "open-webui"
+  ];
 
   environment.sessionVariables = rec {
     OLLAMA_API_BASE=http://127.0.0.1:11434;
@@ -19,7 +20,8 @@
 
   services.open-webui = {
     enable = true;
-    package = unstablePkgs.open-webui;
+    package = pkgs.open-webui;
+    #package = unstablePkgs.open-webui;
     environment = 
     {
       OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
