@@ -48,6 +48,7 @@
 		specialArgs = { inherit inputs unstablePkgs; };
 
 		modules = [
+
 			./hosts/chloe-laptop/configuration.nix
 			./hardware/nvidia.nix
 
@@ -56,11 +57,10 @@
 				home-manager.backupFileExtension = "backup";
 				home-manager.useGlobalPkgs = true;
 				home-manager.useUserPackages = true;
-				#home-manager.users.chloe-inventor = ./home/space-home.nix;
+				home-manager.extraSpecialArgs = { inherit inputs; };
 				home-manager.users.chloe = ./home/space-chloe.nix;
 
-				home-manager.sharedModules = [ # what does this do? who knows ? :)
-				        #stylix.homeModules.stylix
+				home-manager.sharedModules = [
              			inputs.nixcord.homeModules.nixcord
            			];
 			}		
@@ -68,6 +68,7 @@
 			# style thing
 			./modules/desktop/space-home.nix
 			stylix.nixosModules.stylix
+			./modules/desktop/niri.nix
 
 			# services, programs and system packages
 			./modules/system-packages.nix
