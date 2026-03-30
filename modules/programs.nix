@@ -21,6 +21,7 @@
   };
 
   environment.systemPackages = [
+    pkgs.ffmpeg
     pkgs.winetricks
     pkgs.protonvpn-gui
 
@@ -31,6 +32,10 @@
     pkgs.gnome-keyring
     pkgs.seahorse
   ];
+
+  environment.sessionVariables = {
+    FFMPEG = "${pkgs.ffmpeg}";
+  };
 
   # overlay for blender to use GPU in rendering
   # without this, renders only on iGPU
