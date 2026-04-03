@@ -1,4 +1,5 @@
-position: top
+name: "minimal"
+position: left
 height: 24
 start:
 - type: workspaces
