@@ -24,9 +24,9 @@
 		};
 		n = {
 		body = ''
-    		kitty --directory (pwd) >/dev/null 2>&1 &
+    		kitty --directory (pwd) >/dev/null 2>&1 fish &
     		disown
-		end
+		
 			'';
 		};
 

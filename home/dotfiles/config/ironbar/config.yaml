@@ -1,29 +1,20 @@
-monitors:
-  default:
-    position: top
-    height: 38
-    margin:
-      top: 5
-      left: 10
-      right: 10
-    start:
-      - type: workspaces
-        all_outputs: false # Shows only workspaces on the current monitor
-        format: "{icon}"
-        format-icons:
-          focused: ""
-          active: ""
-          default: ""
-          empty: "◌"
-    center:
-      - type: focused
-        format: "{title}" # Shows the active Niri window title
-        truncate:
-          mode: end
-          length: 50
-    end:
-      - type: tray
-      - type: sys_info
-        format: " {cpu_percent}%   {memory_percent}%"
-      - type: clock
-        format: "%H:%M"
+position: top
+height: 24
+start:
+- type: workspaces
+center:
+- type: focused
+  icon_size: 16
+end:
+- type: battery
+  show_if: |
+    ls /sys/class/power_supply/ | grep --quiet '^BAT'
+- type: sys_info
+  format:
+  - '{cpu_percent}% '
+  - '{memory_percent}% '
+  interval:
+    cpu: 1
+- type: tray
+- type: clock
+
