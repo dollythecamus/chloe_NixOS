@@ -372,6 +372,9 @@ binds {
     Mod+E hotkey-overlay-title="Run an Application: Wofi" { spawn "wofi" "--show" "drun"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
+    // toggle ironbar visible
+    Mod+B {spawn-sh "ironbar bar toggle-visible default";}
+
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
     // For example, this is a standard bind to toggle the screen reader (orca).
