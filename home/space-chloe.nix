@@ -2,13 +2,13 @@
 
 {
   imports = [
-    ./hyprland.nix
+    #./hyprland.nix
     ./niri.nix
     ./eww.nix
     ./fish.nix
     ./yazi.nix
     ./neofetch.nix
-    ./wpaperd.nix
+    #./wpaperd.nix
     ./dunst.nix
     ./wofi.nix
     ./vscode.nix
@@ -23,12 +23,12 @@
 
     # honestly dunno why i have to enable each one individually since autoEnable is true but whatevs;
     targets = {
-    	hyprland.enable = true;
-	    fish.enable = true;
-	    kitty.enable = true;
-	    wofi.enable = true;
-    	waybar.enable = true;
-	    neovim.enable = true;
+      #hyprland.enable = true;
+      fish.enable = true;
+      kitty.enable = true;
+      wofi.enable = true;
+      waybar.enable = true;
+      neovim.enable = true;
       nixcord.enable = true;
       blender.enable = true;
       dunst.enable = true;
@@ -36,7 +36,7 @@
       firefox.enable = true;
       bat.enable = true;
       yazi.enable = true;
-      wpaperd.enable = true;
+      #wpaperd.enable = true;
       btop.enable = true;
     };
 
@@ -54,7 +54,7 @@
       emoji = config.stylix.fonts.monospace;
     };
 
-    # image = ./wallpaper/puffy-stars.jpg;
+    image = ./wallpaper/puffy-stars.jpg;
 
     polarity = "dark";
   };
@@ -83,10 +83,10 @@
     packages = with pkgs; [
          
       # # # rice # # # 
-	      terminaltexteffects # cool
+	terminaltexteffects # cool
         fish
         wofi
-	      nvtopPackages.nvidia
+	nvtopPackages.nvidia
         base16-schemes
 
         playerctl
@@ -103,8 +103,8 @@
         wl-clipboard
         adwaita-icon-theme
         font-awesome
-	      nautilus
-	      peaclock
+	nautilus
+	peaclock
 	
         uutils-coreutils # GNU coreutils
         fish # command line shell
@@ -140,7 +140,7 @@
       # Productivity
         obsidian
         librewolf
-	      libreoffice 
+	libreoffice 
       
       # Creation
         krita

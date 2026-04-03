@@ -2,7 +2,7 @@
 
 {
   
-  xdg.configFile."ironbar/config.yaml".source = ./config/ironbar/config.yaml; 
+  xdg.configFile."ironbar/config.yaml".source = ./dotfiles/config/ironbar/config.yaml; 
 
   home.packages = with pkgs; [
   	(pkgs.ironbar.overrideAttrs (oldAttrs: {

@@ -5,7 +5,6 @@
 	enable = true;
 	interactiveShellInit = ''
 	zoxide init fish | source
-	neofetch
 	'';
 
 	functions = {
@@ -22,6 +21,13 @@
 			end
 			rm -f -- "$tmp"
 			''; 
+		};
+		n = {
+		body = ''
+    		kitty --directory (pwd) >/dev/null 2>&1 &
+    		disown
+		end
+			'';
 		};
 
 		matrix = {

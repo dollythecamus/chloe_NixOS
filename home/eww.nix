@@ -11,7 +11,7 @@
 
   # yay !
   xdg.configFile."eww" = {
-    source = ./config/eww;
+    source = ./dotfiles/config/eww;
     recursive = true;
   };
 

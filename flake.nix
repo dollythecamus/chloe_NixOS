@@ -77,7 +77,6 @@
 			./modules/syncthing.nix
 			./modules/llms.nix
 
-			./modules/users/chloe-inventor.nix
 			./modules/users/chloe.nix
 		];
 	};};
