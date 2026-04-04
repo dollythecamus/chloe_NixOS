@@ -108,6 +108,8 @@ input {
     position x=1280 y=0
 }
 
+
+
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
 // https://niri-wm.github.io/niri/Configuration:-Layout
@@ -322,6 +324,28 @@ window-rule {
     // You can get away with just app-id="wezterm" if you want.
     match app-id=r#"^org\.wezfurlong\.wezterm$"#
     default-column-width {}
+}
+
+// borderless forever
+window-rule {
+    match app-id=".*"
+    
+    // Sets the corner radius. Use 0 for perfectly sharp, square edges
+    geometry-corner-radius 0
+    
+    // Ensures the application content is clipped to the window geometry
+    clip-to-geometry true
+}
+
+// by gemini, supposed to adjust the height of popup windows
+window-rule {
+    // This rule sets the initial height for windows on open.
+    // Setting it globally (match-all) is often the simplest fix in Niri.
+    match app-id=".*"
+    
+    // Limits the height to 60% of the monitor height.
+    // Floating windows will respect this and appear centered by default.
+    default-window-height { proportion 0.6; }
 }
 
 // Open the Firefox picture-in-picture player as floating by default.
