@@ -2,9 +2,24 @@
 
 {
   services.openssh.enable = true;
-  age.secrets.secret1.file = ./secrets/secret1.age;
-
   environment.systemPackages = [
     inputs.agenix.packages."${system}".default
   ];
+
+  age.secrets.secret1.file = ./secrets/secret1.age;
+
+  age.secrets.openclaw_gateway_token = {
+    file = ./secrets/openclaw/gateway_token.age;
+    owner = "chloe";  # Your username
+    group = "users";
+    mode = "0400";
+  };
+  
+  age.secrets.discord_bot_token = {
+    file = ./secrets/openclaw/discord_token.age;
+    owner = "chloe";
+    group = "users";
+    mode = "0400";
+  };
+  
 }

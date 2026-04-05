@@ -8,10 +8,8 @@
     config = {
       gateway = {
         mode = "local";
-        # Gateway auth token - use environment variable at runtime
-        # Set OPENCLAW_GATEWAY_TOKEN environment variable on your system
         auth = {
-          token = builtins.getEnv "OPENCLAW_GATEWAY_TOKEN";
+          token = builtins.readFile config.age.secrets.openclaw_gateway_token.path;
         };
         # WebSocket port (default: 18789)
         # If you need remote access, change mode to "remote" and adjust port
@@ -50,7 +48,6 @@
   };
 
   # Set environment variable for gateway token
-  # IMPORTANT: Change this to a real token or use agenix for secrets management
   /*
   environment.sessionVariables = {
     OPENCLAW_GATEWAY_TOKEN = "your-secure-gateway-token-here";
