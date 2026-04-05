@@ -12,6 +12,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixcord = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:FlameFlag/nixcord";
@@ -42,10 +47,12 @@
   {
     nixosConfigurations = {
       chloe-laptop = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs system; };
         modules = [
 
           ./host_chloe-laptop.nix
+          inputs.agenix.nixosModules.default
+    
 	  #stylix.nixosModules.stylix
 	
 	  home-manager.nixosModules.home-manager {
@@ -66,11 +73,12 @@
 	# this openclaw thing is. so scary.
 
       chloe-openclaw = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs pkgs-unstable; };
+        specialArgs = { inherit inputs system pkgs-unstable; };
 	modules = [
 
 	  ./host_chloe-laptop.nix
 	  ./modules/llms.nix
+    inputs.agenix.nixosModules.default
 
 	  # stylix.nixosModules.stylix
 
