@@ -16,6 +16,8 @@
     #inputs.nixcord.homeModules.nixcord
   ];
 
+  #stylix.fonts.monospace = { package = pkgs.nerdfonts; name = "JetBrainsMono Nerd Font"; };
+
   stylix = {
 
     enable = true;
@@ -40,12 +42,12 @@
       btop.enable = true;
     };
 
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
+    # base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
 
     cursor = {
       package = pkgs.simp1e-cursors;
       name = "Simp1e-Nord-Dark";
-      size = 15;
+      size = 14;
     };
 
     fonts = {

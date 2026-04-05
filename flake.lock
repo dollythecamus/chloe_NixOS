@@ -214,7 +214,7 @@
     "home-manager_2": {
       "inputs": {
         "nixpkgs": [
-          "nix-clawdbot",
+          "nix-openclaw",
           "nixpkgs"
         ]
       },
@@ -232,7 +232,7 @@
         "type": "github"
       }
     },
-    "nix-clawdbot": {
+    "nix-openclaw": {
       "inputs": {
         "flake-utils": "flake-utils",
         "home-manager": "home-manager_2",
@@ -244,14 +244,14 @@
       "locked": {
         "lastModified": 1775328099,
         "narHash": "sha256-Cibc8aRJrWGuLrkDdcTGpx73gT93Fe8vfs35M1y2HH4=",
-        "owner": "clawdbot",
-        "repo": "nix-clawdbot",
+        "owner": "openclaw",
+        "repo": "nix-openclaw",
         "rev": "0f4d0666f1490cbe1ba76062275eb22d2f89cc44",
         "type": "github"
       },
       "original": {
-        "owner": "clawdbot",
-        "repo": "nix-clawdbot",
+        "owner": "openclaw",
+        "repo": "nix-openclaw",
         "type": "github"
       }
     },
@@ -403,7 +403,7 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
-        "nix-clawdbot": "nix-clawdbot",
+        "nix-openclaw": "nix-openclaw",
         "nixcord": "nixcord",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable",

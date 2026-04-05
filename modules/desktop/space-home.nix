@@ -1,6 +1,9 @@
 {config, pkgs, inputs, ...}:
 
 {
+  
+  /*
+	# removed from nixos modules, to use only on home-manager modules :p
   stylix = {
     enable = true;
 
@@ -11,6 +14,7 @@
     };
 
   };
+  */
   
   # does it conflict with the ly dm? idunno
   # what i know is that many programs won't work reliably without gnome as DE

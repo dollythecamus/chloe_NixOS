@@ -4,13 +4,13 @@
 
   users.users.chloe= {
       isNormalUser = true;
-      description = "Dr. Chloe Inventor";
+      description = "chloeee";
       extraGroups = [ "docker" "networkmanager" "wheel" "dialout" "bluetooth" "input"];
 
 	# need some unstable package? do it here!
 	packages = with unstablePkgs; [
-		godot
-		btop
+	  godot
+	  btop
 	];
   };
 }

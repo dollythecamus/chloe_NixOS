@@ -22,8 +22,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-clawdbot = {
-      url = "github:clawdbot/nix-clawdbot";
+    nix-openclaw = {
+      url = "github:openclaw/nix-openclaw";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
@@ -44,7 +44,7 @@
         modules = [
 
           ./host_chloe-laptop.nix
-	  stylix.nixosModules.stylix
+	  #stylix.nixosModules.stylix
 	
 	  home-manager.nixosModules.home-manager {
 	    home-manager.backupFileExtension = "backup";
@@ -54,6 +54,7 @@
 	    home-manager.users.chloe = ./home/space-chloe.nix;
 	    home-manager.sharedModules = [
 	      inputs.nixcord.homeModules.nixcord
+	      inputs.stylix.homeModules.stylix
 	      ];
 	    }
 	  ];
@@ -65,9 +66,11 @@
       chloe-openclaw = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs unstablePkgs; };
 	modules = [
+
 	  ./host_chloe-laptop.nix
+
 	  ./modules/llms.nix
-	  stylix.nixosModules.stylix
+	  #stylix.nixosModules.stylix
 
 	  home-manager.nixosModules.home-manager {
 	    home-manager.backupFileExtension = "backup";
@@ -77,8 +80,9 @@
 	    home-manager.users.chloe = ./home/space-chloe.nix;
 	    home-manager.sharedModules = [
 	      inputs.nixcord.homeModules.nixcord
-	      inputs.nix-clawdbot.homeManagerModules.clawdbot
-	      ./modules/clawdbot.nix
+	      inputs.stylix.homeModules.stylix
+	      inputs.nix-openclaw.homeManagerModules.openclaw
+	      ./modules/openclaw.nix
 	      ];
 	    }
 

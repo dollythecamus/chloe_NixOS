@@ -1,7 +1,7 @@
 {config, pkgs, inputs, ...}:
 
 {
-  programs.clawdbot = {
+  programs.openclaw = {
   
   # documents = ~/openclaw/documents;
   
