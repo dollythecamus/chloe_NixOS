@@ -78,6 +78,7 @@
 
 	  ./host_chloe-laptop.nix
 	  ./modules/llms.nix
+    ./modules/openclaw_gateway.nix
     inputs.agenix.nixosModules.default
 
 	  # stylix.nixosModules.stylix

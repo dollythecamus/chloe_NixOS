@@ -8,11 +8,7 @@
     config = {
       gateway = {
         mode = "local";
-        auth = {
-          token = builtins.readFile config.age.secrets.openclaw_gateway_token.path;
-        };
-        # WebSocket port (default: 18789)
-        # If you need remote access, change mode to "remote" and adjust port
+        auth.token = builtins.readFile config.age.secrets.openclaw_gateway_token.path;
         port = 18789;
       };
 
