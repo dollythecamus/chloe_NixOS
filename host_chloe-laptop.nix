@@ -6,8 +6,22 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
+    ./host_chloe-laptop_hardware.nix
+
+    ./hardware/nvidia.nix
+
+    ./modules/desktop/space-home.nix
+    ./modules/desktop/niri.nix
     
+    ./modules/system-packages.nix
+    ./modules/services.nix 
+    ./modules/programs.nix
+    ./modules/syncthing.nix
+
+    # nope! 
+    # ./modules/llms.nix
+    
+    ./modules/users/chloe.nix
   ];
 
   # Enable NTFS to use files in external hard drive

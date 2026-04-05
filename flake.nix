@@ -7,14 +7,14 @@
     
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
+    home-manager = {
+    	url = "github:nix-community/home-manager/release-26.11";
+    	inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixcord = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:FlameFlag/nixcord";
-    };
-
-    home-manager = {
-    	url = "github:nix-community/home-manager/release-25.11";
-    	inputs.nixpkgs.follows = "nixpkgs";
     };
 
     stylix = {
@@ -22,9 +22,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-clawdbot = {
+      url = "github:clawdbot/nix-clawdbot";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
   };
 
-  outputs = {self, nixpkgs, nixpkgs-unstable, home-manager, stylix, ...} @ inputs: 
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, stylix, ...} @ inputs: 
   let
       system = "x86_64-linux";
       unstablePkgs = import nixpkgs-unstable {
@@ -33,52 +38,54 @@
   in
 
   {
-  	# no idea if this works actually
-	homeConfigurations.chloe-inventor = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          modules = [
-            stylix.homeModules.stylix
-            ./home/space-chloe.nix
-          ];
+    nixosConfigurations = {
+      chloe-laptop = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs unstablePkgs; };
+        modules = [
+
+          ./host_chloe-laptop.nix
+	  stylix.nixosModules.stylix
+	
+	  home-manager.nixosModules.home-manager.home-manager {
+	    backupFileExtension = "backup";
+	    useGlobalPkgs = true;
+	    useUserPackages = true;
+	    extraSpecialArgs = { inherit inputs; };
+	    users.chloe = ./home/space-chloe.nix;
+	    sharedModules = [
+	      inputs.nixcord.homeModules.nixcord
+	      ];
+	    }
+	  ];
         };
 
-	nixosConfigurations = {
-	  chloe-laptop = nixpkgs.lib.nixosSystem {
+	# chloe's configuration that adds the openclaw module
+	# this openclaw thing is. so scary.
 
-		specialArgs = { inherit inputs unstablePkgs; };
+      chloe-openclaw = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs unstablePkgs; };
+	modules = [
+	  ./host_chloe-laptop.nix
+	  
+	  ./modules/llms.nix
+	  stylix.nixosModules.stylix
 
-		modules = [
+	  home-manager.nixosModules.home-manager.home-manager {
+	    backupFileExtension = "backup";
+	    useGlobalPkgs = true;
+	    useUserPackages = true;
+	    extraSpecialArgs = { inherit inputs; };
+	    users.chloe = ./home/space-chloe.nix;
+	    sharedModules = [
+	      inputs.nixcord.homeModules.nixcord
+	      nix-clawdbot.homeManagermodules.clawdbot
+	      ./modules/clawdbot.nix
+	      ];
+	    }
 
-			./hosts/chloe-laptop/configuration.nix
-			./hardware/nvidia.nix
-
-			home-manager.nixosModules.home-manager {
-
-				home-manager.backupFileExtension = "backup";
-				home-manager.useGlobalPkgs = true;
-				home-manager.useUserPackages = true;
-				home-manager.extraSpecialArgs = { inherit inputs; };
-				home-manager.users.chloe = ./home/space-chloe.nix;
-
-				home-manager.sharedModules = [
-             			inputs.nixcord.homeModules.nixcord
-           			];
-			}		
-			
-			# style thing
-			./modules/desktop/space-home.nix
-			stylix.nixosModules.stylix
-			./modules/desktop/niri.nix
-
-			# services, programs and system packages
-			./modules/system-packages.nix
-			./modules/services.nix 
-			./modules/programs.nix
-			./modules/syncthing.nix
-			./modules/llms.nix
-
-			./modules/users/chloe.nix
-		];
-	};};
+	  ];
 	};
+    };
+  
+  };
 }
