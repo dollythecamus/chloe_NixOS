@@ -1,4 +1,4 @@
-{config, pkgs, unstablePkgs, inputs, lib,...}:
+{config, pkgs, inputs, lib,...}:
 
 {
   environment.sessionVariables = rec {
@@ -11,7 +11,7 @@
 
   services.ollama = {
     enable = true;
-    package = unstablePkgs.ollama-vulkan;
+    package = inputs.nixpkgs-unstable.legacyPackages.x86_64-linux.ollama-vulkan;
   };
 
   services.open-webui = {

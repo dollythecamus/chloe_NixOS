@@ -1,4 +1,4 @@
-{ config, pkgs, unstablePkgs, inputs, ...}:
+{ config, pkgs, inputs, ...}:
 
 {
 
@@ -8,7 +8,7 @@
       extraGroups = [ "docker" "networkmanager" "wheel" "dialout" "bluetooth" "input"];
 
 	# need some unstable package? do it here!
-	packages = with unstablePkgs; [
+	packages = with inputs.nixpkgs-unstable.legacyPackages.x86_64-linux; [
 	  godot
 	  btop
 	];

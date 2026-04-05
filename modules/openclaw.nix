@@ -1,37 +1,30 @@
-{config, pkgs, inputs, ...}:
+{config, pkgs, pkgs-unstable, inputs, ...}:
 
 {
   programs.openclaw = {
-  
-  # documents = ~/openclaw/documents;
-  
-  instances.default = {
-    enable = true;
-    providers.telegram = {
-        enable = false;
-          # nope!
-	  /*
-	  botTokenFile = "<tokenPath>";
-	  allowFrom = [ <allowFrom> ];
-	  groups = {
-	      "*" = { requireMention = true; };
-	    };
-	  */
+    package = pkgs-unstable.openclaw;
+    # documents = ~/openclaw/documents;
+    config = {
+        
+	gateway = {
+	  mode = "local";
+	  auth = {
+	    token = "GATEWAY_TOKEN :)";
 	  };
-	# nope!
-	/*
-	providers.anthropic = {
-	    apiKeyFile = "<anthropicKeyPath>";
+	};
+
+	channels = {
+	  discord = {
+	      
 	  };
-	*/
-	
-	providers.ollama = {  
-	  };
-	
-	plugins = [
-	    # { source = "github:acme/hello-world"; }
-	  ];
 	};
     };
-}
 
+    instances.default = {
+      enable = true;
+      plugins = [
+        # { source = "github:acme/hello-world"; }
+        ];
+      };
+    };
+}

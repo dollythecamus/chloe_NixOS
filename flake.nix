@@ -32,15 +32,17 @@
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, stylix, ...} @ inputs: 
   let
       system = "x86_64-linux";
-      unstablePkgs = import nixpkgs-unstable {
-        inherit system; 
+      pkgs-unstable = import nixpkgs-unstable {
+        inherit system;
+        config.permittedInsecurePackages = [
+          "openclaw-2026.3.12"
+        ];
       };
   in
-
   {
     nixosConfigurations = {
       chloe-laptop = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs unstablePkgs; };
+        specialArgs = { inherit inputs; };
         modules = [
 
           ./host_chloe-laptop.nix
@@ -64,25 +66,25 @@
 	# this openclaw thing is. so scary.
 
       chloe-openclaw = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs unstablePkgs; };
+        specialArgs = { inherit inputs pkgs-unstable; };
 	modules = [
 
 	  ./host_chloe-laptop.nix
-
 	  ./modules/llms.nix
-	  #stylix.nixosModules.stylix
+
+	  # stylix.nixosModules.stylix
 
 	  home-manager.nixosModules.home-manager {
 	    home-manager.backupFileExtension = "backup";
-	    home-manager.useGlobalPkgs = true;
+	    home-manager.useGlobalPkgs = false;
 	    home-manager.useUserPackages = true;
-	    home-manager.extraSpecialArgs = { inherit inputs; };
+	    home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
 	    home-manager.users.chloe = ./home/space-chloe.nix;
 	    home-manager.sharedModules = [
 	      inputs.nixcord.homeModules.nixcord
 	      inputs.stylix.homeModules.stylix
 	      inputs.nix-openclaw.homeManagerModules.openclaw
-	      ./modules/openclaw.nix
+        ./modules/openclaw.nix
 	      ];
 	    }
 
