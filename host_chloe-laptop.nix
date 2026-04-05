@@ -8,6 +8,7 @@
   imports = [
     ./host_chloe-laptop_hardware.nix
 
+    /*
     ./hardware/nvidia.nix
 
     ./modules/desktop/space-home.nix
@@ -22,6 +23,7 @@
     # ./modules/llms.nix
     
     ./modules/users/chloe.nix
+    */
   ];
 
   # Enable NTFS to use files in external hard drive

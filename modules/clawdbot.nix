@@ -1,10 +1,9 @@
 {config, pkgs, inputs, ...}:
 
 {
-
   programs.clawdbot = {
   
-  documents = ~/openclaw/documents;
+  # documents = ~/openclaw/documents;
   
   instances.default = {
     enable = true;

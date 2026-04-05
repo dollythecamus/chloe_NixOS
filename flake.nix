@@ -8,8 +8,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     home-manager = {
-    	url = "github:nix-community/home-manager/release-26.11";
-    	inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/home-manager/release-25.11";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixcord = {
@@ -46,13 +46,13 @@
           ./host_chloe-laptop.nix
 	  stylix.nixosModules.stylix
 	
-	  home-manager.nixosModules.home-manager.home-manager {
-	    backupFileExtension = "backup";
-	    useGlobalPkgs = true;
-	    useUserPackages = true;
-	    extraSpecialArgs = { inherit inputs; };
-	    users.chloe = ./home/space-chloe.nix;
-	    sharedModules = [
+	  home-manager.nixosModules.home-manager {
+	    home-manager.backupFileExtension = "backup";
+	    home-manager.useGlobalPkgs = true;
+	    home-manager.useUserPackages = true;
+	    home-manager.extraSpecialArgs = { inherit inputs; };
+	    home-manager.users.chloe = ./home/space-chloe.nix;
+	    home-manager.sharedModules = [
 	      inputs.nixcord.homeModules.nixcord
 	      ];
 	    }
@@ -66,19 +66,18 @@
         specialArgs = { inherit inputs unstablePkgs; };
 	modules = [
 	  ./host_chloe-laptop.nix
-	  
 	  ./modules/llms.nix
 	  stylix.nixosModules.stylix
 
-	  home-manager.nixosModules.home-manager.home-manager {
-	    backupFileExtension = "backup";
-	    useGlobalPkgs = true;
-	    useUserPackages = true;
-	    extraSpecialArgs = { inherit inputs; };
-	    users.chloe = ./home/space-chloe.nix;
-	    sharedModules = [
+	  home-manager.nixosModules.home-manager {
+	    home-manager.backupFileExtension = "backup";
+	    home-manager.useGlobalPkgs = true;
+	    home-manager.useUserPackages = true;
+	    home-manager.extraSpecialArgs = { inherit inputs; };
+	    home-manager.users.chloe = ./home/space-chloe.nix;
+	    home-manager.sharedModules = [
 	      inputs.nixcord.homeModules.nixcord
-	      nix-clawdbot.homeManagermodules.clawdbot
+	      inputs.nix-clawdbot.homeManagerModules.clawdbot
 	      ./modules/clawdbot.nix
 	      ];
 	    }
