@@ -34,7 +34,9 @@
   ];
 
   environment.sessionVariables = {
-    FFMPEG = "${pkgs.ffmpeg}";
+    FFMPEG_PATH = "${pkgs.ffmpeg}";
+    EDITOR = "nvim";
+    TERMINAL = "kitty";
   };
 
   # overlay for blender to use GPU in rendering
