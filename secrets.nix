@@ -21,5 +21,10 @@
     group = "users";
     mode = "0400";
   };
+
+  environment.sessionVariables = {
+    OPENCLAW_GATEWAY_TOKEN = builtins.readFile age.secrets.openclaw_gateway_token.path;
+    OPENCLAW_DISCORD_BOT_TOKEN = builtins.readFile age.secrets.discord_bot_token.path;
+  };
   
 }
