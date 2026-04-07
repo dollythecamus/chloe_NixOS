@@ -20,6 +20,8 @@
     ./modules/programs.nix
     ./modules/syncthing.nix
 
+    ./modules/godot.nix
+
     # nope! 
     # ./modules/llms.nix
     

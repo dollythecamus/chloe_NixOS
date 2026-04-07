@@ -12,10 +12,12 @@
     };
   };
 
+  /* # set in secrets.nix instead
   # Set environment variable for gateway token
-  home.sessionVariables = {
+  environment.sessionVariables = {
     OPENCLAW_GATEWAY_TOKEN = builtins.readFile age.secrets.openclaw_gateway_token.path;
     OPENCLAW_DISCORD_BOT_TOKEN = builtins.readFile age.secrets.discord_bot_token.path;
   };
+  */
   
 }

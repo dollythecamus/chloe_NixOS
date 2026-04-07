@@ -57,7 +57,7 @@
 	
 	  home-manager.nixosModules.home-manager {
 	    home-manager.backupFileExtension = "backup";
-	    home-manager.useGlobalPkgs = true;
+	    home-manager.useGlobalPkgs = false;
 	    home-manager.useUserPackages = true;
 	    home-manager.extraSpecialArgs = { inherit inputs; };
 	    home-manager.users.chloe = ./home/space-chloe.nix;
@@ -68,9 +68,6 @@
 	    }
 	  ];
         };
-
-	# chloe's configuration that adds the openclaw module
-	# this openclaw thing is. so scary.
 
       chloe-openclaw = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs system pkgs-unstable; };
@@ -83,7 +80,7 @@
 	  # stylix.nixosModules.stylix
 
 	  home-manager.nixosModules.home-manager {
-	    home-manager.backupFileExtension = "backup";
+	    home-manager.backupFileExtension = "__backup";
 	    home-manager.useGlobalPkgs = false;
 	    home-manager.useUserPackages = true;
 	    home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
