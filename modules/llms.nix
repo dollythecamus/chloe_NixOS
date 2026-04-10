@@ -1,4 +1,4 @@
-{config, pkgs, inputs, lib,...}:
+{config, pkgs, pkgs-unstable, inputs, lib,...}:
 
 {
   environment.sessionVariables = rec {
@@ -11,13 +11,12 @@
 
   services.ollama = {
     enable = true;
-    package = inputs.nixpkgs-unstable.legacyPackages.x86_64-linux.ollama-vulkan;
+    package = pkgs-unstable.ollama-vulkan;
   };
 
   services.open-webui = {
     enable = true;
-    package = pkgs.open-webui;
-    #package = unstablePkgs.open-webui;
+    package = pkgs-unstable.open-webui;
     environment = 
     {
       OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";

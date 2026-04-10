@@ -39,15 +39,16 @@
       system = "x86_64-linux";
       pkgs-unstable = import nixpkgs-unstable {
         inherit system;
+	config.allowUnfree = true;
         config.permittedInsecurePackages = [
-          "openclaw-2026.3.12"
+          "openclaw-2026.4.2"
         ];
       };
   in
   {
     nixosConfigurations = {
       chloe-laptop = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs system; };
+        specialArgs = { inherit inputs system pkgs-unstable; };
         modules = [
 
           ./host_chloe-laptop.nix
