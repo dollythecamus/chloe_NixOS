@@ -61,7 +61,7 @@
 	    home-manager.useGlobalPkgs = false;
 	    home-manager.useUserPackages = true;
 	    home-manager.extraSpecialArgs = { inherit inputs; };
-	    home-manager.users.chloe = ./home/space-chloe.nix;
+	    home-manager.users.chloe = ./home/chloe.nix;
 	    home-manager.sharedModules = [
 	      inputs.nixcord.homeModules.nixcord
 	      inputs.stylix.homeModules.stylix
@@ -70,12 +70,13 @@
 	  ];
         };
 
-      chloe-openclaw = nixpkgs.lib.nixosSystem {
+      # regular configuration, added LLMs modules and openclaw
+      chloe-llm = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs system pkgs-unstable; };
 	modules = [
 
 	  ./host_chloe-laptop.nix
-	  ./modules/llms.nix
+	  ./modules/llm.nix
     inputs.agenix.nixosModules.default
 
 	  # stylix.nixosModules.stylix
@@ -85,12 +86,12 @@
 	    home-manager.useGlobalPkgs = false;
 	    home-manager.useUserPackages = true;
 	    home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
-	    home-manager.users.chloe = ./home/space-chloe.nix;
+	    home-manager.users.chloe = ./home/chloe.nix;
 	    home-manager.sharedModules = [
 	      inputs.nixcord.homeModules.nixcord
 	      inputs.stylix.homeModules.stylix
 	      inputs.nix-openclaw.homeManagerModules.openclaw
-        ./modules/openclaw.nix
+              ./modules/openclaw.nix
 	      ];
 	    }
 

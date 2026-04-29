@@ -2,18 +2,20 @@
 
 {
   imports = [
-    #./hyprland.nix
+    
+    ./xdg.nix
+    ./stylix.nix
+
+    ### specific modules for some packages
     ./niri.nix
     ./eww.nix
     ./fish.nix
     ./yazi.nix
     ./neofetch.nix
-    #./wpaperd.nix
     ./dunst.nix
     ./wofi.nix
     ./vscode.nix
     ./ironbar.nix
-    #inputs.nixcord.homeModules.nixcord
   ];
 
   #stylix.fonts.monospace = { package = pkgs.nerdfonts; name = "JetBrainsMono Nerd Font"; };
@@ -64,7 +66,11 @@
   # rebuild is screaming at me to remove this
   # nixpkgs.config.allowUnfree = true;
 
-  
+ 
+  xdg.portal = {
+
+  };
+
   programs.nixcord = {
     enable = true;          # Enable Nixcord (It also installs Discord)
     vesktop.enable = true;  # Vesktop

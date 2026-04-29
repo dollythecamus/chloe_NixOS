@@ -39,6 +39,7 @@
       animation = "matrix";
     };
     # can configure more :3
+    # ly is pretty >~<
   };
 
   # Configure keymap in X11
@@ -46,5 +47,9 @@
     layout = "us,br";
     variant = "";
   };
+
+  environment.pathsToLink = [
+    "/share/xdg-desktop-portal" "/share/applications"
+  ];
 
 }
