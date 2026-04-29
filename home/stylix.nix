@@ -27,7 +27,7 @@
       serif     = config.stylix.fonts.monospace;
       sansSerif = config.stylix.fonts.monospace;
       #emoji     = config.stylix.fonts.monospace;
-      monospace = {package = pkgs.nerd-fonts.adwaita-mono;};
+      #monospace = {package = pkgs.nerd-fonts.adwaita-mono; name = "Adwaita Mono"};
     };
 
     image = ./wallpaper/puffy-stars.jpg;
@@ -37,7 +37,7 @@
 
   home.packages = with pkgs; [
     base16-schemes
-    nerd-fonts.adwaita-mono
+    #nerd-fonts.adwaita-mono
   ];
 }
 
