@@ -2,20 +2,6 @@
 
 {
   
-  /*
-	# removed from nixos modules, to use only on home-manager modules :p
-  stylix = {
-    enable = true;
-
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/solarized-dark.yaml";
-
-    targets = {
-    	grub.enable = false;
-    };
-
-  };
-  */
-  
   # does it conflict with the ly dm? idunno
   # what i know is that many programs won't work reliably without gnome as DE
   # and i want the reliability

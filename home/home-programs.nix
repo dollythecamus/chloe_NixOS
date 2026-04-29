@@ -2,7 +2,7 @@
 
 {
   programs.nixcord = {
-    enable = true;;
+    enable = true;
     vesktop.enable = true;
   };
 

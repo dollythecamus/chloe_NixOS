@@ -23,16 +23,16 @@
     base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
 
     cursor = {
-      package = pkgs.simple-cursors;
+      package = pkgs.simp1e-cursors;
       name = "Simple-Nord-Dark";
       size = 14;
     };
 
     fonts = {
-      serif     = config.stylix.fonts.monospace;
-      sansSerif = config.stylix.fonts.monospace;
-      emoji     = config.stylix.fonts.monospace;
-      monospace = {package = pkgs.nerdfonts; name = "JetBrainsMono Nerd Font";};
+      #serif     = config.stylix.fonts.monospace;
+      #sansSerif = config.stylix.fonts.monospace;
+      #emoji     = config.stylix.fonts.monospace;
+      monospace = {package = pkgs.nerd-fonts.adwaita-mono;};
     };
 
     image = ./wallpaper/puffy-stars.jpg;
@@ -42,6 +42,7 @@
 
   home.packages = with pkgs; [
     base16-schemes
+    nerd-fonts.adwaita-mono
   ];
 }
 

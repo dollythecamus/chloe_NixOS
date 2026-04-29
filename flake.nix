@@ -39,7 +39,7 @@
       system = "x86_64-linux";
       pkgs-unstable = import nixpkgs-unstable {
         inherit system;
-	config.allowUnfree = true;
+	      config.allowUnfree = true;
         config.permittedInsecurePackages = [
           "openclaw-2026.4.2"
         ];
