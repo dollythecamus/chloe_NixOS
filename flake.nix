@@ -92,6 +92,7 @@
 	      inputs.stylix.homeModules.stylix
 	      inputs.nix-openclaw.homeManagerModules.openclaw
               ./modules/openclaw.nix
+              ./home/aider.nix
 	      ];
 	    }
 
