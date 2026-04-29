@@ -20,17 +20,12 @@
       btop.enable = true;
     };
     
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
-
-    cursor = {
-      package = pkgs.simp1e-cursors;
-      name = "Simple-Nord-Dark";
-      size = 14;
-    };
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
 
     fonts = {
-      #serif     = config.stylix.fonts.monospace;
-      #sansSerif = config.stylix.fonts.monospace;
+      # all monospace
+      serif     = config.stylix.fonts.monospace;
+      sansSerif = config.stylix.fonts.monospace;
       #emoji     = config.stylix.fonts.monospace;
       monospace = {package = pkgs.nerd-fonts.adwaita-mono;};
     };
