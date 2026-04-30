@@ -18,16 +18,27 @@
       bat.enable = true;
       yazi.enable = true;
       btop.enable = true;
+
+      obsidian = {
+        enable = true;
+        vaultNames = ["Mind"];
+      };
     };
     
+    cursor = {
+      name = "DMZ-Black";
+      size = 24;
+      package = pkgs.vanilla-dmz;
+    };
+
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
 
     fonts = {
       # all monospace
-      serif     = config.stylix.fonts.monospace;
-      sansSerif = config.stylix.fonts.monospace;
-      #emoji     = config.stylix.fonts.monospace;
-      #monospace = {package = pkgs.nerd-fonts.adwaita-mono; name = "Adwaita Mono"};
+      serif     = {package = pkgs.nerd-fonts.adwaita-mono; name = "AdwaitaMono Nerd Font"; };
+      sansSerif = {package = pkgs.nerd-fonts.adwaita-mono; name = "AdwaitaMono Nerd Font"; };
+      # emoji     = config.stylix.fonts.monospace;
+      monospace = {package = pkgs.nerd-fonts.adwaita-mono; name = "AdwaitaMono Nerd Font"; };
     };
 
     image = ./wallpaper/puffy-stars.jpg;
@@ -37,7 +48,8 @@
 
   home.packages = with pkgs; [
     base16-schemes
-    #nerd-fonts.adwaita-mono
+    vanilla-dmz
+    nerd-fonts.adwaita-mono
   ];
 }
 
