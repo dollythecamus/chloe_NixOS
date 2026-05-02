@@ -41,7 +41,7 @@
         inherit system;
 	      config.allowUnfree = true;
         config.permittedInsecurePackages = [
-          "openclaw-2026.4.2"
+          "openclaw-2026.4.21"
         ];
       };
   in
@@ -91,7 +91,7 @@
 	      inputs.nixcord.homeModules.nixcord
 	      inputs.stylix.homeModules.stylix
 	      inputs.nix-openclaw.homeManagerModules.openclaw
-              # ./modules/openclaw.nix
+              ./modules/openclaw.nix
               ./home/aider.nix
 	      ];
 	    }

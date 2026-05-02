@@ -3,6 +3,7 @@
 {
   environment.sessionVariables = rec {
     OLLAMA_API_BASE_URL=http://127.0.0.1:11434;
+    OLLAMA_API_KEY = "ollama-local";
   };
 
   services.ollama = {
@@ -18,7 +19,7 @@
     package = pkgs-unstable.open-webui;
     environment = 
     {
-      OLLAMA_API_KEY = "";
+      OLLAMA_API_KEY = "ollama-local";
       OLLAMA_API_BASE_URL = "http://127.0.0.1:11434";
     };
   };
