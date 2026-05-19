@@ -20,6 +20,14 @@
       };
   };
 
+  programs.obs-studio = {
+    enable = true;
+    enableVirtualCamera = true;
+    plugins = [
+      # pkgs.obs-studio-plugins._pluginnamehere
+    ];
+  };
+
   environment.systemPackages = [
     pkgs.ffmpeg
     pkgs.winetricks

@@ -60,7 +60,7 @@
 	    home-manager.backupFileExtension = "backup";
 	    home-manager.useGlobalPkgs = false;
 	    home-manager.useUserPackages = true;
-	    home-manager.extraSpecialArgs = { inherit inputs; };
+	    home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
 	    home-manager.users.chloe = ./home/chloe.nix;
 	    home-manager.sharedModules = [
 	      inputs.nixcord.homeModules.nixcord
