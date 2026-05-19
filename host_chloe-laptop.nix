@@ -8,6 +8,7 @@
   imports = [
     ./host_chloe-laptop_hardware.nix
     ./secrets.nix
+    ./xdg.nix
 
     ./hardware/nvidia.nix
     ./modules/users/chloe.nix

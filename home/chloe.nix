@@ -3,7 +3,8 @@
 {
   imports = [
     
-    ./xdg.nix
+    # in nixos module, not home
+    # ./xdg.nix
     ./stylix.nix
     ./home-programs.nix
 

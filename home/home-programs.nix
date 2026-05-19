@@ -77,7 +77,7 @@
       
         krita
         godot # 4.5
-	pkgs-unstable.godot # latest 4.6.2
+	#pkgs-unstable.godot # latest 4.6.2
 
         libresprite
         blender
