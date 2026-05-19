@@ -28,7 +28,7 @@
         slurp
         glow
 
-	pkgs-unstable.btop # unstable is better
+	pkgs-unstable.btop-cuda
 	nvtopPackages.nvidia
 
         neofetch
@@ -77,6 +77,7 @@
       
         krita
         godot # 4.5
+	pkgs-unstable.godot # latest 4.6.2
 
         libresprite
         blender
