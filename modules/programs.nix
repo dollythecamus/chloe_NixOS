@@ -11,6 +11,9 @@
     dedicatedServer.openFirewall = true;
   };
   
+  programs.adb = {
+    enable = true;
+  };
 
   # Git
   programs.git = {

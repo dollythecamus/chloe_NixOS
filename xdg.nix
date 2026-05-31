@@ -11,7 +11,7 @@
     ]; 
   };
 
-  home.sessionVariables = {
+  environment.sessionVariables = {
     TERMINAL = "kitty";
     XDG_CURRENT_DESKTOP = "niri";
     WAYLAND_DISPLAY = "wayland-0";
