@@ -36,7 +36,8 @@
 	pkgs-unstable.btop-cuda
 	nvtopPackages.nvidia
 
-        neofetch
+	fastfetch
+        #neofetch
         neocities
         vlc
         wl-clipboard

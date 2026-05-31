@@ -69,7 +69,9 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  
+
+  # big downloads
+  nix.settings.download-buffer-size = 524288000;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # This value determines the NixOS release from which the default
