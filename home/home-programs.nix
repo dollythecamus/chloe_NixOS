@@ -11,6 +11,11 @@
     defaultEditor = true;
   };
 
+  programs.obsidian = {
+    enable = true;
+    cli.enable = true;
+  };
+
   programs.kitty.enable = true;
   
   home.packages = with pkgs; [
@@ -71,7 +76,6 @@
         qbittorrent
         drawpile 
 
-        obsidian
         librewolf
 	libreoffice 
       
