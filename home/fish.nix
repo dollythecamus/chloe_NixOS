@@ -6,7 +6,7 @@
 	interactiveShellInit = ''
 	zoxide init fish | source
 	'';
-
+/*
 	functions = {
 		fish_greeting = {
 		body = ''echo "haiiiiiii :3 *paws u*"'';
@@ -35,6 +35,7 @@
 	        };
 	};
 	
+  */
   };
 }
 
