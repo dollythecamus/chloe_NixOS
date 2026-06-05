@@ -11,10 +11,6 @@
     dedicatedServer.openFirewall = true;
   };
   
-  #programs.adb = {
-  #  enable = true;
-  #};
-
   # Git
   programs.git = {
     enable = true;
@@ -31,19 +27,17 @@
     ];
   };
 
-  environment.systemPackages = [
-    pkgs.ffmpeg
-    pkgs.winetricks
-    pkgs.protonvpn-gui
-    pkgs.pipewire
-    pkgs.android-tools
-
-	# that's not how u install it
-    # pkgs.dotnetCorePackages.runtime_9_0-bin # needs for KSA uwu
+  environment.systemPackages = with pkgs; [
+    ffmpeg
+    winetricks
+    protonvpn
+    pipewire
+    
+    android-tools
 
     # auth
-    pkgs.gnome-keyring
-    pkgs.seahorse
+    gnome-keyring
+    seahorse
   ];
 
   environment.sessionVariables = {
