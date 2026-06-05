@@ -41,7 +41,7 @@
         inherit system;
 	      config.allowUnfree = true;
         config.permittedInsecurePackages = [
-          "openclaw-2026.5.7"
+          "openclaw-2026.5.12"
         ];
       };
   in
