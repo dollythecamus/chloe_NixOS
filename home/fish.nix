@@ -6,10 +6,13 @@
 	interactiveShellInit = ''
 	zoxide init fish | source
 	'';
-/*
+
 	functions = {
+
 		fish_greeting = {
-		body = ''echo "haiiiiiii :3 *paws u*"'';
+		body = ''
+		  echo "haiiiiiii :3 *paws u*"
+		  '';
 		};
 
 		y = {
@@ -22,20 +25,20 @@
 			rm -f -- "$tmp"
 			''; 
 		};
+
 		n = {
 		body = ''
     		kitty --directory (pwd) >/dev/null 2>&1 fish &
     		disown
-		
 			'';
 		};
 
 		matrix = {
-		  body = ''echo "i'll show you how deep the rabbit hole goes" | tte matrix'';
-	        };
+		  body = ''
+		    echo "i'll show you how deep the rabbit hole goes" | tte matrix
+			'';
+	    };
 	};
-	
-  */
   };
 }
 
