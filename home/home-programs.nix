@@ -93,7 +93,7 @@
         gimp 
         gmic-qt
         gmic
-        pureref
+        # pureref # doesn't build for some reason also don't use it
 
         github-desktop # could install via flatpak to solve some issues, let's see
   
