@@ -30,7 +30,7 @@
   environment.systemPackages = with pkgs; [
     ffmpeg
     winetricks
-    protonvpn
+    proton-vpn
     pipewire
     
     android-tools
