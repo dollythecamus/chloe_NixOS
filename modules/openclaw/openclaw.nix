@@ -4,7 +4,8 @@
   # annoying to configure it with the home-manager options
   programs.openclaw = {
     enable = true;
-    package = pkgs-unstable.openclaw;
+    # from the nix-openclaw flake
+    package = inputs.nix-openclaw.packages.${config.system}.openclaw;
   };
 
   # configure openclaw.json with the configured file
