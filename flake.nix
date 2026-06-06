@@ -91,7 +91,7 @@
 	      inputs.nixcord.homeModules.nixcord
 	      inputs.stylix.homeModules.stylix
 	      inputs.nix-openclaw.homeManagerModules.openclaw
-              ./modules/openclaw.nix
+              ./modules/openclaw/openclaw.nix
               ./home/aider.nix
 	      ];
 	    }
