@@ -33,8 +33,6 @@
     proton-vpn
     pipewire
     
-    android-tools
-
     # auth
     gnome-keyring
     seahorse
@@ -45,18 +43,5 @@
     EDITOR = "nvim";
     TERMINAL = "kitty";
   };
-
-  # overlay for blender to use GPU in rendering
-  # without this, renders only on iGPU
-  /*
-  	# i wish there were a way to use vulkan for gpu instead, the way it is now, i have to compile the whole cuda support for it and sometimes it fails a idk why
-  nixpkgs.overlays = [
-    (final : prev: {
-      blender = prev.blender.override {
-	cudaSupport = true;
-      };
-     }
-  )];
-  */
 
 }

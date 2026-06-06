@@ -1,11 +1,14 @@
 {config, pkgs, pkgs-unstable, inputs, ...}:
 
 {
-  environment.systemPackages = [
-    pkgs.godot # 4.5 
-    pkgs-unstable.godot # 4.6.1
+  # install godot
+  environment.systemPackages = with pkgs; [
+    godot # 4.5 
+    pkgs-unstable.godot # 4.6.3 most recent
     
-    pkgs.scrcpy
+    # for android work
+    scrcpy
+    android-tools
   ];
 
   # programs.adb.enable = true;
