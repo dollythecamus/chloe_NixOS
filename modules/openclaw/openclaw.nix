@@ -1,4 +1,4 @@
-{config, pkgs, pkgs-unstable, inputs, ...}:
+{config, lib, pkgs-unstable, inputs, ...}:
 
 {
   # annoying to configure it with the home-manager options
@@ -7,9 +7,10 @@
     package = pkgs-unstable.openclaw;
   };
 
-  # configure with openclaw.json
+  # configure openclaw.json with the configured file
   # hope it works
-  home.file.".openclaw/openclaw.json" = {
+  home.file.".openclaw/openclaw.json" = lib.mkForce {
     source = ./openclaw.json;
+    force = true;
   };
 }
