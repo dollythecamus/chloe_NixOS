@@ -27,8 +27,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # specific commit from a few days ago because the most recent commits are broken 
     nix-openclaw = {
-      url = "github:openclaw/nix-openclaw";
+      url = "github:openclaw/nix-openclaw/561aa2809a9cbfc9ba7b86c02b5796cd71937ecc";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
