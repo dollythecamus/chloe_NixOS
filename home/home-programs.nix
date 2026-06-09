@@ -37,7 +37,6 @@
 	nvtopPackages.nvidia
 
 	fastfetch
-        #neofetch
         neocities
         vlc
         wl-clipboard
@@ -62,20 +61,16 @@
         rusty-man # rust docs in cli
 
         # it seemed that stable was bad for wiki-tui idk why
-	pkgs-unstable.wiki-tui # wikipedia in cli! how queer!
         
 	mask # command runner in a markdown file, woa
         presenterm # terminal slides presentation tool
-        #ncspot # spotify but good
         kew # music player
 
         prismlauncher
         ckan
         lutris
-        wine
 
         qbittorrent
-        drawpile 
 
         librewolf
 	libreoffice 
@@ -84,16 +79,9 @@
         godot # 4.5
 	#pkgs-unstable.godot # latest 4.6.2
 
-        libresprite
         blender
-        audacity
         lmms
-        freecad
-        inkscape 
         gimp 
-        gmic-qt
-        gmic
-        # pureref # doesn't build for some reason also don't use it
 
         github-desktop # could install via flatpak to solve some issues, let's see
   
