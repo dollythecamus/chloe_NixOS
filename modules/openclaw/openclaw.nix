@@ -1,11 +1,12 @@
-{config, lib, pkgs-unstable, inputs, ...}:
+{config, lib, pkgs, pkgs-unstable, inputs, ...}:
 
 {
   # annoying to configure it with the home-manager options
   programs.openclaw = {
     enable = true;
-    # from the nix-openclaw flake
-    package = inputs.nix-openclaw.packages.${config.system}.openclaw;
+    # from unstable channel, more recent than nixpkgs stable
+    # but actually works, unlike from the nix-openclaw module 
+    package = pkgs-unstable.openclaw;
   };
 
   # configure openclaw.json with the configured file
