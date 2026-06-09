@@ -2,7 +2,7 @@
 
 {
     # install blender
-    environment.systemPackages = with pkgs; [
+    hoome.packages = with pkgs; [
       blender
     ];
     

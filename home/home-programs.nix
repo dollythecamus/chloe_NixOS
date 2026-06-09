@@ -1,6 +1,12 @@
 {config, pkgs, pkgs-unstable, inputs, ...}:
 
 {
+  imports = [
+        # ./programs/unity.nix
+        ./programs/godot.nix
+        ./programs/blender.nix
+  ];
+
   programs.nixcord = {
     enable = true;
     vesktop.enable = true;
@@ -19,6 +25,7 @@
   programs.kitty.enable = true;
   
   home.packages = with pkgs; [
+    home-manager # make home-manager available for use in the terminal
     
     # rice
 	terminaltexteffects # cool
@@ -66,25 +73,27 @@
         presenterm # terminal slides presentation tool
         kew # music player
 
+        # gaming
         prismlauncher
         ckan
         lutris
 
+        # torrent
         qbittorrent
 
+        # browser, office
         librewolf
 	libreoffice 
       
+        # art
         krita
-        godot # 4.5
-	#pkgs-unstable.godot # latest 4.6.2
-
-        blender
-        lmms
         gimp 
 
-        github-desktop # could install via flatpak to solve some issues, let's see
-  
+        # music
+        lmms
+
+        # dev
+        github-desktop
   ];
 
 }
