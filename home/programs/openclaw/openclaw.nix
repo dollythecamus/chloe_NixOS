@@ -1,5 +1,7 @@
 {config, lib, pkgs, pkgs-unstable, inputs, ...}:
 
+# not used anymore
+# switching to hermes
 {
   # annoying to configure it with the home-manager options
   programs.openclaw = {

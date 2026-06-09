@@ -27,8 +27,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    /*
     nix-openclaw = {
       url = "github:openclaw/nix-openclaw";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    */
+
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
@@ -86,8 +93,8 @@
       home-manager.sharedModules = [
         inputs.nixcord.homeModules.nixcord
         inputs.stylix.homeModules.stylix
-        inputs.nix-openclaw.homeManagerModules.openclaw
-              ./modules/openclaw/openclaw.nix
+        # inputs.nix-openclaw.homeManagerModules.openclaw
+              # ./modules/openclaw/openclaw.nix
               ./home/aider.nix
         ];
       }
