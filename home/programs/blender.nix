@@ -2,7 +2,7 @@
 
 {
     # install blender
-    hoome.packages = with pkgs; [
+    home.packages = with pkgs; [
       blender
     ];
     
