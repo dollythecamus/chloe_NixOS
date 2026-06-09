@@ -54,18 +54,18 @@
           ./host_chloe-laptop.nix
           inputs.agenix.nixosModules.default
     
-	  home-manager.nixosModules.home-manager {
-	    home-manager.backupFileExtension = "backup";
-	    home-manager.useGlobalPkgs = false;
-	    home-manager.useUserPackages = true;
-	    home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
-	    home-manager.users.chloe = ./home/chloe.nix;
-	    home-manager.sharedModules = [
-	      inputs.nixcord.homeModules.nixcord
-	      inputs.stylix.homeModules.stylix
-	      ];
-	    }
-	  ];
+          home-manager.nixosModules.home-manager {
+            home-manager.backupFileExtension = "backup";
+            home-manager.useGlobalPkgs = false;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
+            home-manager.users.chloe = ./home/chloe.nix;
+            home-manager.sharedModules = [
+              inputs.nixcord.homeModules.nixcord
+              inputs.stylix.homeModules.stylix
+              ];
+            }
+          ];
         };
 
       # regular configuration, added LLMs modules and openclaw
@@ -77,24 +77,22 @@
 	  ./modules/llm.nix
     inputs.agenix.nixosModules.default
 
-	  home-manager.nixosModules.home-manager {
-	    home-manager.backupFileExtension = "__backup";
-	    home-manager.useGlobalPkgs = false;
-	    home-manager.useUserPackages = true;
-	    home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
-	    home-manager.users.chloe = ./home/chloe.nix;
-	    home-manager.sharedModules = [
-	      inputs.nixcord.homeModules.nixcord
-	      inputs.stylix.homeModules.stylix
-	      inputs.nix-openclaw.homeManagerModules.openclaw
+    home-manager.nixosModules.home-manager {
+      home-manager.backupFileExtension = "__backup";
+      home-manager.useGlobalPkgs = false;
+      home-manager.useUserPackages = true;
+      home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
+      home-manager.users.chloe = ./home/chloe.nix;
+      home-manager.sharedModules = [
+        inputs.nixcord.homeModules.nixcord
+        inputs.stylix.homeModules.stylix
+        inputs.nix-openclaw.homeManagerModules.openclaw
               ./modules/openclaw/openclaw.nix
               ./home/aider.nix
-	      ];
-	    }
-
-	  ];
-	};
+        ];
+      }
+    ];
     };
-  
   };
+};
 }
