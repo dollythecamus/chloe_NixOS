@@ -82,6 +82,7 @@
 
 	  ./host_chloe-laptop.nix
 	  ./modules/llm.nix
+    inputs.hermes-agent.nixosModules.default
     inputs.agenix.nixosModules.default
 
     home-manager.nixosModules.home-manager {
