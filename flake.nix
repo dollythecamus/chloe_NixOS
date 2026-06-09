@@ -27,9 +27,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # specific commit from a few days ago because the most recent commits are broken 
     nix-openclaw = {
-      url = "github:openclaw/nix-openclaw/561aa2809a9cbfc9ba7b86c02b5796cd71937ecc";
+      url = "github:openclaw/nix-openclaw";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
@@ -55,8 +54,6 @@
           ./host_chloe-laptop.nix
           inputs.agenix.nixosModules.default
     
-	  #stylix.nixosModules.stylix
-	
 	  home-manager.nixosModules.home-manager {
 	    home-manager.backupFileExtension = "backup";
 	    home-manager.useGlobalPkgs = false;
@@ -79,8 +76,6 @@
 	  ./host_chloe-laptop.nix
 	  ./modules/llm.nix
     inputs.agenix.nixosModules.default
-
-	  # stylix.nixosModules.stylix
 
 	  home-manager.nixosModules.home-manager {
 	    home-manager.backupFileExtension = "__backup";
