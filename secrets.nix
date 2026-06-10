@@ -18,7 +18,7 @@
 
   environment.sessionVariables = {
     DISCORD_BOT_TOKEN="${config.age.secrets.discord_bot_token.path}";
-    OPENROUTER_API_TOKEN="${config.age.secrets.openrouter_token.path}";
+    OPENROUTER_API_KEY="${config.age.secrets.openrouter_token.path}";
   };
   
 }
