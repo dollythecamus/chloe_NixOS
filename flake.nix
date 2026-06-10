@@ -84,6 +84,7 @@
 	  ./modules/llm.nix
     inputs.hermes-agent.nixosModules.default
     inputs.agenix.nixosModules.default
+    ./modules/hermes.nix
 
     home-manager.nixosModules.home-manager {
       home-manager.backupFileExtension = "__backup";
