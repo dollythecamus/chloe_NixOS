@@ -7,10 +7,9 @@
     container = {
       enable = true;
       hostUsers = [ "chloe" ];
-      extraOptions = [ "--gpus" "all" ];
     };
 
-    settings.model.default = "openrouter/moonshotai/kimi-k2.6:free";
+    settings.model.default = "openrouter/owl-alpha";
 
     extraDependencyGroups = ["messaging"];
     # Path to the environment files containing API tokens/keys
