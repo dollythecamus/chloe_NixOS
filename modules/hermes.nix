@@ -4,11 +4,15 @@
     services.hermes-agent = {
     enable = true;
     # container enables more configuration in the hermes environment
-    container.enable = true;
-    container.hostUsers = [ "chloe" ];
-    
-    settings.model.default = "openrouter/moonshotai/kimi-k2.6:free"; 
-    
+    container = {
+      enable = true;
+      hostUsers = [ "chloe" ];
+      extraOptions = [ "--gpus" "all" ];
+    };
+
+    settings.model.default = "openrouter/moonshotai/kimi-k2.6:free";
+
+    extraDependencyGroups = ["messaging"];
     # Path to the environment files containing API tokens/keys
     environmentFiles = [ 
         config.age.secrets.openrouter_token.path
