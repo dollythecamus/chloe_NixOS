@@ -3,6 +3,9 @@
 {
     services.hermes-agent = {
     enable = true;
+    # container enables more configuration in the hermes environment
+    container.enable = true;
+    container.hostUsers = [ "chloe" ];
     
     settings.model.default = "openrouter/moonshotai/kimi-k2.6:free"; 
     
