@@ -3,6 +3,6 @@
 {
   programs.aider-chat = {
     enable = true;
-    package = pkgs-unstable.aider-chat;
+    package = pkgs-unstable.aider-chat-full;
   };
 }
