@@ -3,13 +3,13 @@
 {
     services.hermes-agent = {
     enable = true;
-    /*
+    
     # container for hermes environment
     container = {
       enable = true;
       hostUsers = [ "chloe" ];
     };
-    */
+    
 
     settings.model.default = "openrouter/owl-alpha";
 
