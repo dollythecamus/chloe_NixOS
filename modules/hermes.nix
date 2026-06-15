@@ -9,11 +9,11 @@
       enable = true;
       hostUsers = [ "chloe" ];
     };
+    extraDependencyGroups = ["messaging" "hindsight" "exa" ];
+    # messaging = discord
+    # hindsight = memory provider
+    # exa       = web search
     
-
-    settings.model.default = "openrouter/owl-alpha";
-
-    extraDependencyGroups = ["messaging"];
     # Path to the environment files containing API tokens/keys
     environmentFiles = [ 
         config.age.secrets.openrouter_token.path
