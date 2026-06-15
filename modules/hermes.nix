@@ -14,6 +14,20 @@
     # hindsight = memory provider
     # exa       = web search
     
+    settings = {
+      model = {
+        default = "openrouter/nex-agi/nex-n2-pro:free";
+        provider = "openrouter";
+      };
+      memory = {
+        memory_enabled = true;
+        user_profile_enabled = true;
+      };
+      tools = {
+
+      };
+    };
+
     # Path to the environment files containing API tokens/keys
     environmentFiles = [ 
         config.age.secrets.openrouter_token.path

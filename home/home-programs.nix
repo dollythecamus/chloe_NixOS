@@ -2,7 +2,7 @@
 
 {
   imports = [
-        # ./programs/unity.nix
+        ./programs/unity.nix
         ./programs/godot.nix
         ./programs/blender.nix
   ];
