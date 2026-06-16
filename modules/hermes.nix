@@ -30,8 +30,7 @@
 
     # Path to the environment files containing API tokens/keys
     environmentFiles = [ 
-        config.age.secrets.openrouter_token.path
-        config.age.secrets.discord_bot_token.path
+        config.age.secrets.hermes_env.path
     ];
     
     # links the 'hermes' CLI tool to system packages
