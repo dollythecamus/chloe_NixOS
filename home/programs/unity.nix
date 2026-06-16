@@ -8,11 +8,11 @@
     # https://huantian.dev/blog/unity3d-rider-nixos/
     # some help
 
-    home.systemPackages = with pkgs; [
+    home.packages = with pkgs; [
         # install unity hub
         unityhub
         
         # install jetbrains rider
-        rider
+        jetbrains.rider
     ];
 }
