@@ -12,10 +12,9 @@
       enable = true;
       hostUsers = [ "chloe" ];
     };
-    extraDependencyGroups = ["messaging" "hindsight" "searxng"];
+    extraDependencyGroups = ["messaging" "hindsight"];
     # messaging  = discord
     # hindsight  = memory provider
-    # searxng   = web search (self-hosted SearXNG)
 
     settings = {
       model = {
