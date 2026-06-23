@@ -1,11 +1,11 @@
 {config, pkgs, inputs, ... }:
 
 {
-    services.hermes-agent = {
-    enable = true;
-    
     # SearXNG — self-hosted meta search engine for web tool
     imports = [ ./searxng.nix ];
+
+    services.hermes-agent = {
+    enable = true;
 
     # container for hermes environment
     container = {
