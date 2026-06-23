@@ -9,5 +9,6 @@
         formats = [ "html" "json" ];
       };
     };
+    secret_key = config.age.secrets.searxng_env.path;
   };
 }
