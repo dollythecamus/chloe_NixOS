@@ -4,11 +4,18 @@
   services.searx = {
     enable = true;
     settings = {
-      server.port = 8080;
       search = {
         formats = [ "html" "json" ];
       };
+
+      # Server configuration
+      server = {
+        port = 8888;
+        bind_address = "127.0.0.1";
+        secret_key = config.age.secrets.searxng_env.path;
+        limiter = true;
+        public_instance = false;
+      };
     };
-    secret_key = config.age.secrets.searxng_env.path;
   };
 }
