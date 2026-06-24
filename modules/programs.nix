@@ -39,7 +39,6 @@
     # auth
     gnome-keyring
     seahorse
-    signal-cli
   ];
 
   environment.sessionVariables = {
