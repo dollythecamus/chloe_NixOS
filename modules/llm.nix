@@ -13,7 +13,7 @@
 
   services.ollama = {
     enable = true;
-    package = pkgs-unstable.ollama-cuda;
+    package = pkgs-unstable.ollama-vulkan;
     
     host = "127.0.0.1";
     port = 11434;
