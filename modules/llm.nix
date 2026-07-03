@@ -13,10 +13,13 @@
 
   services.ollama = {
     enable = true;
-    package = pkgs-unstable.ollama-vulkan;
+    package = pkgs-unstable.ollama-vulkan;q
     
     host = "127.0.0.1";
     port = 11434;
   };
+
+  # ollama web interface
+  services.nextjs-ollama-llm-ui.enable = true;
 
 }
