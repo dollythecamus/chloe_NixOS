@@ -18,8 +18,7 @@
 
     settings = {
       model = {
-        default = "openrouter/nex-agi/nex-n2-pro:free";
-        provider = "openrouter";
+        default = "local";
       };
       memory = {
         memory_enabled = true;
@@ -29,13 +28,18 @@
         backend = "searxng";
         search_backend = "searxng";
       };
-      tools = {
 
+      custom_provider = {
+        name = "local";
+        base_url = "https://127.0.0.1:11434/"; # ollama API base URL
+        model = "jetelain/Qwen3.6-35B-A3B:latest";
       };
     };
 
     environment = {
       SEARXNG_URL = "http://127.0.0.1:8080";
+      OLLAMA_API_BASE_URL="http://127.0.0.1:11434/";
+      OLLAMA_API_BASE="http://127.0.0.1:11434/";
     };
 
     # Path to the environment files containing API tokens/keys
