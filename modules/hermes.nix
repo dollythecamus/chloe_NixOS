@@ -11,6 +11,7 @@
     container = {
       enable = true;
       hostUsers = [ "chloe" ];
+
     };
     extraDependencyGroups = ["messaging" "hindsight"];
     # messaging  = discord
@@ -31,15 +32,15 @@
 
       custom_provider = {
         name = "local";
-        base_url = "https://127.0.0.1:11434/"; # ollama API base URL
+        # ollama API base URL
+        # to access within the container
+        base_url = "https://host.docker.internal:11434/v1";
         model = "jetelain/Qwen3.6-35B-A3B:latest";
       };
     };
 
     environment = {
-      SEARXNG_URL = "http://127.0.0.1:8080";
-      OLLAMA_API_BASE_URL="http://127.0.0.1:11434/";
-      OLLAMA_API_BASE="http://127.0.0.1:11434/";
+      SEARXNG_URL = "http://host.docker.internal:8080";
     };
 
     # Path to the environment files containing API tokens/keys
