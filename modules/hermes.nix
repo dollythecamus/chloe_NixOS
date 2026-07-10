@@ -7,12 +7,6 @@
     services.hermes-agent = {
     enable = true;
 
-    # container for hermes environment
-    container = {
-      enable = true;
-      hostUsers = [ "chloe" ];
-
-    };
     extraDependencyGroups = ["messaging" "hindsight"];
     # messaging  = discord
     # hindsight  = memory provider
@@ -34,13 +28,13 @@
         name = "local";
         # ollama API base URL
         # to access within the container
-        base_url = "https://host.docker.internal:11434/v1";
+        base_url = "https://127.0.0.1:11434/v1";
         model = "jetelain/Qwen3.6-35B-A3B:latest";
       };
     };
 
     environment = {
-      SEARXNG_URL = "http://host.docker.internal:8080";
+      SEARXNG_URL = "http://127.0.0.1:8080";
     };
 
     # Path to the environment files containing API tokens/keys

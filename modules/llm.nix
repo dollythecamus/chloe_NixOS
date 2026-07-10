@@ -6,8 +6,8 @@
   ];
 
   environment.sessionVariables = {
-    OLLAMA_API_BASE_URL="http://0.0.0.0:11434/v1";
-    OLLAMA_API_BASE="http://0.0.0.0:11434/v1";
+    OLLAMA_API_BASE_URL="http://127.0.0.1:11434/v1";
+    OLLAMA_API_BASE="http://127.0.0.1:11434/v1";
     OLLAMA_API_KEY = "ollama-local";
   };
 
@@ -15,7 +15,7 @@
     enable = true;
     package = pkgs-unstable.ollama-cuda;
     
-    host = "0.0.0.0";
+    host = "127.0.0.1";
     port = 11434;
   };
 
