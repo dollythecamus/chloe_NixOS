@@ -27,15 +27,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    /*
-    nix-openclaw = {
-      url = "github:openclaw/nix-openclaw";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-    */
+    # llm:
 
     hermes-agent = {
       url = "github:NousResearch/hermes-agent";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
+    lmstudio = {
+      url = "github:Daaboulex/lmstudio-nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 

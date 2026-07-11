@@ -1,22 +1,10 @@
-{config, pkgs-unstable,...}:
+{config, inputs, pkgs-unstable,...}:
 
 {
   environment.systemPackages = [
+    # opencode, for vibe coding
     pkgs-unstable.opencode
+    inputs.lmstudio.packages.${pkgs.system}.default
   ];
-
-  environment.sessionVariables = {
-    OLLAMA_API_BASE_URL="http://127.0.0.1:11434/v1";
-    OLLAMA_API_BASE="http://127.0.0.1:11434/v1";
-    OLLAMA_API_KEY = "ollama-local";
-  };
-
-  services.ollama = {
-    enable = true;
-    package = pkgs-unstable.ollama-cuda;
-    
-    host = "127.0.0.1";
-    port = 11434;
-  };
 
 }
