@@ -1,108 +1,81 @@
-provider: "openrouter"
-default: "~anthropic/claude-sonnet-latest"
-base_url: "https://openrouter.ai/api/v1"
-
-# Token Limits & Optimization
-# Leave context_length unset for auto-detection unless using custom local contexts.
-# context_length: 131072
-max_tokens: 4096 # Maximum tokens generated per turnaround response
-
-# OpenAI wire configuration fallback tweaks (if upstream rejects standard headers)
-# default_headers:
-#   User-Agent: "curl/8.7.1"
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 2. Resilient Fallback Provider Chains
-# ─────────────────────────────────────────────────────────────────────────────
-# Active if the primary provider drops or hits rate limits.
-fallback_providers:
-  - provider: openrouter
-    model: google/gemini-2.5-pro
-  - provider: ollama
-    model: gemma4
-    base_url: "http://127.0.0.1:11434/v1"
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 3. Auxiliary Model Task Delegation
-# ─────────────────────────────────────────────────────────────────────────────
-# Direct lighter tasks to cost-effective or task-specialized models to maximize
-# processing speed and token efficiency.
-auxiliary:
-  title_gen:
-    provider: openrouter
-    model: google/gemini-3-flash-preview
-    timeout: 30
-  
-  vision:
-    provider: openrouter
-    model: google/gemini-2.5-flash
-    timeout: 120
-    download_timeout: 30
-  
-  compression:
-    provider: auto
-    model: "anthropic/claude-3-haiku"
-    timeout: 60
-
-  approval:
-    # Used under approval_mode: smart to analyze low-risk command threats
-    provider: openrouter
-    model: google/gemini-2.5-flash
-    timeout: 15
-
-# Canonical short-name references for hot-swapping via /model <alias>
-model_aliases:
-  fav: "claude-sonnet-4.6"
-  fast: "gemini-2.5-flash"
-  local: "gemma4"
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 4. OpenRouter Provider Routing Rules
-# ─────────────────────────────────────────────────────────────────────────────
-provider_routing:
-  sort: "throughput"        # "price", "throughput", or "latency"
-  data_collection: "deny"   # "allow" or "deny" (excludes training/logging nodes)
-  only: ["anthropic", "google"]
-  ignore: ["deepinfra", "fireworks"]
-
-# Pareto Code Router settings (OpenRouter-specific coding threshold plugins)
-openrouter:
-  min_coding_score: 85
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 5. Execution Backends & Isolation
-# ─────────────────────────────────────────────────────────────────────────────
-# Supported backends: "local", "docker", "ssh", "modal", "daytona", "singularity"
+model:
+  default: openrouter/owl-alpha
+agent:
+  max_turns: 150
+  disabled_toolsets:
+    - computer_use
+    - discord
+    - discord_admin
+    - feishu_doc
+    - feishu_drive
+    - homeassistant
+    - image_gen
+    - kanban
+    - project
+    - search
+    - spotify
+    - tts
+    - video
+    - video_gen
+    - vision
+    - x_search
+    - yuanbao
 terminal:
-  backend: "docker"
-  
-  # Home directory strategy:
-  # "auto" (Keep real OS-user HOME, container state uses virtual home)
-  # "real" (Forces real host path exposed inside container)
-  # "profile" (Strict isolation using separate profile homes per agent instance)
-  home_mode: "auto"
-
-  # Container allocation variables (Applies to docker, modal, singularity)
-  docker_image: "ubuntu:24.04"
-  container_cpu: 2
-  container_memory: 8192       # In Megabytes (8GB)
-  container_disk: 51200        # In Megabytes (50GB)
-  container_persistent: true   # Keeps filesystem state snapshots across sessions
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 6. Safety, Gateway, and Channel Toggles
-# ─────────────────────────────────────────────────────────────────────────────
-# Set behavior constraints across automation runs or messaging interfaces
-security:
-  approval_mode: "smart"       # "always", "never", "smart"
-  allowed_path_roots:
-    - "~/.hermes/workspace"
-    - "/tmp/sandbox"
-
-gateway:
-  enabled_platforms:
-    - "telegram"
-    - "discord"
-  voice_transcription: true
-  cron_scheduler_enabled: true
+  backend: local
+web:
+  backend: searxng
+  use_gateway: false
+browser:
+  cloud_provider: local
+  use_gateway: false
+compression:
+  enabled: true
+display:
+  tool_progress: all
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+_config_version: 33
+session_reset:
+  mode: none
+platform_toolses:
+  cli:
+    - browser
+    - clarify
+    - code_execution
+    - context_engine
+    - cronjob
+    - delegation
+    - file
+    - memory
+    - session_search
+    - skills
+    - terminal
+    - todo
+    - web
+  discord:
+    - browser
+    - clarify
+    - code_execution
+    - context_engine
+    - cronjob
+    - delegation
+    - file
+    - memory
+    - session_search
+    - skills
+    - terminal
+    - todo
+    - web
+known_plugin_toolsets:
+  cli:
+    - spotify
+  discord:
+    - spotify
+custom_providers:
+  - name: local
+    base_url: https://127.0.0.1:11434/v1
+    model: jetelain/Qwen3.6-35B-A3B:latest
+smart_model_routing:
+  enabled: false
+redact_secrets: true
