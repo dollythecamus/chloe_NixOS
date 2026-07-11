@@ -19,8 +19,6 @@
     ./modules/system-packages.nix
     ./modules/services.nix 
     ./modules/programs.nix
-    ./modules/syncthing.nix
-
     
   ];
 
