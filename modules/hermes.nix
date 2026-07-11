@@ -12,7 +12,7 @@
     # messaging  = discord
     # hindsight  = memory provider
 
-    configFile = ./config/hermes/config.yaml
+    configFile = ./config/hermes/config.yaml;
 
     environment = {
       SEARXNG_URL = "http://127.0.0.1:8080";
