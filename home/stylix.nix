@@ -31,7 +31,7 @@
       package = pkgs.vanilla-dmz;
     };
 
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-macchiato.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
 
     fonts = {
       # all monospace
@@ -41,7 +41,7 @@
       monospace = {package = pkgs.nerd-fonts.adwaita-mono; name = "AdwaitaMono Nerd Font"; };
     };
 
-    image = ./wallpaper/puffy-stars.jpg;
+    # image = ./wallpaper/puffy-stars.jpg;
 
     polarity = "dark";
   };
@@ -50,6 +50,7 @@
     base16-schemes
     vanilla-dmz
     nerd-fonts.adwaita-mono
+    adwaita-icon-theme
   ];
 }
 
