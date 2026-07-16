@@ -4,6 +4,7 @@
   environment.systemPackages = [
     # opencode, for vibe coding
     pkgs-unstable.opencode
+    # lm studio for running local llms
     inputs.lmstudio.packages.${pkgs.system}.default
   ];
 

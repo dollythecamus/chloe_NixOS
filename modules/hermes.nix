@@ -1,7 +1,8 @@
 {config, pkgs, inputs, ... }:
 
 {
-    # SearXNG — self-hosted meta search engine for web tool
+    # SearXNG — self-hosted search engine
+      # used by hermesn
     imports = [ ./searxng.nix ];
 
     services.hermes-agent = {
