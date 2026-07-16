@@ -4,7 +4,7 @@
 
   users.users.chloe= {
       isNormalUser = true;
-      description = "chloeee";
+      description = "its chloe";
       extraGroups = [ 
         "docker" 
         "networkmanager" 
@@ -13,6 +13,7 @@
 	"bluetooth" 
 	"input"
 	"pipewire"
+  "hermes"
       ];
   };
 }
