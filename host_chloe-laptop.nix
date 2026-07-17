@@ -14,6 +14,7 @@
     ./modules/users/chloe.nix
 
     ./modules/desktop/space-home.nix
+    ./modules/desktop/niri.nix
     ./modules/desktop/ly.nix
     
     ./modules/system-packages.nix

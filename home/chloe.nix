@@ -2,11 +2,8 @@
 
 {
   imports = [
-    ./sway.nix
     ./stylix.nix
     ./home-programs.nix
-
-    ### specific modules for some packages
     ./niri.nix
     ./eww.nix
     ./neofetch.nix

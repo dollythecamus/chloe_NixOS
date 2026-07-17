@@ -76,7 +76,7 @@ input "type:keyboard" {
     repeat_rate 35
 }
 
-output eDP-1 mode 1920x1080@144.003 adaptive_sync on
+output eDP-1 mode 1920x1080@144.003
 
 ### Key bindings
 #
