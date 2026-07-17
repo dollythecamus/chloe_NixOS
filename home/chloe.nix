@@ -11,10 +11,7 @@
     ### specific modules for some packages
     ./niri.nix
     ./eww.nix
-    ./fish.nix
-    ./yazi.nix
     ./neofetch.nix
-    ./dunst.nix
     ./wofi.nix
     ./vscode.nix
     ./ironbar.nix

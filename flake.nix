@@ -92,9 +92,6 @@
       home-manager.sharedModules = [
         inputs.nixcord.homeModules.nixcord
         inputs.stylix.homeModules.stylix
-        # inputs.nix-openclaw.homeManagerModules.openclaw
-              # ./modules/openclaw/openclaw.nix
-              ./home/aider.nix
         ];
       }
     ];

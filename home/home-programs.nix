@@ -13,6 +13,11 @@
   	./gaming.nix
   ];
 
+  # notifications
+  services.dunst = {
+    enable = true;
+  };
+
   programs.nixcord = {
     enable = true;
     vesktop.enable = true;
