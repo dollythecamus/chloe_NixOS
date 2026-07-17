@@ -31,7 +31,7 @@
       package = pkgs.vanilla-dmz;
     };
 
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyodark-terminal.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/kanagawa.yaml";
 
     fonts = {
       # all monospace
