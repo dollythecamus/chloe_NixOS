@@ -34,11 +34,6 @@
     ffmpeg
     winetricks
     proton-vpn
-    pipewire
-    
-    # auth
-    gnome-keyring
-    seahorse
   ];
 
   environment.sessionVariables = {

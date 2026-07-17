@@ -16,5 +16,4 @@
     xwayland-satellite
     xwayland
   ];
-
 }

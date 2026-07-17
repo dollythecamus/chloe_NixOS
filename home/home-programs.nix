@@ -53,12 +53,11 @@
     mask # command runner in a markdown file, woa
     presenterm # terminal slides presentation tool
     kew # music player
-
+    qutebrowser # minimal web browser
         # torrent
         qbittorrent
-
-        # browser, office
-        librewolf
+# browser, office
+        librewolf # to replace by qute
 	libreoffice 
       
         # art

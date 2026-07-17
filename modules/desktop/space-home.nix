@@ -13,21 +13,7 @@
   services.desktopManager.gnome.enable = true;
 
   # programs.hyprland.enable = true; # niri was better :3
-
-  # login manager
-  services.displayManager.ly = {
-    enable = true;
-    
-    settings = {
-      clock = "%c";
-      bigclock = true;
-      animate = true;
-      animation = "matrix";
-    };
-    # can configure more :3
-    # ly is pretty >~<
-  };
-
+  
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us,br";
