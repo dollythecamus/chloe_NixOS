@@ -24,7 +24,7 @@ terminal:
   backend: local
 web:
   backend: searxng
-  use_gateway: false
+  use_gateway: true
 browser:
   cloud_provider: local
   use_gateway: false
@@ -72,10 +72,6 @@ known_plugin_toolsets:
     - spotify
   discord:
     - spotify
-custom_providers:
-  - name: local
-    base_url: https://127.0.0.1:11434/v1
-    model: jetelain/Qwen3.6-35B-A3B:latest
 smart_model_routing:
   enabled: false
 redact_secrets: true

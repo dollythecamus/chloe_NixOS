@@ -15,10 +15,6 @@
 
     configFile = ./config/hermes/config.yaml;
 
-    environment = {
-      SEARXNG_URL = "http://127.0.0.1:8080";
-    };
-
     # Path to the environment files containing API tokens/keys
     environmentFiles = [ 
         config.age.secrets.hermes_env.path

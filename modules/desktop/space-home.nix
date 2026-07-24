@@ -10,7 +10,7 @@
 
   # services.xserver.displayManager.gdm.enable = true;
   # replace with actually configured system instead of using GNOME to patchwork
-  services.desktopManager.gnome.enable = false;
+  services.desktopManager.gnome.enable = true;
 
   # programs.hyprland.enable = true; # niri was better :3
   

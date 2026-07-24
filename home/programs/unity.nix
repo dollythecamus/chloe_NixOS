@@ -11,8 +11,5 @@
     home.packages = with pkgs; [
         # install unity hub
         unityhub
-        
-        # install jetbrains rider
-        jetbrains.rider
     ];
 }
