@@ -13,20 +13,21 @@
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
+  # Root partition: nvme0n1p4 (ext4, label "nixos")
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/44e0806e-aaed-4460-bc6c-d96d693fb09a";
+    { device = "/dev/disk/by-uuid/7dc941d5-0e7c-4380-acf7-4dde1adbd8e5";
       fsType = "ext4";
     };
 
+  # Shared ESP: nvme0n1p1 (also used by Fedora's /boot/efi)
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/834B-29A8";
+    { device = "/dev/disk/by-uuid/1402-3C62";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-  swapDevices =
-    [ { device = "/dev/disk/by-uuid/c80789bf-1fef-4137-8208-2637e2d797bd"; }
-    ];
+  # No swap partition on disk — zram (enabled in host config) covers this
+  swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
