@@ -7,7 +7,7 @@
   ];
 
   age.identityPaths = [ 
-    "/home/chloe/.ssh/id_ed25519" 
+    "/home/chloe/.ssh/id_ed25519_agenix" 
     "/etc/ssh/ssh_host_ed25519_key"
     ];
 

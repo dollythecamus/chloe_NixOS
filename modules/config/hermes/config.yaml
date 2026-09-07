@@ -9,6 +9,7 @@ terminal:
   backend: local
 web:
   backend: firecrawl
+  use_gateway: true
 browser:
   cloud_provider: local
 display:
@@ -17,6 +18,15 @@ computer_use:
   backend: cua
 proxy:
   enabled: true
+# Persistent memory across sessions (was dropped from this file in the v41
+# rewrite — DO NOT remove: this is what stops Hermes from "forgetting").
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+# Never auto-reset sessions/memory between runs.
+session_reset:
+  mode: none
+redact_secrets: true
 _config_version: 41
 platform_toolsets:
   cli:

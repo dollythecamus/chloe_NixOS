@@ -1,4 +1,4 @@
-{config, pkgs, inputs, ... }:
+{config, pkgs, lib, inputs, ... }:
 
 {
     # SearXNG — self-hosted search engine
@@ -25,4 +25,26 @@
     # links the 'hermes' CLI tool to system packages
     addToSystemPackages = true;
   };
+
+  # ── Interactive users share the gateway's state store ────────────────────
+  # The upstream module only creates a ~/.hermes -> /var/lib/hermes/.hermes
+  # symlink bridge for container-mode hostUsers; in native mode it relies on
+  # HERMES_HOME being exported into every interactive shell. Shells launched
+  # without it (sudo-ed env, GUI launchers) silently fall back to $HOME/.hermes
+  # and create a SECOND, empty brain — no memory, no skills, no history, and
+  # repeated "run hermes setup again" prompts. This is that missing bridge.
+  # Run hermes as chloe (member of the hermes group), NOT via sudo: root-owned
+  # files with umask 022 break the gateway's group write access.
+  system.activationScripts."hermes-user-bridge" = lib.stringAfter [ "hermes-agent-setup" ] ''
+    for _t in "chloe:/home/chloe" "root:/root"; do
+      _u="''${_t%%:*}"; _h="''${_t##*:}"
+      if [ -d "$_h/.hermes" ] && [ ! -L "$_h/.hermes" ]; then
+        _b="$_h/.hermes.bak.$(date +%Y%m%d_%H%M%S)"
+        echo "hermes-user-bridge: real dir at $_h/.hermes -> backing up to $_b"
+        mv "$_h/.hermes" "$_b"
+      fi
+      ln -sfn /var/lib/hermes/.hermes "$_h/.hermes"
+      chown -h "$_u":hermes "$_h/.hermes" 2>/dev/null || true
+    done
+  '';
 }
