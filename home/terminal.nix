@@ -70,6 +70,8 @@ disown
        matrix = ''
 echo "i'll show you how deep the rabbit hole goes" | tte matrix
 '';
+       # system maintenance automation (source in repo: home/fish/)
+       rebuild = builtins.readFile ./fish/rebuild.fish;
     };
   };
 }
