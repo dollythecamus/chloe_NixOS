@@ -56,46 +56,23 @@
         modules = [
 
           ./host_chloe-laptop.nix
+          ./modules/llm.nix
+          ./modules/hermes.nix
+          inputs.hermes-agent.nixosModules.default
           inputs.agenix.nixosModules.default
     
           home-manager.nixosModules.home-manager {
-            home-manager.backupFileExtension = "backup";
-            home-manager.useGlobalPkgs = false;
-            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "__backup";
+            home-manager.useGlobalPkgs = true;
             home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
             home-manager.users.chloe = ./home/chloe.nix;
             home-manager.sharedModules = [
               inputs.nixcord.homeModules.nixcord
               inputs.stylix.homeModules.stylix
               ];
-            }
-          ];
-        };
-
-      # regular configuration, added LLMs modules and openclaw
-      chloe-llm = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs system pkgs-unstable; };
-	modules = [
-
-	  ./host_chloe-laptop.nix
-	  ./modules/llm.nix
-    inputs.hermes-agent.nixosModules.default
-    inputs.agenix.nixosModules.default
-    ./modules/hermes.nix
-
-    home-manager.nixosModules.home-manager {
-      home-manager.backupFileExtension = "__backup";
-      home-manager.useGlobalPkgs = false;
-      home-manager.useUserPackages = true;
-      home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
-      home-manager.users.chloe = ./home/chloe.nix;
-      home-manager.sharedModules = [
-        inputs.nixcord.homeModules.nixcord
-        inputs.stylix.homeModules.stylix
+          }
         ];
-      }
-    ];
+      };
     };
   };
-};
 }
