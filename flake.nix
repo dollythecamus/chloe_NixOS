@@ -63,7 +63,8 @@
     
           home-manager.nixosModules.home-manager {
             home-manager.backupFileExtension = "__backup";
-            home-manager.useGlobalPkgs = true;
+            home-manager.useGlobalPkgs = false;
+            home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
             home-manager.users.chloe = ./home/chloe.nix;
             home-manager.sharedModules = [
