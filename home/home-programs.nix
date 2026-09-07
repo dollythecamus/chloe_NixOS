@@ -28,6 +28,22 @@
     cli.enable = true;
   };
 
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      # default browser: Chrome
+      "text/html" = "google-chrome.desktop";
+      "x-scheme-handler/http" = "google-chrome.desktop";
+      "x-scheme-handler/https" = "google-chrome.desktop";
+      "x-scheme-handler/about" = "google-chrome.desktop";
+      "x-scheme-handler/unknown" = "google-chrome.desktop";
+      # kept from the hand-written ~/.config/mimeapps.list
+      "x-scheme-handler/lmstudio" = "LM-Studio.desktop";
+      "x-scheme-handler/x-github-client" = "github-desktop.desktop";
+      "x-scheme-handler/x-github-desktop-dev-auth" = "github-desktop.desktop";
+    };
+  };
+
   home.packages = with pkgs; [
     home-manager # make home-manager available for use in the terminal
     
