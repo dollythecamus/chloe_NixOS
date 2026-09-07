@@ -57,6 +57,7 @@
         # torrent
         qbittorrent
 # browser, office
+        google-chrome
         librewolf # to replace by qute
 	libreoffice 
       
