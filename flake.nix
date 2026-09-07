@@ -55,22 +55,24 @@
         specialArgs = { inherit inputs system pkgs-unstable; };
         modules = [
 
+          inputs.hermes-agent.nixosModules.default
+          inputs.agenix.nixosModules.default
           ./host_chloe-laptop.nix
           ./modules/llm.nix
           ./modules/hermes.nix
-          inputs.hermes-agent.nixosModules.default
-          inputs.agenix.nixosModules.default
     
           home-manager.nixosModules.home-manager {
+            
+            home-manager.sharedModules = [
+              inputs.nixcord.homeModules.nixcord
+              inputs.stylix.homeModules.stylix
+              ];
+            
             home-manager.backupFileExtension = "__backup";
             home-manager.useGlobalPkgs = false;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
             home-manager.users.chloe = ./home/chloe.nix;
-            home-manager.sharedModules = [
-              inputs.nixcord.homeModules.nixcord
-              inputs.stylix.homeModules.stylix
-              ];
           }
         ];
       };

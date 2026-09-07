@@ -9,7 +9,7 @@
 
     services.hermes-agent = {
     enable = true;
-    container = {enable = true; hostUsers = ["chloe"];};
+    # container = {enable = true; hostUsers = ["chloe"];};
 
     extraDependencyGroups = ["messaging" "hindsight"];
     # messaging  = discord

@@ -34,6 +34,7 @@
     ffmpeg
     winetricks
     proton-vpn
+    openssl
   ];
 
   environment.sessionVariables = {
