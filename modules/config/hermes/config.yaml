@@ -1,5 +1,5 @@
 model:
-  default: openrouter/owl-alpha
+  default: opencode-go/deepseek-v4-flash
 agent:
   max_turns: 150
   disabled_toolsets:

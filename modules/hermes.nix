@@ -3,11 +3,13 @@
 {
     # SearXNG — self-hosted search engine
       # used by hermesn
-    imports = [ ./searxng.nix ];
+    imports = [ 
+      #./searxng.nix 
+    ];
 
     services.hermes-agent = {
     enable = true;
-    # container = {enable = true; hostUsers = ["chloe"];};
+    container = {enable = true; hostUsers = ["chloe"];};
 
     extraDependencyGroups = ["messaging" "hindsight"];
     # messaging  = discord
@@ -17,7 +19,7 @@
 
     # Path to the environment files containing API tokens/keys
     environmentFiles = [ 
-        config.age.secrets.hermes_env.path
+        config.age.secrets.hermes-env.path
     ];
     
     # links the 'hermes' CLI tool to system packages
