@@ -28,6 +28,9 @@ session_reset:
   mode: none
 redact_secrets: true
 _config_version: 41
+platforms:
+  discord:
+    gateway_restart_notification: false
 platform_toolsets:
   cli:
     - a2a
