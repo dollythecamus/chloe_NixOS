@@ -22,6 +22,27 @@
   # bluetooth applet is already autostarted by services.blueman (system)
   services.network-manager-applet.enable = true;
 
+  # low/critical battery + charging notifications via upower (into dunst)
+  services.poweralertd.enable = true;
+
+  # idle: dim/lock/suspend. niri serves ext-idle-notify, which swayidle >=1.8
+  # speaks. graphical-session.target works because niri's systemd generator
+  # starts it for the session (same target as nm-applet above).
+  services.swayidle = {
+    enable = true;
+    systemdTargets = [ "graphical-session.target" ];
+    events = {
+      "before-sleep" = "${pkgs.swaylock}/bin/swaylock -f";
+      "lock" = "${pkgs.swaylock}/bin/swaylock -f";
+    };
+    timeouts = [
+      # DPMS-off the outputs at 10min (wlopm), lock at 12min, suspend at 30min
+      { timeout = 600; command = "${pkgs.wlopm}/bin/wlopm --off"; resumeCommand = "${pkgs.wlopm}/bin/wlopm --on"; }
+      { timeout = 720; command = "${pkgs.swaylock}/bin/swaylock -f"; }
+      { timeout = 1800; command = "${pkgs.systemd}/bin/systemctl suspend"; }
+    ];
+  };
+
   programs.nixcord = {
     enable = true;
     vesktop.enable = true;
@@ -94,6 +115,11 @@
         # desktop integration applets (nm-applet systemd service lives above;
         # nm-connection-editor is in the same package)
         networkmanagerapplet
+
+        # screen locker (the niri Super+Alt+L bind spawns this)
+        swaylock
+        # DPMS on/off for wayland (used by swayidle timeouts, Mod+Shift+S)
+        wlopm
   ];
 
 }

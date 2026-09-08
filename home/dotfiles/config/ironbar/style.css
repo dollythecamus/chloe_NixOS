@@ -1,9 +1,11 @@
+/* ironbar theme — generated from the stylix (base16) palette by home/ironbar.nix.
+   @...@ placeholders are substituted at build time; keep them intact. */
 :root {
-    --color-dark-primary: #c23333;
-    --color-dark-secondary: #2d2d2d;
-    --color-white: #fff;
-    --color-active: #6699cc;
-    --color-urgent: #8f0a0a;
+    --color-dark-primary: @bg@;
+    --color-dark-secondary: @bg2@;
+    --color-white: @fg@;
+    --color-active: @accent@;
+    --color-urgent: @alert@;
 
     --margin-lg: 1em;
     --margin-sm: 0.5em;

@@ -329,7 +329,6 @@ binds {
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+Q hotkey-overlay-title="Open a Terminal: Kitty fish" { spawn "kitty" "fish"; }
     Mod+E hotkey-overlay-title="Run an Application: Wofi" { spawn "wofi" "--show" "drun"; }
-    Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
     // Common programs: Mod+Alt+<key> launcher family.
     Mod+Alt+B hotkey-overlay-title="Open the Browser: Chrome" { spawn "google-chrome-stable"; }
@@ -338,6 +337,8 @@ binds {
     Mod+Shift+N hotkey-overlay-title="Network Connections: nm-connection-editor" { spawn "nm-connection-editor"; }
     Mod+Shift+Ctrl+N hotkey-overlay-title="Wi-Fi Radio Toggle" { spawn-sh "nmcli radio wifi grep -q enabled && nmcli radio wifi off || nmcli radio wifi on"; }
     Mod+Shift+B hotkey-overlay-title="Bluetooth Manager: blueman" { spawn "blueman-manager"; }
+    Super+Alt+L allow-when-locked=true hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock" "-f"; }
+    Mod+Shift+S hotkey-overlay-title="Screens Off Now: wlopm" { spawn "wlopm" "--off"; }
 
     // toggle ironbar visible
     Mod+B {spawn-sh "ironbar bar minimal toggle-visible";}

@@ -12,7 +12,14 @@ end:
   types_whitelist: ["Wifi", "Ethernet"]
 - type: bluetooth
   icon_size: 16
+- type: brightness
+  format: "{percentage}%"
+- type: volume
+  format: "{icon} {percentage}%"
+  mute_format: "{icon} mute"
 - type: battery
+  format: "{percentage}%"
+  icon_size: 16
   show_if: |
     ls /sys/class/power_supply/ | grep --quiet '^BAT'
 - type: sys_info
