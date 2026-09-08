@@ -18,6 +18,10 @@
     enable = true;
   };
 
+  # network applet: tray icon + dialogs (wifi password prompts, edit connections)
+  # bluetooth applet is already autostarted by services.blueman (system)
+  services.network-manager-applet.enable = true;
+
   programs.nixcord = {
     enable = true;
     vesktop.enable = true;
@@ -86,6 +90,10 @@
 
         # dev
         github-desktop
+
+        # desktop integration applets (nm-applet systemd service lives above;
+        # nm-connection-editor is in the same package)
+        networkmanagerapplet
   ];
 
 }

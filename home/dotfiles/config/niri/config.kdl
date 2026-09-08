@@ -334,6 +334,11 @@ binds {
     // Common programs: Mod+Alt+<key> launcher family.
     Mod+Alt+B hotkey-overlay-title="Open the Browser: Chrome" { spawn "google-chrome-stable"; }
 
+    // Network & Bluetooth: Mod+Shift+<key> settings family.
+    Mod+Shift+N hotkey-overlay-title="Network Connections: nm-connection-editor" { spawn "nm-connection-editor"; }
+    Mod+Shift+Ctrl+N hotkey-overlay-title="Wi-Fi Radio Toggle" { spawn-sh "nmcli radio wifi grep -q enabled && nmcli radio wifi off || nmcli radio wifi on"; }
+    Mod+Shift+B hotkey-overlay-title="Bluetooth Manager: blueman" { spawn "blueman-manager"; }
+
     // toggle ironbar visible
     Mod+B {spawn-sh "ironbar bar minimal toggle-visible";}
 

@@ -7,6 +7,11 @@ center:
 - type: focused
   icon_size: 16
 end:
+- type: network_manager
+  icon_size: 16
+  types_whitelist: ["Wifi", "Ethernet"]
+- type: bluetooth
+  icon_size: 16
 - type: battery
   show_if: |
     ls /sys/class/power_supply/ | grep --quiet '^BAT'
