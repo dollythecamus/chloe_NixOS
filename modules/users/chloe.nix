@@ -8,12 +8,12 @@
       extraGroups = [ 
         "docker" 
         "networkmanager" 
-	"wheel" 
-	"dialout" 
-	"bluetooth" 
-	"input"
-	"pipewire"
-  "hermes"
+        "wheel" 
+        "dialout" 
+        "bluetooth" 
+        "input"
+        "pipewire"
+        "hermes"
       ];
   };
 }
