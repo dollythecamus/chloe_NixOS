@@ -116,6 +116,10 @@
         # nm-connection-editor is in the same package)
         networkmanagerapplet
 
+        # 3d printer slicer (UltiMaker Cura 5.12, wrapped AppImage —
+        # native cura was dropped from nixpkgs; binary is `cura`)
+        cura-appimage
+
         # screen locker (the niri Super+Alt+L bind spawns this)
         swaylock
         # DPMS on/off for wayland (used by swayidle timeouts, Mod+Shift+S)
