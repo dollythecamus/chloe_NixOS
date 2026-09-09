@@ -18,8 +18,15 @@
   #    makes every sandboxed process — editor, shader compiler, import
   #    workers — resolve sandbox libs. Verified 2026-09-09: with the var
   #    set, UnityShaderCompiler runs; without it, same load error.
+  #
+  # 3. unzip: Hub's Linux module installer shells out to `unzip` (only
+  #    checks PATH + /usr/bin/unzip) after DOWNLOADING a module — so Android
+  #    build support "fails to install after download". Ubuntu ships unzip
+  #    system-wide; the FHS sandbox doesn't. Add p.unzip to extraLibs.
+  #    (2026-09-09, info-log.json: "Command 'unzip' not found in PATH or
+  #    known locations: /usr/bin/unzip, /bin/unzip")
   home.packages = with pkgs; [
-    ((unityhub.override { extraLibs = p: [ p.ncurses6 ]; }
+    ((unityhub.override { extraLibs = p: [ p.ncurses6 p.unzip ]; }
     ).overrideAttrs (final: prev: {
       installPhase = prev.installPhase + ''
         sed -i '1a export LD_LIBRARY_PATH="/usr/lib64:/usr/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"' \
