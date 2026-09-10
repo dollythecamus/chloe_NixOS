@@ -31,7 +31,12 @@
   # mkswap service); `size` is in MiB. priority 10 < the zram device's
   # priority (see host_chloe-laptop.nix), so zram fills first and this is
   # the overflow tier.
-  swapDevices = [ { device = "/swap/swapfile"; size = 16384; priority = 10; } ];
+  #
+  # Do NOT move this into a subdirectory (e.g. /swap/swapfile): the
+  # generated mkswap service runs `truncate --size 0 "$DEVICE"` BEFORE its
+  # `mkdir -p "$(dirname "$DEVICE")"` under `set -o errexit`, so a missing
+  # parent directory makes the unit fail and no swap is ever created.
+  swapDevices = [ { device = "/swapfile"; size = 16384; priority = 10; } ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
