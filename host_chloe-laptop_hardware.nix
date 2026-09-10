@@ -26,8 +26,12 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-  # No swap partition on disk — zram (enabled in host config) covers this
-  swapDevices = [ ];
+  # Disk-backed swap on the root ext4 partition. The file is created,
+  # sized and mkswap'd automatically by NixOS at activation (util-linux
+  # mkswap service); `size` is in MiB. priority 10 < the zram device's
+  # priority (see host_chloe-laptop.nix), so zram fills first and this is
+  # the overflow tier.
+  swapDevices = [ { device = "/swap/swapfile"; size = 16384; priority = 10; } ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

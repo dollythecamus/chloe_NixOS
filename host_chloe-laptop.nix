@@ -23,6 +23,17 @@
     
   ];
 
+  # Compressed RAM swap, priority 100 > the 16 GiB disk swapfile's 10, so
+  # zram is consumed before anything hits the disk. zstd is the best
+  # compressing of the algorithms the module accepts; memoryPercent left at
+  # its default of 50 (= ~5.7 GiB of backing store on this 11.4 GiB machine,
+  # which is a cap on stored pages, not a RAM reservation).
+  zramSwap = {
+    enable = true;
+    priority = 100;
+    algorithm = "zstd";
+  };
+
   # Enable NTFS to use files in external hard drive
   boot.supportedFilesystems = [ "ntfs" ];
 
