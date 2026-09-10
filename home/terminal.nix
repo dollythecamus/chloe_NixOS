@@ -25,9 +25,17 @@
     defaultEditor = true;
   };
 
-  # GitHub CLI: gh
+  # GitHub CLI: gh. config.yml is HM-owned (read-only in the store), so
+  # every preference gh needs must be declared here — `gh config set`
+  # cannot write it. Auth state (hosts.yml, token in the keyring) stays
+  # runtime-owned so `gh auth login/refresh/switch` keep working.
   programs.gh = {
     enable = true;
+    settings = {
+      git_protocol = "ssh"; # matches hosts.yml; ~/.ssh/id_ed25519_github
+      editor = "nvim"; # matches EDITOR in modules/programs.nix
+      prompt = "enabled";
+    };
     # HM's default (true) only writes the gh git credential helper when
     # HM `programs.git` is enabled; git here is system-wide
     # (modules/programs.nix, libsecret helper), so it would be inert.
