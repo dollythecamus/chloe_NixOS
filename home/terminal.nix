@@ -25,6 +25,15 @@
     defaultEditor = true;
   };
 
+  # GitHub CLI: gh
+  programs.gh = {
+    enable = true;
+    # HM's default (true) only writes the gh git credential helper when
+    # HM `programs.git` is enabled; git here is system-wide
+    # (modules/programs.nix, libsecret helper), so it would be inert.
+    gitCredentialHelper.enable = false;
+  };
+
 
   # tui file manager
   programs.yazi = {
