@@ -38,9 +38,7 @@ function stayawake --description 'toggle the "keep machine on while away" sleep 
 
     switch $cmd
         case on start enable
-            if systemctl --user is-active --quiet $unit
-                echo 'stayawake: already ON.'
-            else
+            if not systemctl --user is-active --quiet $unit
                 systemd-run --user \
                     --unit=$unit \
                     --property='Description=stayawake: keep machine on (sleep + lid inhibitor)' \
@@ -51,8 +49,22 @@ function stayawake --description 'toggle the "keep machine on while away" sleep 
                         --why='stayawake: keep machine on while away' \
                         --mode=block \
                         sleep infinity
-                and echo 'stayawake: ON — idle suspend and lid-close suspend are both inhibited.'
-                or echo 'stayawake: failed to start inhibitor.' >&2
+                or begin
+                    echo 'stayawake: failed to start inhibitor.' >&2
+                    return 1
+                end
+            end
+            # Self-check: the lid is only suppressed by a LOW-LEVEL
+            # handle-lid-switch lock. Make sure it actually landed — a stale
+            # fish function (loaded before a rebuild) starts the old command
+            # without it, which is exactly how the lid kept sleeping before.
+            if systemd-inhibit --list --no-legend 2>/dev/null | grep -q 'stayawake.*handle-lid-switch'
+                echo 'stayawake: ON — idle suspend and lid-close suspend are both inhibited.'
+            else
+                echo 'stayawake: FAILED SELF-CHECK — no handle-lid-switch lock visible.' >&2
+                echo '  Running unit: '(systemctl --user show -p ExecStart --value $unit) >&2
+                echo '  If that shows the old --what, open a NEW terminal and re-run (stale function).' >&2
+                return 1
             end
 
         case off stop disable
