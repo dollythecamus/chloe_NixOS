@@ -1,23 +1,34 @@
-# stayawake — hold a systemd sleep+i-idle block inhibitor so the machine
-# never idle-suspends and ignores the lid closing while ON.
+# stayawake — hold systemd inhibitor locks so the machine never idle-suspends
+# and ignores the lid switch while ON.
 #
 #   stayawake         show status
-#   stayawake on      start inhibiting (machine stays on: no idle suspend, no lid suspend)
+#   stayawake on      start inhibiting (no idle suspend, lid switch ignored)
 #   stayawake off     stop inhibiting (normal swayidle/logind sleep behaviour resumes)
 #   stayawake status  show state + the inhibitor line
 #
 # How it works:
-# - ON starts a systemd --user transient unit that runs `systemd-inhibit
-#   --what=sleep:idle --mode=block sleep infinity`. A `block` sleep inhibitor
-#   is consulted by logind for BOTH the swayidle idle suspend timer and the
-#   lid switch, so while it is held the machine cannot enter sleep.
+# - ON starts a systemd --user transient unit running:
+#       systemd-inhibit --what=sleep:idle:handle-lid-switch --mode=block sleep infinity
+# - TWO different lock kinds are needed, and this is the part that is easy to
+#   get wrong:
+#     * sleep:idle  — high-level locks. logind consults these for the swayidle
+#       30-min suspend and for IdleAction, so the machine will not idle-suspend.
+#     * handle-lid-switch — a LOW-LEVEL lock. logind's config default
+#       LidSwitchIgnoreInhibited=yes means the lid switch IGNORES high-level
+#       sleep inhibitors ("when logind is handling events by itself ... the lid
+#       switch does not respect suspend blockers by default"). Only a low-level
+#       handle-* lock, which is "always honored", suppresses the lid action.
+#       Without it, closing the lid still suspends — which is exactly the bug
+#       this function originally had.
 # - Runs as the logged-in user (no sudo). logind checks user-held inhibitors
-#   system-wide, so this also works when the command is issued remotely
-#   (e.g. from Hermes over Discord) without a password prompt.
-# - The unit is registered in the graphical user session's manager, which is
-#   the session that stays awake.
+#   system-wide, so the host stays up for remote services (e.g. the Hermes
+#   gateway answering prompts from Discord).
 #
-# Driving it from Hermes (Discord): just call `stayawake on` / `stayawake off`.
+# Caveats worth knowing:
+# - The unit is transient: it does NOT survive a reboot, and it dies if the
+#   user session ends (screen lock is fine; logout/reboot is not). Re-run
+#   `stayawake on` after either.
+# - state: the transient unit is not enabled, so a fresh boot starts OFF.
 function stayawake --description 'toggle the "keep machine on while away" sleep inhibitor'
     set -l unit stayawake
     set -l cmd status
@@ -32,15 +43,15 @@ function stayawake --description 'toggle the "keep machine on while away" sleep 
             else
                 systemd-run --user \
                     --unit=$unit \
-                    --property='Description=stayawake: keep machine on (sleep inhibitor)' \
+                    --property='Description=stayawake: keep machine on (sleep + lid inhibitor)' \
                     --collect \
                     systemd-inhibit \
-                        --what=sleep:idle \
+                        --what=sleep:idle:handle-lid-switch \
                         --who=stayawake \
                         --why='stayawake: keep machine on while away' \
                         --mode=block \
                         sleep infinity
-                and echo 'stayawake: ON — machine will not suspend or sleep.'
+                and echo 'stayawake: ON — idle suspend and lid-close suspend are both inhibited.'
                 or echo 'stayawake: failed to start inhibitor.' >&2
             end
 
