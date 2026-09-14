@@ -1,15 +1,21 @@
 {config, pkgs, lib, inputs, ... }:
 
-{
-    # SearXNG — self-hosted search engine
-      # used by hermesn
-    imports = [ 
-      #./searxng.nix 
-    ];
+let
+  # The interactive CLI must carry the same dependency groups as the gateway
+  # package the module builds: anthropic = the API mode the configured model
+  # uses, hindsight = memory provider, messaging = platform plugins. This is
+  # the same expression as the module's effectivePackage, so it evaluates to
+  # the same derivation.
+  hermesCli = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+    extraDependencyGroups = [ "messaging" "hindsight" "anthropic" ];
+  };
 
+  hermesHome = "/var/lib/hermes/.hermes";
+in
+
+{
     services.hermes-agent = {
     enable = true;
-    # container = {enable = true; hostUsers = ["chloe"];};
 
     extraDependencyGroups = ["messaging" "hindsight" "anthropic"];
     # messaging  = discord
@@ -18,73 +24,75 @@
     configFile = ./config/hermes/config.yaml;
 
     # Path to the environment files containing API tokens/keys
-    environmentFiles = [ 
+    environmentFiles = [
         config.age.secrets.hermes-env.path
     ];
-    
-    # links the 'hermes' CLI tool to system packages
-    addToSystemPackages = true;
+
+    # Deliberately NOT addToSystemPackages. That option exports HERMES_HOME
+    # system-wide and forces every interactive shell into the gateway's store,
+    # which hermes 0.21.x re-hardens to owner-only whenever it opens the store
+    # for writing (hermes_state._secure_state_db_files -> chmod 0600 on
+    # state.db/-wal/-shm; hermes_constants.secure_parent_dir -> chmod 0700 on
+    # HERMES_HOME). Those calls are ownership operations: a second uid gets
+    # EPERM/EACCES no matter how the group bits are set, so the TUI could not
+    # open a session store at all and needed sudo. The CLI is added below
+    # without the export instead, so it uses its own ~/.hermes.
+    addToSystemPackages = false;
   };
 
-  # ── Interactive users share the gateway's state store ────────────────────
-  # The upstream module only creates a ~/.hermes -> /var/lib/hermes/.hermes
-  # symlink bridge for container-mode hostUsers; in native mode it relies on
-  # HERMES_HOME being exported into every interactive shell. Shells launched
-  # without it (sudo-ed env, GUI launchers) silently fall back to $HOME/.hermes
-  # and create a SECOND, empty brain — no memory, no skills, no history, and
-  # repeated "run hermes setup again" prompts. This is that missing bridge.
-  # Run hermes as chloe (member of the hermes group), NOT via sudo: root-owned
-  # files with umask 022 break the gateway's group write access.
-  system.activationScripts."hermes-user-bridge" = lib.stringAfter [ "hermes-agent-setup" ] ''
-    for _t in "chloe:/home/chloe" "root:/root"; do
-      _u="''${_t%%:*}"; _h="''${_t##*:}"
-      if [ -d "$_h/.hermes" ] && [ ! -L "$_h/.hermes" ]; then
-        _b="$_h/.hermes.bak.$(date +%Y%m%d_%H%M%S)"
-        echo "hermes-user-bridge: real dir at $_h/.hermes -> backing up to $_b"
-        mv "$_h/.hermes" "$_b"
-      fi
-      ln -sfn /var/lib/hermes/.hermes "$_h/.hermes"
-      chown -h "$_u":hermes "$_h/.hermes" 2>/dev/null || true
-    done
+  # The interactive CLI, PATH-only (no HERMES_HOME export).
+  environment.systemPackages = [ hermesCli ];
 
-    # ── Shared-state permissions ────────────────────────────────────────────
-    # The gateway (user hermes) writes credentials/caches 0600/0640 and some
-    # files end up root- or chloe-owned 0600; chloe's TUI hits EACCES on those
-    # ("/var/lib/hermes/.hermes/... Permission denied", auth.json spams every
-    # turn). Upstream already runs the unit with UMask=0007 and makes the state
-    # dirs setgid 2770, so this pass just completes the group-sharing layout on
-    # every activation: everything hermes:hermes, dirs 2770, files 0660,
-    # secrets (.env) 0640 (group read, no write), auth.json explicitly 0660 —
-    # hermes rewrites it 0600 on 'hermes auth', so re-normalize here.
-    if [ -d "/var/lib/hermes/.hermes" ]; then
-      chown -R hermes:hermes /var/lib/hermes/.hermes
-      find /var/lib/hermes/.hermes -type d -exec chmod 2770 {} +
-      find /var/lib/hermes/.hermes -type f -exec chmod 0660 {} +
-      chmod 0640 /var/lib/hermes/.hermes/.env
-      chmod 0660 /var/lib/hermes/.hermes/auth.json
+  # ── Per-user Hermes homes ────────────────────────────────────────────────
+  # Retires the shared-state bridge (~/.hermes -> /var/lib/hermes/.hermes) and
+  # gives each user a real, private home of their own. The legacy symlink must
+  # be removed explicitly — left in place it keeps redirecting the CLI into the
+  # gateway's store, and files root writes there (0600 root) then break the
+  # gateway's own opens.
+  system.activationScripts."hermes-user-home" = lib.stringAfter [ "hermes-agent-setup" ] ''
+    _h=/home/chloe
+    if [ -L "$_h/.hermes" ] && [ "$(readlink "$_h/.hermes")" = "${hermesHome}" ]; then
+      rm -f "$_h/.hermes"
+      echo "hermes-user-home: removed shared-state symlink at $_h/.hermes"
+    fi
+    mkdir -p "$_h/.hermes"
+    chown chloe:users "$_h/.hermes"
+    chmod 0700 "$_h/.hermes"
+
+    _h=/root
+    if [ -L "$_h/.hermes" ] && [ "$(readlink "$_h/.hermes")" = "${hermesHome}" ]; then
+      rm -f "$_h/.hermes"
+      echo "hermes-user-home: removed shared-state symlink at $_h/.hermes"
+    fi
+    mkdir -p "$_h/.hermes/cache/terminal"
+    chown -R root:root "$_h/.hermes"
+    chmod 0700 "$_h/.hermes"
+
+    # chloe's TUI needs the same provider keys the gateway uses. install, not
+    # ln: the decrypted secret stays 0400 root, so root does the copy and chloe
+    # reads the result. Refreshed at every activation, so a rekeyed secret
+    # reaches the TUI at the next switch or boot.
+    if [ -f "${config.age.secrets.hermes-env.path}" ]; then
+      install -o chloe -g users -m 0600 "${config.age.secrets.hermes-env.path}" /home/chloe/.hermes/.env
     fi
   '';
 
-  # ── Runtime guard for the same permissions ───────────────────────────────
-  # hermes 0.21.x tightens HERMES_HOME to 0700 every time it persists
-  # credentials (agent/credential_pool.py -> hermes_cli.auth._save_auth_store
-  # -> _write_private_file_atomic -> secure_parent_dir -> os.chmod(parent,0700)),
-  # and rewrites auth.json 0600. The gateway runs as 'hermes', so that chmod
-  # locks the interactive user (chloe, group hermes) out of the whole shared
-  # state dir: TUI prompts die with "state.db is not writable ... is read-only
-  # for this user", sessions/config/memory look empty, and the TUI's own
-  # self-repair fails with EPERM. The activation pass above only runs at
-  # switch/boot, so re-apply the same normalization on a short timer.
+  # ── Contamination guard for the gateway's store ──────────────────────────
+  # The store now belongs to the hermes user alone. This only repairs ownership
+  # and modes if something else writes there by accident (a stray root run, a
+  # restored backup, an old shell that still has HERMES_HOME exported). A file
+  # the gateway does not own makes its next open fail with EPERM
+  # (_secure_state_db_files), and a mode-only fix cannot recover from that —
+  # hence the chown.
   systemd.services.hermes-state-perm-guard = {
-    description = "Re-normalize Hermes shared state dir permissions (group access)";
+    description = "Re-normalize the Hermes gateway state dir (ownership + group access)";
     serviceConfig = {
       Type = "oneshot";
       User = "root";
       ExecStart = pkgs.writeShellScript "hermes-state-perm-guard" ''
         set -u
-        SD=/var/lib/hermes/.hermes
+        SD=${hermesHome}
         [ -d "$SD" ] || exit 0
-        # The lockout case: the app chmods the top dir 0700 (owner-only).
         chown hermes:hermes "$SD" 2>/dev/null || true
         chmod 2770 "$SD" 2>/dev/null || true
         # Anything the app (0600) or another uid left without group rw is
@@ -97,7 +105,7 @@
   };
 
   systemd.timers.hermes-state-perm-guard = {
-    description = "Periodic Hermes state dir permission guard";
+    description = "Periodic Hermes gateway state dir guard";
     wantedBy = [ "timers.target" ];
     timerConfig = {
       OnBootSec = "30s";

@@ -10,6 +10,7 @@
     ./wofi.nix
     ./vscode.nix
     ./ironbar.nix
+    ./hermes.nix
   ];
 
   programs.home-manager.enable = true;
