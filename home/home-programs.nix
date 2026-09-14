@@ -106,6 +106,11 @@
         krita
         gimp 
 
+        # vtuber (Inochi2D): creator = puppet editor (.INP), session =
+        # the runtime that drives a puppet live for OBS
+        inochi-creator
+        inochi-session
+
         # music
         lmms
 
