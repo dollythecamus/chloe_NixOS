@@ -46,5 +46,22 @@
       ln -sfn /var/lib/hermes/.hermes "$_h/.hermes"
       chown -h "$_u":hermes "$_h/.hermes" 2>/dev/null || true
     done
+
+    # ── Shared-state permissions ────────────────────────────────────────────
+    # The gateway (user hermes) writes credentials/caches 0600/0640 and some
+    # files end up root- or chloe-owned 0600; chloe's TUI hits EACCES on those
+    # ("/var/lib/hermes/.hermes/... Permission denied", auth.json spams every
+    # turn). Upstream already runs the unit with UMask=0007 and makes the state
+    # dirs setgid 2770, so this pass just completes the group-sharing layout on
+    # every activation: everything hermes:hermes, dirs 2770, files 0660,
+    # secrets (.env) 0640 (group read, no write), auth.json explicitly 0660 —
+    # hermes rewrites it 0600 on 'hermes auth', so re-normalize here.
+    if [ -d "/var/lib/hermes/.hermes" ]; then
+      chown -R hermes:hermes /var/lib/hermes/.hermes
+      find /var/lib/hermes/.hermes -type d -exec chmod 2770 {} +
+      find /var/lib/hermes/.hermes -type f -exec chmod 0660 {} +
+      chmod 0640 /var/lib/hermes/.hermes/.env
+      chmod 0660 /var/lib/hermes/.hermes/auth.json
+    fi
   '';
 }
