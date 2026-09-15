@@ -34,6 +34,26 @@
     algorithm = "zstd";
   };
 
+  # Suspend-to-disk hibernation into /swapfile (16 GiB >= ~11.4 GiB RAM). This is
+  # the only sleep path left on this laptop: the firmware advertises
+  # "ACPI: PM: (supports S0 S4 S5)" -- no S3 -- so suspend can only be s2idle,
+  # and s2idle resume is broken here (2026-09-15: `rtcwake -m mem -s 90` left the
+  # machine dead even with an independent RTC wake source; no `PM: suspend exit`
+  # appears anywhere in the journal from Sep 5 onward). Hibernation itself has
+  # never been exercised on this machine: the journal has no image save/load,
+  # no systemd-hibernate run and no hibernate request reaching logind, so nothing
+  # is known yet about whether it works. logind's CanHibernate reports "yes".
+  #
+  # boot.resumeDevice = the filesystem holding the swapfile (root ext4 -> the
+  # nvme0n1p4 UUID); the initrd then adds resume=DEV to the kernel cmdline. The
+  # swapfile's first extent must additionally be passed as resume_offset=N
+  # (both are needed to find the image at boot).
+  # NOTE: if the swapfile is ever recreated with a different geometry, re-run
+  #   sudo filefrag -v /swapfile
+  # and update resume_offset = <extent 0 physical offset> / 4096.
+  boot.resumeDevice = "/dev/disk/by-uuid/7dc941d5-0e7c-4380-acf7-4dde1adbd8e5";
+  boot.kernelParams = [ "resume_offset=4272128" ];
+
   # Enable NTFS to use files in external hard drive
   boot.supportedFilesystems = [ "ntfs" ];
 
