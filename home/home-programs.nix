@@ -6,25 +6,38 @@ let
   # Discord) where the laptop must not sleep. Screen lock (720s) and panel-off
   # (600s) below still happen; lid-close on AC is handled in modules/services.nix
   # via logind (HandleLidSwitchExternalPower = "lock").
-  # AC detection reads sysfs (no daemon dependency) and accepts any non-battery
-  # supply reporting online -- ACAD (type Mains) and, when charging over USB-C PD,
-  # ucsi-source-psy (type USB). BAT1 has no "online" attribute, so only external
-  # supplies can match.
+  #
+  # MUST use shell builtins only. swayidle's unit sets PATH to bash's own bin
+  # directory (no coreutils), so a coreutils call here fails *silently*: the
+  # first version used `cat`, every read came back empty, the loop fell through
+  # to "exit 1", and the machine suspended while plugged in. `read` needs no
+  # PATH. Anything else in these scripts must be an absolute store path.
+  # Any non-battery supply reporting online counts as external power: ACAD
+  # (type Mains) and, when charging over USB-C PD, ucsi-source-psy (type USB).
+  # BAT1 has no `online` attribute, so only external supplies can match.
   acOnline = pkgs.writeShellScript "ac-power-online" ''
     for p in /sys/class/power_supply/*; do
+      kind=""
+      state=""
       [ -r "$p/type" ] || continue
-      [ "$(cat "$p/type" 2>/dev/null)" = Battery ] && continue
-      [ "$(cat "$p/online" 2>/dev/null)" = 1 ] && exit 0
+      read -r kind < "$p/type"
+      [ "$kind" = Battery ] && continue
+      [ -r "$p/online" ] || continue
+      read -r state < "$p/online"
+      [ "$state" = 1 ] && exit 0
     done
     exit 1
   '';
 
   # swayidle runs this at the 30min idle mark instead of suspending outright.
+  # Both branches leave a breadcrumb in the journal (under swayidle.service) so a
+  # later investigation can tell which one ran.
   idleSuspend = pkgs.writeShellScript "idle-suspend-unless-ac" ''
     if ${acOnline}; then
-      echo "on external power: idle suspend suppressed" >&2
+      echo "idle-suspend: on external power, suspend suppressed" >&2
       exit 0
     fi
+    echo "idle-suspend: on battery, suspending" >&2
     exec ${pkgs.systemd}/bin/systemctl suspend
   '';
 in
