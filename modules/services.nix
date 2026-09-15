@@ -36,6 +36,19 @@
   };
   services.power-profiles-daemon.enable = false;
 
+  # Lid close: on battery suspend (unchanged); on external power lock only, never
+  # sleep. HandleLidSwitchExternalPower is "completely ignored by default"
+  # (logind.conf(5)) -- with no explicit value logind falls back to HandleLidSwitch,
+  # whose built-in default is "suspend" -- so the value must be set explicitly.
+  # niri takes no low-level "handle-lid-switch" lock (its login1 watcher only reads
+  # LidClosed for switch-events), so logind is the actor for the lid. "lock" makes
+  # logind lock all sessions -> swayidle's "lock" event runs swaylock -f.
+  # Idle suspend is a separate actor (swayidle); see home/home-programs.nix.
+  services.logind.settings.Login = {
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchExternalPower = "lock";
+  };
+
   # laptop battery power savings
   services.tlp = {
   enable = true;

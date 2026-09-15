@@ -1,5 +1,34 @@
 {config, pkgs, pkgs-unstable, inputs, ...}:
 
+let
+  # Idle suspend is skipped while the machine is on external power: plugged in
+  # means long unattended stretches (the Hermes gateway stays reachable from
+  # Discord) where the laptop must not sleep. Screen lock (720s) and panel-off
+  # (600s) below still happen; lid-close on AC is handled in modules/services.nix
+  # via logind (HandleLidSwitchExternalPower = "lock").
+  # AC detection reads sysfs (no daemon dependency) and accepts any non-battery
+  # supply reporting online -- ACAD (type Mains) and, when charging over USB-C PD,
+  # ucsi-source-psy (type USB). BAT1 has no "online" attribute, so only external
+  # supplies can match.
+  acOnline = pkgs.writeShellScript "ac-power-online" ''
+    for p in /sys/class/power_supply/*; do
+      [ -r "$p/type" ] || continue
+      [ "$(cat "$p/type" 2>/dev/null)" = Battery ] && continue
+      [ "$(cat "$p/online" 2>/dev/null)" = 1 ] && exit 0
+    done
+    exit 1
+  '';
+
+  # swayidle runs this at the 30min idle mark instead of suspending outright.
+  idleSuspend = pkgs.writeShellScript "idle-suspend-unless-ac" ''
+    if ${acOnline}; then
+      echo "on external power: idle suspend suppressed" >&2
+      exit 0
+    fi
+    exec ${pkgs.systemd}/bin/systemctl suspend
+  '';
+in
+
 {
   imports = [
        # gamedev
@@ -28,6 +57,8 @@
   # idle: dim/lock/suspend. niri serves ext-idle-notify, which swayidle >=1.8
   # speaks. graphical-session.target works because niri's systemd generator
   # starts it for the session (same target as nm-applet above).
+  # Suspend at 30min fires only while on battery (idleSuspend above); on AC the
+  # machine stays awake and merely stays locked.
   services.swayidle = {
     enable = true;
     systemdTargets = [ "graphical-session.target" ];
@@ -39,7 +70,7 @@
       # DPMS-off the outputs at 10min (wlopm), lock at 12min, suspend at 30min
       { timeout = 600; command = "${pkgs.wlopm}/bin/wlopm --off"; resumeCommand = "${pkgs.wlopm}/bin/wlopm --on"; }
       { timeout = 720; command = "${pkgs.swaylock}/bin/swaylock -f"; }
-      { timeout = 1800; command = "${pkgs.systemd}/bin/systemctl suspend"; }
+      { timeout = 1800; command = "${idleSuspend}"; }
     ];
   };
 
@@ -108,6 +139,11 @@
 
         # music
         lmms
+
+        # audio: routing/level GUI -- output & input device selection, per-device
+        # profiles (analog/headset/etc.), per-app volume and stream routing.
+        # Talks to the system-wide pipewire-pulse socket (/var/run/pulse/native).
+        pavucontrol
 
         # dev
         github-desktop
