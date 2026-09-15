@@ -21,13 +21,20 @@
     ./modules/programs.nix
     
   ]
-  # Desktop layer. Both stacks keep niri and the shared session bits; they differ
-  # in the login manager and in whether the GNOME desktop-manager shim is on.
-  # `desktop` comes from the flake's specialArgs (nixosConfigurations.chloe-laptop
-  # = "niri", .chloe-laptop-plasma = "plasma").
+  # Desktop layer. Both generations use the SAME login manager (ly) and keep
+  # niri, so the only thing the plasma output changes is which desktop session is
+  # on offer: the GNOME desktop-manager shim on one side, Plasma 6 on the other.
+  # `desktop` comes from the flake's specialArgs
+  # (nixosConfigurations.chloe-laptop = "niri", .chloe-laptop-plasma = "plasma").
+  # ly is shared on purpose: it comes up on this laptop, and its session list is
+  # built from the same sessionData.desktops directory that holds plasma.desktop,
+  # so the Plasma generation cannot cost a working login screen. (SDDM was tried
+  # for the plasma output on 2026-09-15 and showed nothing at all -- see the
+  # WAYLAND_DISPLAY note in modules/desktop/plasma.nix for the cause.)
+  ++ [ ./modules/desktop/ly.nix ]
   ++ (if desktop == "plasma"
       then [ ./modules/desktop/plasma.nix ]
-      else [ ./modules/desktop/gnome-shim.nix ./modules/desktop/ly.nix ]);
+      else [ ./modules/desktop/gnome-shim.nix ]);
 
   # Garbage collection. Until now there was no policy at all: 75 GiB in
   # /nix/store and the root filesystem at 85% (42 GiB free). Weekly, dropping
