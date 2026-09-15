@@ -60,6 +60,7 @@
           ./host_chloe-laptop.nix
           ./modules/llm.nix
           ./modules/hermes.nix
+          ./modules/cua-driver.nix
     
           home-manager.nixosModules.home-manager {
             

@@ -23,6 +23,12 @@ display:
   tool_progress: all
 computer_use:
   backend: cua
+  # Route the driver through niri's native Wayland backend instead of the
+  # XWayland-only view (no X11 clients here, so X11 mode sees nothing).
+  # Hermes turns this into CUA_DRIVER_RS_ENABLE_WAYLAND=1 in the driver child
+  # env (tools/computer_use/cua_backend.py); the same variable is also exported
+  # session-wide by modules/cua-driver.nix for manual `cua-driver doctor` runs.
+  native_wayland: true
 proxy:
   enabled: true
 memory:
