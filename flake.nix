@@ -80,7 +80,7 @@
             home-manager.backupFileExtension = "__backup";
             home-manager.useGlobalPkgs = false;
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
+            home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable desktop; };
             home-manager.users.chloe = ./home/chloe.nix;
           }
         ];

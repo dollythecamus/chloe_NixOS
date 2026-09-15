@@ -1,4 +1,4 @@
-{config, pkgs, pkgs-unstable, inputs, ...}:
+{config, pkgs, pkgs-unstable, inputs, desktop, ...}:
 
 {
   imports = [
@@ -13,17 +13,17 @@
   	./gaming.nix
   ];
 
-  # notifications
-  services.dunst = {
-    enable = true;
-  };
-
-  # network applet: tray icon + dialogs (wifi password prompts, edit connections)
-  # bluetooth applet is already autostarted by services.blueman (system)
-  services.network-manager-applet.enable = true;
-
-  # low/critical battery + charging notifications via upower (into dunst)
-  services.poweralertd.enable = true;
+  # Desktop-session pieces -- niri's, not Plasma's. In the plasma generation the
+  # session owns all four roles itself: plasmashell *is* the notification daemon
+  # and the tray (network/battery/bluetooth applets), and powerdevil +
+  # kscreenlocker own idle and locking. Running the niri-era daemons there would
+  # put two processes behind org.freedesktop.Notifications (one loses the name
+  # and logs it) and double the tray. `desktop` comes from the flake's
+  # home-manager.extraSpecialArgs.
+  services.dunst.enable = desktop != "plasma";
+  services.network-manager-applet.enable = desktop != "plasma";
+  services.poweralertd.enable = desktop != "plasma";
+  services.swayidle.enable = desktop != "plasma";
 
   # idle: dim/lock only -- NO automatic suspend (see below). niri serves
   # ext-idle-notify, which swayidle >=1.8 speaks. graphical-session.target works
