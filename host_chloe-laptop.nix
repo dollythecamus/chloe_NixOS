@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, desktop, ... }:
 
 {
   imports = [
@@ -15,13 +15,36 @@
 
     ./modules/desktop/space-home.nix
     ./modules/desktop/niri.nix
-    ./modules/desktop/ly.nix
     
     ./modules/system-packages.nix
     ./modules/services.nix 
     ./modules/programs.nix
     
-  ];
+  ]
+  # Desktop layer. Both stacks keep niri and the shared session bits; they differ
+  # in the login manager and in whether the GNOME desktop-manager shim is on.
+  # `desktop` comes from the flake's specialArgs (nixosConfigurations.chloe-laptop
+  # = "niri", .chloe-laptop-plasma = "plasma").
+  ++ (if desktop == "plasma"
+      then [ ./modules/desktop/plasma.nix ]
+      else [ ./modules/desktop/gnome-shim.nix ./modules/desktop/ly.nix ]);
+
+  # Garbage collection. Until now there was no policy at all: 75 GiB in
+  # /nix/store and the root filesystem at 85% (42 GiB free). Weekly, dropping
+  # generations older than 14 days; the *boot menu* keeps the 10 most recent
+  # entries regardless (GRUB's default configurationLimit is 100). Note the two
+  # are independent: configurationLimit limits the menu, nix.gc decides what is
+  # reclaimable.
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
+  };
+  # Hardlink identical files in the store. With two nixpkgs pins (26.05 and
+  # nixpkgs-unstable for hermes-agent/lmstudio/btop-cuda) the same sources land
+  # twice -- linux-firmware, nvidia-x11, clang libs and cef-binary are all in the
+  # store twice -- and this is what stops that doubling.
+  nix.settings.auto-optimise-store = true;
 
   # Compressed RAM swap, priority 100 > the 16 GiB disk swapfile's 10, so
   # zram is consumed before anything hits the disk. zstd is the best
@@ -63,6 +86,9 @@
   	grub.device = "nodev";
   	grub.useOSProber = true;
   	grub.efiSupport = true;
+  	# Keep the boot menu to 10 entries (GRUB's default is 100). The store keeps
+  	# generations for 14 days per nix.gc above -- the two limits are independent.
+  	grub.configurationLimit = 10;
   	efi.efiSysMountPoint = "/boot";
   	efi.canTouchEfiVariables = true;
   };

@@ -141,7 +141,10 @@
 
         # screen locker (the niri Super+Alt+L bind spawns this)
         swaylock
-        # DPMS on/off for wayland (used by swayidle timeouts, Mod+Shift+S)
+        # DPMS on/off for wayland. No config uses it any more: the swayidle
+        # timeouts and Mod+Shift+S/Mod+Shift+P all use niri's own
+        # power-off/on-monitors actions (wlopm --off requires an output name).
+        # Kept for manual use only.
         wlopm
   ];
 

@@ -48,15 +48,23 @@
         inherit system;
 	      config.allowUnfree = true;
       };
-  in
-  {
-    nixosConfigurations = {
-      chloe-laptop = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs system pkgs-unstable; };
+
+      # One host, two desktop stacks. `desktop` is a module argument (passed
+      # through specialArgs), so host_chloe-laptop.nix picks the login manager
+      # and the desktop layer from it:
+      #   niri   -- the live configuration: niri + ly + the GNOME shim
+      #   plasma -- the KDE Plasma 6 evaluation: SDDM is the login manager, niri
+      #             stays available in the session menu, the GNOME
+      #             desktop-manager shim is dropped
+      # Same hostName, same hardware, same user config -- the A/B is the desktop
+      # layer only, and either output can be booted from GRUB's generation list.
+      mkSystem = desktop: nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs system pkgs-unstable self desktop; };
         modules = [
 
           inputs.hermes-agent.nixosModules.default
           inputs.agenix.nixosModules.default
+          ./modules/revision.nix
           ./host_chloe-laptop.nix
           ./modules/llm.nix
           ./modules/hermes.nix
@@ -77,6 +85,11 @@
           }
         ];
       };
+  in
+  {
+    nixosConfigurations = {
+      chloe-laptop = mkSystem "niri";
+      chloe-laptop-plasma = mkSystem "plasma";
     };
   };
 }

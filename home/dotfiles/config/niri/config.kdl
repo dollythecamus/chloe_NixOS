@@ -338,7 +338,11 @@ binds {
     Mod+Shift+Ctrl+N hotkey-overlay-title="Wi-Fi Radio Toggle" { spawn-sh "nmcli radio wifi grep -q enabled && nmcli radio wifi off || nmcli radio wifi on"; }
     Mod+Shift+B hotkey-overlay-title="Bluetooth Manager: blueman" { spawn "blueman-manager"; }
     Super+Alt+L allow-when-locked=true hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock" "-f"; }
-    Mod+Shift+S hotkey-overlay-title="Screens Off Now: wlopm" { spawn "wlopm" "--off"; }
+    // wlopm needs an explicit output name (`wlopm --off <output>`), so the old
+    // `spawn "wlopm" "--off"` never blanked anything -- it just logged "ERROR:
+    // '--off' needs an output name". niri's own action needs no output name and
+    // turns the monitors back on at the next input.
+    Mod+Shift+S hotkey-overlay-title="Screens Off Now: niri power-off-monitors" { power-off-monitors; }
 
     // toggle ironbar visible
     Mod+B {spawn-sh "ironbar bar minimal toggle-visible";}
