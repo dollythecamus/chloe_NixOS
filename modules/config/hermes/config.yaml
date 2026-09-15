@@ -8,8 +8,15 @@ agent:
 terminal:
   backend: local
 web:
+  # Keyless free tier: Firecrawl's anonymous public cloud endpoint (no API key,
+  # no account) for BOTH search and extract; on throttle the keyless ring fails
+  # over to Exa -> Parallel -> Keenable. Do NOT set use_gateway: true here — it
+  # selects the managed Nous Tool Gateway, which this instance has no
+  # subscription for, and every web_search/web_extract call then fails with
+  # "the Nous Tool Gateway is not available (not entitled or unreachable)".
   backend: firecrawl
-  use_gateway: true
+  provider_tier:
+    firecrawl: free
 browser:
   cloud_provider: local
 display:
