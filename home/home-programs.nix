@@ -80,8 +80,13 @@ in
       "lock" = "${pkgs.swaylock}/bin/swaylock -f";
     };
     timeouts = [
-      # DPMS-off the outputs at 10min (wlopm), lock at 12min, suspend at 30min
-      { timeout = 600; command = "${pkgs.wlopm}/bin/wlopm --off"; resumeCommand = "${pkgs.wlopm}/bin/wlopm --on"; }
+      # DPMS-off the outputs at 10min, lock at 12min, suspend at 30min.
+      # niri's own power-off/on-monitors actions (niri >= 26.04) replace wlopm:
+      # `wlopm --off` needs an output name, so the old line only ever produced
+      # "ERROR: '--off' needs an output name" in the journal and the panel never
+      # blanked. The niri action needs no output name and covers every output;
+      # NIRI_SOCKET is in swayidle's environment (verified on the live process).
+      { timeout = 600; command = "${pkgs.niri}/bin/niri msg action power-off-monitors"; resumeCommand = "${pkgs.niri}/bin/niri msg action power-on-monitors"; }
       { timeout = 720; command = "${pkgs.swaylock}/bin/swaylock -f"; }
       { timeout = 1800; command = "${idleSuspend}"; }
     ];
