@@ -118,6 +118,7 @@
         # the runtime that drives a puppet live for OBS
         inochi-creator
         inochi-session
+        openseeface
 
         # music
         lmms
