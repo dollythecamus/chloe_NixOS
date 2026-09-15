@@ -30,7 +30,7 @@
   # because niri's systemd generator starts it for the session (same target as
   # nm-applet above).
   services.swayidle = {
-    enable = true;
+    # `enable` is set by the desktop branch above
     systemdTargets = [ "graphical-session.target" ];
     events = {
       "before-sleep" = "${pkgs.swaylock}/bin/swaylock -f";
