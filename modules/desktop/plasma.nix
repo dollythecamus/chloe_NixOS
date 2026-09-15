@@ -28,9 +28,14 @@
   };
 
   # Plumbing that the GNOME shim used to provide (modules/desktop/gnome-shim.nix).
-  # Dropping the shim must not drop the secret store or the ssh-agent with it.
+  # Dropping the shim must not drop the secret store, the ssh-agent or the file
+  # manager's virtual filesystem (nautilus is in home.packages; without gvfs it
+  # loses trash/remote/MTP integration). Deliberately NOT re-added: localsearch +
+  # tinysparql (the Tracker indexers the shim started -- 335 MB RSS when observed),
+  # so file *search* inside nautilus stays off in this generation.
   services.gnome.gnome-keyring.enable = true;
   services.gnome.gcr-ssh-agent.enable = true;
+  services.gvfs.enable = true;
 
   # XDG_CURRENT_DESKTOP is hardcoded to "niri" by the shared session-variable
   # modules (root xdg.nix and modules/desktop/niri.nix). In a Plasma session that
