@@ -1,47 +1,5 @@
 {config, pkgs, pkgs-unstable, inputs, ...}:
 
-let
-  # Idle suspend is skipped while the machine is on external power: plugged in
-  # means long unattended stretches (the Hermes gateway stays reachable from
-  # Discord) where the laptop must not sleep. Screen lock (720s) and panel-off
-  # (600s) below still happen; lid-close on AC is handled in modules/services.nix
-  # via logind (HandleLidSwitchExternalPower = "lock").
-  #
-  # MUST use shell builtins only. swayidle's unit sets PATH to bash's own bin
-  # directory (no coreutils), so a coreutils call here fails *silently*: the
-  # first version used `cat`, every read came back empty, the loop fell through
-  # to "exit 1", and the machine suspended while plugged in. `read` needs no
-  # PATH. Anything else in these scripts must be an absolute store path.
-  # Any non-battery supply reporting online counts as external power: ACAD
-  # (type Mains) and, when charging over USB-C PD, ucsi-source-psy (type USB).
-  # BAT1 has no `online` attribute, so only external supplies can match.
-  acOnline = pkgs.writeShellScript "ac-power-online" ''
-    for p in /sys/class/power_supply/*; do
-      kind=""
-      state=""
-      [ -r "$p/type" ] || continue
-      read -r kind < "$p/type"
-      [ "$kind" = Battery ] && continue
-      [ -r "$p/online" ] || continue
-      read -r state < "$p/online"
-      [ "$state" = 1 ] && exit 0
-    done
-    exit 1
-  '';
-
-  # swayidle runs this at the 30min idle mark instead of suspending outright.
-  # Both branches leave a breadcrumb in the journal (under swayidle.service) so a
-  # later investigation can tell which one ran.
-  idleSuspend = pkgs.writeShellScript "idle-suspend-unless-ac" ''
-    if ${acOnline}; then
-      echo "idle-suspend: on external power, suspend suppressed" >&2
-      exit 0
-    fi
-    echo "idle-suspend: on battery, suspending" >&2
-    exec ${pkgs.systemd}/bin/systemctl suspend
-  '';
-in
-
 {
   imports = [
        # gamedev
@@ -67,11 +25,10 @@ in
   # low/critical battery + charging notifications via upower (into dunst)
   services.poweralertd.enable = true;
 
-  # idle: dim/lock/suspend. niri serves ext-idle-notify, which swayidle >=1.8
-  # speaks. graphical-session.target works because niri's systemd generator
-  # starts it for the session (same target as nm-applet above).
-  # Suspend at 30min fires only while on battery (idleSuspend above); on AC the
-  # machine stays awake and merely stays locked.
+  # idle: dim/lock only -- NO automatic suspend (see below). niri serves
+  # ext-idle-notify, which swayidle >=1.8 speaks. graphical-session.target works
+  # because niri's systemd generator starts it for the session (same target as
+  # nm-applet above).
   services.swayidle = {
     enable = true;
     systemdTargets = [ "graphical-session.target" ];
@@ -80,15 +37,17 @@ in
       "lock" = "${pkgs.swaylock}/bin/swaylock -f";
     };
     timeouts = [
-      # DPMS-off the outputs at 10min, lock at 12min, suspend at 30min.
-      # niri's own power-off/on-monitors actions (niri >= 26.04) replace wlopm:
-      # `wlopm --off` needs an output name, so the old line only ever produced
-      # "ERROR: '--off' needs an output name" in the journal and the panel never
-      # blanked. The niri action needs no output name and covers every output;
-      # NIRI_SOCKET is in swayidle's environment (verified on the live process).
+      # DPMS-off the outputs at 10min, lock at 12min. No suspend timeout: every
+      # suspend on this laptop has hung (no `PM: suspend exit` in the journal
+      # history, forced power-off each time), so nothing automatic may suspend it
+      # until that is fixed. Deliberate suspends (rtcwake, `systemctl suspend`)
+      # still work for testing.
+      # niri's own power-off/on-monitors actions: `wlopm --off` needs an output
+      # name, so the old line only ever logged "ERROR: '--off' needs an output
+      # name" and the panel never blanked. NIRI_SOCKET is in swayidle's env
+      # (verified on the live process).
       { timeout = 600; command = "${pkgs.niri}/bin/niri msg action power-off-monitors"; resumeCommand = "${pkgs.niri}/bin/niri msg action power-on-monitors"; }
       { timeout = 720; command = "${pkgs.swaylock}/bin/swaylock -f"; }
-      { timeout = 1800; command = "${idleSuspend}"; }
     ];
   };
 

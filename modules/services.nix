@@ -36,16 +36,21 @@
   };
   services.power-profiles-daemon.enable = false;
 
-  # Lid close: on battery suspend (unchanged); on external power lock only, never
-  # sleep. HandleLidSwitchExternalPower is "completely ignored by default"
-  # (logind.conf(5)) -- with no explicit value logind falls back to HandleLidSwitch,
-  # whose built-in default is "suspend" -- so the value must be set explicitly.
-  # niri takes no low-level "handle-lid-switch" lock (its login1 watcher only reads
-  # LidClosed for switch-events), so logind is the actor for the lid. "lock" makes
-  # logind lock all sessions -> swayidle's "lock" event runs swaylock -f.
-  # Idle suspend is a separate actor (swayidle); see home/home-programs.nix.
+  # Lid close: lock the screen, never sleep -- on battery and on external power
+  # alike. Every suspend on this laptop hangs and needs a forced power-off (no
+  # `PM: suspend exit` anywhere in the journal history), so until that is fixed
+  # nothing automatic may suspend it; the idle path is covered by dropping the
+  # suspend timeout in home/home-programs.nix. Deliberate suspends (rtcwake,
+  # `systemctl suspend`) still work for testing the wake failure.
+  # HandleLidSwitchExternalPower is "completely ignored by default"
+  # (logind.conf(5)) -- with no explicit value logind falls back to
+  # HandleLidSwitch, whose built-in default is "suspend" -- so both arms must be
+  # set explicitly. niri takes no low-level "handle-lid-switch" lock (its login1
+  # watcher only reads LidClosed for switch-events), so logind is the actor.
+  # "lock" makes logind lock all sessions -> swayidle's "lock" event runs
+  # swaylock -f.
   services.logind.settings.Login = {
-    HandleLidSwitch = "suspend";
+    HandleLidSwitch = "lock";
     HandleLidSwitchExternalPower = "lock";
   };
 
