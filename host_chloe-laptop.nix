@@ -34,16 +34,6 @@
     algorithm = "zstd";
   };
 
-  # Suspend-to-disk hibernation using /swapfile (16 GiB >= ~98% of 11.4 GiB RAM).
-  # Root ext4 UUID -> nvme0n1p4. boot.resumeDevice makes the initrd generator add
-  # resume=DEV to the kernel cmdline; the swapfile's physical extent offset must be
-  # passed as resume_offset=N (systemd's hibernate-resume needs both).
-  # NOTE: if the swapfile is ever recreated with a different geometry, re-run
-  #   sudo filefrag -v /swapfile
-  # and update resume_offset = <extent 0 physical> / 4096.
-  boot.resumeDevice = "/dev/disk/by-uuid/7dc941d5-0e7c-4380-acf7-4dde1adbd8e5";
-  boot.kernelParams = [ "resume_offset=4272128" ];
-
   # Enable NTFS to use files in external hard drive
   boot.supportedFilesystems = [ "ntfs" ];
 
