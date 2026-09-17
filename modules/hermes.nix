@@ -17,6 +17,17 @@
 
     configFile = ./config/hermes/config.yaml;
 
+    # ── Identity ─────────────────────────────────────────────────────────
+    # Hermes reads SOUL.md from HERMES_HOME and nowhere else (agent/
+    # prompt_builder.load_soul_md — identity slot #1), so it belongs in the
+    # store, not in a working directory. The module installs this file at
+    # every activation as a real file (install -o hermes -g hermes -m 0640),
+    # which is what both the gateway and the interactive TUI read: chloe's
+    # ~/.hermes is the symlink bridge to /var/lib/hermes/.hermes. Editing the
+    # file on disk is therefore a runtime edit that the next switch reverts —
+    # change it here.
+    hermesHomeFiles."SOUL.md" = ./config/hermes/SOUL.md;
+
     # Path to the environment files containing API tokens/keys
     environmentFiles = [ 
         config.age.secrets.hermes-env.path
