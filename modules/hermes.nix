@@ -26,7 +26,18 @@
     # ~/.hermes is the symlink bridge to /var/lib/hermes/.hermes. Editing the
     # file on disk is therefore a runtime edit that the next switch reverts —
     # change it here.
-    hermesHomeFiles."SOUL.md" = ./config/hermes/SOUL.md;
+    hermesHomeFiles = {
+      "SOUL.md" = ./config/hermes/SOUL.md;
+
+      # ── The `code` profile's identity ───────────────────────────────────
+      # A profile has its own HERMES_HOME ($HERMES_HOME/profiles/<name>), and
+      # Hermes reads that profile's SOUL.md from there — so the identity of
+      # the coding profile is declared here for the same reason as the root
+      # one. It is the same file Hermes would otherwise own at runtime; the
+      # difference is that this one is recorded in git and survives a
+      # re-clone of the profile.
+      "profiles/code/SOUL.md" = ./config/hermes/SOUL-code.md;
+    };
 
     # Path to the environment files containing API tokens/keys
     environmentFiles = [ 
