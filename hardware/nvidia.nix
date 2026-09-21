@@ -1,11 +1,24 @@
-{config, inputs, ...}:
+{config, inputs, pkgs, ...}:
 
 {
   # Nvidia Configuration
 
   # Enable OpenGL
+  #
+  # extraPackages: the OpenCL ICD *loader* (libOpenCL.so.1). The NVIDIA driver
+  # ships only the vendor ICD (libnvidia-opencl.so.1 + /run/opengl-driver/etc/
+  # OpenCL/vendors/nvidia.icd); the vendor-neutral loader comes from pkgs.ocl-icd.
+  # With nothing providing it, Unity's GPU lightmapper backend
+  # (Editor/Data/Tools/libRadeonRays.so, a hard dynamic dependency on
+  # libOpenCL.so.1) failed to load and the editor logged "Light baking could not
+  # be started because no valid OpenCL device could be found" despite a working
+  # CUDA OpenCL platform. ocl-icd is built with
+  # --enable-custom-vendordir=/run/opengl-driver/etc/OpenCL/vendors, so its default
+  # vendor search path is already the populated NixOS one — no OCL_ICD_VENDORS,
+  # no OPENCL_VENDOR_PATH, and no unityhub override are needed.
   hardware.graphics = {
     enable = true;
+    extraPackages = [ pkgs.ocl-icd ];
   };
 
   # Load nvidia driver for Xorg and Wayland
