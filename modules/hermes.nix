@@ -37,6 +37,12 @@
       # difference is that this one is recorded in git and survives a
       # re-clone of the profile.
       "profiles/code/SOUL.md" = ./config/hermes/SOUL-code.md;
+
+      # ── The `nixos` profile's identity ──────────────────────────────────
+      # Same mechanism, same reason: the NixOS configuration profile reads
+      # its identity from profiles/nixos/SOUL.md, so it is declared here and
+      # not left as a runtime edit.
+      "profiles/nixos/SOUL.md" = ./config/hermes/SOUL-nixos.md;
     };
 
     # Path to the environment files containing API tokens/keys
