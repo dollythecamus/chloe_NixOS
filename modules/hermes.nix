@@ -11,6 +11,20 @@
     enable = true;
     # container = {enable = true; hostUsers = ["chloe"];};
 
+    # ── Single-owner state (fixes the recurring 0600/0700 EACCES lockout) ──
+    # Hermes hardcodes owner-only chmods at runtime (auth.json 0600, state.db
+    # chmod-by-owner via _secure_state_db_files, HERMES_HOME → 0700 on every
+    # credential save). With the gateway on uid `hermes` and the TUI on uid
+    # `chloe`, each side repeatedly locks the other out; a non-owner chmod is
+    # EPERM regardless of group bits, so only the repair script (sudo) could
+    # undo it. Running the gateway AS chloe collapses both into one owner:
+    # 0600 files remain writable by both sides by construction. Tradeoff —
+    # gateway-initiated turns (Discord, cron, webhooks) now run with chloe's
+    # full privileges instead of a sandboxed system account. Chloe accepted
+    # this (2026-09-23) over the container restructure and over a chmod timer.
+    user = "chloe";
+    group = "hermes";
+    createUser = false;
     extraDependencyGroups = ["messaging" "anthropic"];
     # messaging  = discord
     # hindsight  = memory provider
