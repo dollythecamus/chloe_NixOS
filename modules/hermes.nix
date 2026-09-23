@@ -1,11 +1,16 @@
 {config, pkgs, lib, inputs, ... }:
-
 {
     # SearXNG — self-hosted search engine
       # used by hermesn
-    imports = [ 
-      #./searxng.nix 
+    imports = [
+      #./searxng.nix
     ];
+
+    # createUser = false also disables the module's `users.groups.hermes = {}`
+    # creation — without it the gateway unit fails at step GROUP ("Unknown
+    # group"). The group is kept: it is wired into stateDir ownership modes and
+    # chloe's extraGroups; we drop only the module-created SERVICE user.
+    users.groups.hermes = { };
 
     services.hermes-agent = {
     enable = true;
@@ -25,11 +30,7 @@
     user = "chloe";
     group = "hermes";
     createUser = false;
-    # createUser = false also disables the module's `users.groups.hermes = {}`
-    # creation — without this the unit fails at step GROUP ("Unknown group").
-    # Keep the group (it's already wired into stateDir modes + chloe's
-    # extraGroups) while dropping only the module-created service user.
-    users.groups.hermes = { };
+
     extraDependencyGroups = ["messaging" "anthropic"];
     # messaging  = discord
     # hindsight  = memory provider
@@ -40,11 +41,11 @@
     # Hermes reads SOUL.md from HERMES_HOME and nowhere else (agent/
     # prompt_builder.load_soul_md — identity slot #1), so it belongs in the
     # store, not in a working directory. The module installs this file at
-    # every activation as a real file (install -o hermes -g hermes -m 0640),
-    # which is what both the gateway and the interactive TUI read: chloe's
-    # ~/.hermes is the symlink bridge to /var/lib/hermes/.hermes. Editing the
-    # file on disk is therefore a runtime edit that the next switch reverts —
-    # change it here.
+    # every activation as a real file (install -o ${cfg.user} -g ${cfg.group}
+    # -m 0640), which is what both the gateway and the interactive TUI read:
+    # chloe's ~/.hermes is the symlink bridge to /var/lib/hermes/.hermes.
+    # Editing the file on disk is therefore a runtime edit that the next
+    # switch reverts — change it here.
     hermesHomeFiles = {
       "SOUL.md" = ./config/hermes/SOUL.md;
 
@@ -65,10 +66,10 @@
     };
 
     # Path to the environment files containing API tokens/keys
-    environmentFiles = [ 
+    environmentFiles = [
         config.age.secrets.hermes-env.path
     ];
-    
+
     # links the 'hermes' CLI tool to system packages
     addToSystemPackages = true;
   };
@@ -80,8 +81,9 @@
   # without it (sudo-ed env, GUI launchers) silently fall back to $HOME/.hermes
   # and create a SECOND, empty brain — no memory, no skills, no history, and
   # repeated "run hermes setup again" prompts. This is that missing bridge.
-  # Run hermes as chloe (member of the hermes group), NOT via sudo: root-owned
-  # files with umask 022 break the gateway's group write access.
+  # Run hermes NATIVELY as chloe (the gateway now runs as chloe too — see
+  # above); do NOT run the TUI via sudo: root-owned files with umask 022
+  # break group access and mask permission bugs.
   system.activationScripts."hermes-user-bridge" = lib.stringAfter [ "hermes-agent-setup" ] ''
     for _t in "chloe:/home/chloe" "root:/root"; do
       _u="''${_t%%:*}"; _h="''${_t##*:}"
