@@ -25,6 +25,11 @@
     user = "chloe";
     group = "hermes";
     createUser = false;
+    # createUser = false also disables the module's `users.groups.hermes = {}`
+    # creation — without this the unit fails at step GROUP ("Unknown group").
+    # Keep the group (it's already wired into stateDir modes + chloe's
+    # extraGroups) while dropping only the module-created service user.
+    users.groups.hermes = { };
     extraDependencyGroups = ["messaging" "anthropic"];
     # messaging  = discord
     # hindsight  = memory provider
