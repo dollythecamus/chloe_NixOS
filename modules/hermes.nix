@@ -11,7 +11,7 @@
     enable = true;
     # container = {enable = true; hostUsers = ["chloe"];};
 
-    extraDependencyGroups = ["messaging" "hindsight" "anthropic"];
+    extraDependencyGroups = ["messaging" "anthropic"];
     # messaging  = discord
     # hindsight  = memory provider
 
