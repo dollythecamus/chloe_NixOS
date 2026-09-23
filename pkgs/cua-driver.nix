@@ -19,10 +19,10 @@
 #   driver from the XWayland-only view to niri's wlroots globals (foreign-toplevel
 #   discovery, screencopy capture, virtual pointer/keyboard).
 { lib
+, pkgs
 , stdenv
 , fetchurl
 , autoPatchelfHook
-, xorg
 , libxkbcommon
 }:
 
@@ -43,12 +43,12 @@ stdenv.mkDerivation (finalAttrs: {
   # libX11/libXi/libxkbcommon are what `cua-driver` actually links against;
   # the remaining X libraries are the ones the AT-SPI/XTest paths reach for.
   buildInputs = [
-    xorg.libX11
-    xorg.libXi
-    xorg.libXtst
-    xorg.libXext
-    xorg.libXrandr
-    xorg.libXfixes
+    pkgs.libx11
+    pkgs.libxi
+    pkgs.libxtst
+    pkgs.libxext
+    pkgs.libxrandr
+    pkgs.libxfixes
     libxkbcommon
     stdenv.cc.cc.lib
   ];

@@ -54,6 +54,9 @@
   programs.nixcord = {
     enable = true;
     vesktop.enable = true;
+    # Vesktop is used without Vencord/Equicord injected by choice; nixcord
+    # otherwise warns on every eval about the "no mod client" combination.
+    discord.silenceNoModClientWarning = true;
   };
 
   programs.obsidian = {
