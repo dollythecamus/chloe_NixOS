@@ -17,10 +17,20 @@
     ./modules/desktop/niri.nix
     
     ./modules/system-packages.nix
-    ./modules/services.nix 
+    ./modules/services.nix
     ./modules/programs.nix
-    
-  ]
+
+    # 2026-09-23: revive the tree's existing modules/nix-ld.nix so dynamically
+    # linked, non-nix executables can run. Hermes' browser toolset shells
+    # agent-browser via `npx agent-browser`, and agent-browser's Linux binary
+    # (and its Playwright Chromium) is a generic glibc build — it does not exec
+    # on a stock NixOS because /lib64/ld-linux-x86-64.so.2 is the stub-ld
+    # placeholder ("NixOS cannot run dynamically linked executables...").
+    # The module sets NIX_LD + NIX_LD_LIBRARY_PATH and ships a real ld-linux,
+    # so nix-ld-aware binaries run. Also required for anything else dropped
+    # outside nix (npm-installed tools, appimages).
+    ./modules/nix-ld.nix
+]
   # Desktop layer. Both generations use the SAME login manager (ly) and keep
   # niri, so the only thing the plasma output changes is which desktop session is
   # on offer: the GNOME desktop-manager shim on one side, Plasma 6 on the other.

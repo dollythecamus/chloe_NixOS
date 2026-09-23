@@ -8,15 +8,25 @@ agent:
 terminal:
   backend: local
 web:
-  # Keyless free tier: Firecrawl's anonymous public cloud endpoint (no API key,
-  # no account) for BOTH search and extract; on throttle the keyless ring fails
-  # over to Exa -> Parallel -> Keenable. Do NOT set use_gateway: true here — it
+  # Parallel.ai's anonymous keyless endpoint (no API key, no account) for BOTH
+  # search and extract; on throttle the keyless ring fails over to
+  # Firecrawl -> Exa -> Keenable. Do NOT set use_gateway: true here — it
   # selects the managed Nous Tool Gateway, which this instance has no
   # subscription for, and every web_search/web_extract call then fails with
   # "the Nous Tool Gateway is not available (not entitled or unreachable)".
-  backend: firecrawl
+  #
+  # 2026-09-23: this was `firecrawl` with a `free` tier pin. Firecrawl's
+  # keyless cloud endpoint returns HTTP 403 Forbidden for every request
+  # (verified against https://api.firecrawl.dev/v2/search and /v2/scrape), and
+  # because the config *named* firecrawl the keyless ring pinned the walk to
+  # start there; the error is not rate-limit-shaped so the walk stopped
+  # immediately and every web_search / web_extract call failed (out-of-band
+  # 403 from Firecrawl, not an entitlement problem). Parallel is verified
+  # working keyless for both search and extract; `provider_tier.parallel:
+  # free` routes it keyless even if an API key is later added to .env.
+  backend: parallel
   provider_tier:
-    firecrawl: free
+    parallel: free
 browser:
   cloud_provider: local
 display:
