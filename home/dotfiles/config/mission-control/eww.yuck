@@ -14,6 +14,7 @@
       (label :xalign 0 :text "MISSION // CONTROL")
       (label :xalign 0 :class "sub" :text "SWAY · PROTOTYPE 01"))
     (label :xalign 0 :yalign 0 :class "workspace" :text workspaces)
+    (label :xalign 0 :class "hotkey-hint" :text "SUPER+F1 // HOTKEYS")
     (box :orientation "v" :class "telemetry" :space-evenly false
       (label :xalign 0 :text {status.battery ?: "BAT --"})
       (label :xalign 0 :text {status.cpu ?: "CPU --"})
@@ -22,15 +23,7 @@
       (label :xalign 0 :text {status.disk ?: "DISK --"})
       (label :xalign 0 :text {status.audio ?: "AUDIO --"}))
     (label :xalign 0 :class "clock" :text clock)
-    (button :class "control" :onclick "bash $HOME/.config/mission-control/control.sh theme"
-      "THEME // SUPER+T")
-    (button :class "control" :onclick "bash $HOME/.config/mission-control/control.sh expand"
-      "EXPAND // SUPER+B")
-    (button :class "control" :onclick "bash $HOME/.config/mission-control/control.sh keys"
-      "KEYS // SUPER+F1")
-    (label :xalign 0 :class "sub" :text "SUPER+P pet · SUPER+O orbits")
-    (box :expand true)
-    (label :xalign 0 :class "footer" :text "FULLSCREEN: SUPER+SHIFT+F")))
+    ))
 
 (defwindow compact
   :monitor 0 :geometry (geometry :width "480px" :height "100%" :anchor "right center")

@@ -31,7 +31,7 @@ in
       bars = [ ]; # EWW alone owns workspace/status; no Ironbar or Sway bar.
       gaps.inner = 0;
       gaps.outer = 0;
-      window.border = 1;
+      window.border = 2;
       input."type:touchpad" = {
         tap = "enabled";
         natural_scroll = "enabled";
@@ -58,6 +58,7 @@ in
         "Mod4+p" = "exec ${pet}";
         "Mod4+o" = "exec ${orbits}";
         "Mod4+F1" = "exec ${control} keys";
+        "Mod4+q" = "kill";
         "Mod4+Shift+f" = "fullscreen toggle";
         "Mod4+Shift+l" = "exec ${pkgs.swaylock}/bin/swaylock -f";
         "Mod4+Shift+n" = "exec ${pkgs.networkmanagerapplet}/bin/nm-connection-editor";

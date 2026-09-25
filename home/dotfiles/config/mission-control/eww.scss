@@ -1,16 +1,14 @@
 * { font-family: "AdwaitaMono Nerd Font", monospace; font-size: 15px; }
 .panel { padding: 22px; }
-.panel.light { background: #f6eceb; color: #481d32; }
+.panel.light { background: #f6edec; color: #481d32; }
 .panel.dark { background: #250c23; color: #ffe9ef; }
 .header { margin: 0 0 30px 0; font-weight: bold; font-size: 18px; }
 .light .header, .light .clock { color: #ae3158; }
 .dark .header, .dark .clock { color: #ff718f; }
 .sub { opacity: 0.8; font-size: 12px; margin-bottom: 8px; }
-.workspace { font-size: 19px; margin-bottom: 28px; }
-.telemetry { padding: 16px 12px; border: 1px solid #ac4968; }
+.workspace { font-size: 13px; margin-bottom: 5px; }
+.hotkey-hint { font-size: 11px; color: #ae3158; margin: 0 0 14px 0; }
+.dark .hotkey-hint { color: #ff718f; }
+.telemetry { padding: 16px 12px; border: 2px solid #ac4968; }
 .telemetry label { margin: 8px 0; }
 .clock { margin: 30px 0; font-weight: bold; }
-.control { margin: 3px 0; padding: 7px; border: 1px solid #ac4968; }
-.light .control { background: #fff8f7; color: #481d32; }
-.dark .control { background: #3b1636; color: #ffe9ef; }
-.footer { font-size: 12px; opacity: 0.8; }

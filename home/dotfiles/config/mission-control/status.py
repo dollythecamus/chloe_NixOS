@@ -34,12 +34,20 @@ def workspaces():
         by_number = {s["num"]: s for s in tree_workspaces(tree)}
         focused = next((s["num"] for s in spaces if s["focused"]), None)
         numbers = sorted(set(range(1, 10)) | set(by_number))
-        lines = ["WORKSPACES"]
+        labels = []
+        app_icons = []
         for number in numbers:
             ws = by_number.get(number, {})
             windows = list(tiled_leaves(ws)) + list(floating_leaves(ws))
-            icons = " ".join(window_icon(win) for win in windows) or "·"
-            lines.append(f"{'●' if number == focused else '○'} {number:<2}  {icons}")
+            labels.append(f"{'●' if number == focused else '○'}{number:>2}")
+            app_icons.append([window_icon(win) for win in windows])
+        # Fixed-width columns keep each workspace's app icons directly below
+        # its number in the monospace EWW label.
+        lines = ["  ".join(labels)]
+        for row in range(max(map(len, app_icons), default=0)):
+            lines.append("  ".join(
+                f"{icons[row] if row < len(icons) else '':>3}" for icons in app_icons
+            ))
         return "\n".join(lines)
     except (ValueError, KeyError, TypeError):
         return "WS --"

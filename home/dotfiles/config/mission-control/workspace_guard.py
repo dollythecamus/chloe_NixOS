@@ -60,6 +60,10 @@ def watch():
                 if destination is not None:
                     subprocess.run(["swaymsg", "-r", f"[con_id={window_id}] move container to workspace number {destination}"],
                                    capture_output=True, text=True, timeout=3, check=True)
+                    # Follow overflow into its new workspace instead of leaving
+                    # focus on the now-emptier source workspace.
+                    subprocess.run(["swaymsg", "-r", f"workspace number {destination}"],
+                                   capture_output=True, text=True, timeout=3, check=True)
             except (KeyError, TypeError, ValueError, OSError, subprocess.SubprocessError) as exc:
                 print(f"workspace_guard: {exc}", file=sys.stderr, flush=True)
 
