@@ -1,16 +1,15 @@
-{config, pkgs, inputs, ...}:
+{config, pkgs, inputs, desktop, ...}:
 
 {
   imports = [
     ./stylix.nix
     ./home-programs.nix
-    ./niri.nix
-    ./eww.nix
     ./neofetch.nix
     ./wofi.nix
     ./vscode.nix
-    ./ironbar.nix
-  ];
+  ] ++ (if desktop == "sway-prototype"
+        then [ ./sway.nix ]
+        else [ ./niri.nix ./eww.nix ./ironbar.nix ]);
 
   programs.home-manager.enable = true;
 

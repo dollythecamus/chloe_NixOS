@@ -1,4 +1,4 @@
-{config, pkgs, pkgs-unstable, inputs, desktop, ...}:
+{config, pkgs, pkgs-unstable, inputs, desktop, lib, ...}:
 
 {
   imports = [
@@ -36,7 +36,7 @@
       "before-sleep" = "${pkgs.swaylock}/bin/swaylock -f";
       "lock" = "${pkgs.swaylock}/bin/swaylock -f";
     };
-    timeouts = [
+    timeouts = lib.mkIf (desktop != "sway-prototype") [
       # DPMS-off the outputs at 10min, lock at 12min. No suspend timeout: every
       # suspend on this laptop has hung (no `PM: suspend exit` in the journal
       # history, forced power-off each time), so nothing automatic may suspend it

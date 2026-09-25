@@ -49,15 +49,9 @@
 	      config.allowUnfree = true;
       };
 
-      # One host, two desktop stacks. `desktop` is a module argument (passed
-      # through specialArgs), so host_chloe-laptop.nix picks the login manager
-      # and the desktop layer from it:
-      #   niri   -- the live configuration: niri + ly + the GNOME shim
-      #   plasma -- the KDE Plasma 6 evaluation: SDDM is the login manager, niri
-      #             stays available in the session menu, the GNOME
-      #             desktop-manager shim is dropped
-      # Same hostName, same hardware, same user config -- the A/B is the desktop
-      # layer only, and either output can be booted from GRUB's generation list.
+      # A separate Sway prototype shares hardware and services but isolates its
+      # session, Home Manager imports and palette. The default Niri output stays
+      # unchanged; Sway is not installed until that generation is activated.
       mkSystem = desktop: nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs system pkgs-unstable self desktop; };
         modules = [
@@ -90,6 +84,7 @@
     nixosConfigurations = {
       chloe-laptop = mkSystem "niri";
       chloe-laptop-plasma = mkSystem "plasma";
+      chloe-laptop-sway-prototype = mkSystem "sway-prototype";
     };
   };
 }

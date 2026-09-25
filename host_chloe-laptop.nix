@@ -44,7 +44,10 @@
   ++ [ ./modules/desktop/ly.nix ]
   ++ (if desktop == "plasma"
       then [ ./modules/desktop/plasma.nix ]
-      else [ ./modules/desktop/gnome-shim.nix ]);
+      else [ ./modules/desktop/gnome-shim.nix ])
+  ++ (if desktop == "sway-prototype"
+      then [ ./modules/desktop/sway.nix ]
+      else []);
 
   # Garbage collection. Until now there was no policy at all: 75 GiB in
   # /nix/store and the root filesystem at 85% (42 GiB free). Weekly, dropping

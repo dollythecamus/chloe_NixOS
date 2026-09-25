@@ -1,4 +1,4 @@
-{config, pkgs, inputs, ...}:
+{config, pkgs, inputs, desktop, ...}:
 
 {
   stylix = {
@@ -31,7 +31,14 @@
       package = pkgs.vanilla-dmz;
     };
 
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/kanagawa.yaml";
+    base16Scheme = if desktop == "sway-prototype" then {
+      base00 = "f6eceb"; base01 = "fff8f7"; base02 = "ead1d8";
+      base03 = "957380"; base04 = "715263"; base05 = "481d32";
+      base06 = "38202c"; base07 = "250c23"; base08 = "b3234e";
+      base09 = "ae3158"; base0A = "9e5853"; base0B = "7d4358";
+      base0C = "715c76"; base0D = "8e3d6f"; base0E = "ae3158";
+      base0F = "674c5a";
+    } else "${pkgs.base16-schemes}/share/themes/kanagawa.yaml";
 
     fonts = {
       # all monospace
@@ -43,7 +50,7 @@
 
     # image = ./wallpaper/puffy-stars.jpg;
 
-    polarity = "dark";
+    polarity = if desktop == "sway-prototype" then "light" else "dark";
   };
 
   home.packages = with pkgs; [

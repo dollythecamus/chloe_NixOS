@@ -1,0 +1,3 @@
+window { background: #250c23; color: #ffe9ef; font-family: 'AdwaitaMono Nerd Font'; border: 1px solid #ff718f; }
+#input, #entry { background: #3b1636; color: #ffe9ef; }
+#entry:selected { background: #f36c92; color: #250c23; }
