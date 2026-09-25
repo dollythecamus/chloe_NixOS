@@ -75,7 +75,7 @@ def window_icon(window):
         return ">_"
     if any(name in app for name in ("discord", "steam")):
         return "♫"
-    if any(name in app for name in ("nautilus", "dolphin", "thunar")):
+    if any(name in app for name in ("yazi", "nautilus", "dolphin", "thunar")):
         return "▤"
     return "▣"
 
