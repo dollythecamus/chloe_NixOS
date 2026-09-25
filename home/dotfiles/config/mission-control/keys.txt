@@ -1,0 +1,40 @@
+MISSION // CONTROL — SWAY HOTKEYS
+Super = Windows key. Press q to close this list.
+
+LAUNCH / PANEL
+Super+Enter          Open Kitty terminal
+Super+D              Application launcher (Wofi)
+Super+P              Termagotchi pet
+Super+O              Planetary orbits
+Super+T              Toggle light/dark panel and managed Kitty palette
+Super+B              Expand/collapse right sidebar
+Super+F1             Show this hotkey list
+
+WORKSPACES / WINDOWS
+Super+1..9, 0        Go to workspace 1..9, 10
+Super+Shift+1..9, 0  Move focused window to workspace 1..9, 10
+Super+H/J/K/L        Focus left/down/up/right (arrows also work)
+Super+Shift+H/J/K    Move window left/down/up (arrows also work)
+Super+Shift+L        Lock screen (replaces the default move-right binding)
+Super+Shift+Q        Close focused window
+Super+F              Toggle fullscreen (Super+Shift+F also works)
+Super+Shift+Space    Toggle floating mode
+Super+Space          Switch focus between floating and tiled
+Super+R              Resize mode; H/J/K/L or arrows resize, Enter exits
+Super+A              Focus parent container
+Super+S / W          Stacking / tabbed layout
+Super+E              Toggle horizontal/vertical split manually
+Super+V              Force next split vertical manually
+Super+-              Show scratchpad
+Super+Shift+-        Move focused window to scratchpad
+
+SYSTEM / SESSION
+Super+Shift+N        Network connection editor
+Super+Shift+A        Audio routing (pavucontrol)
+Super+Shift+C        Reload Sway configuration
+Super+Shift+E        Confirm and exit Sway (ends this session)
+Volume/Brightness    Laptop media keys adjust audio and display
+
+New workspaces default to horizontal splits (side by side). When a third
+TILED window opens or moves into a workspace, the guard moves it to the
+next numbered workspace with room. Floating windows do not count.

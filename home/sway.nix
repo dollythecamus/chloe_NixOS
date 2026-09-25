@@ -4,8 +4,8 @@ let
   control = "${pkgs.bash}/bin/bash $HOME/.config/mission-control/control.sh";
   terminal = "${control} terminal";
   launcher = "${control} launcher";
-  pet = "${control} terminal --title mission-pet ${petPackage}/bin/termagotchi";
-  orbits = "${control} terminal --title mission-orbits ${pkgs.python3}/bin/python3 $HOME/.config/mission-control/orbits.py";
+  pet = "${control} terminal --class mission-pet --title mission-pet ${petPackage}/bin/termagotchi";
+  orbits = "${control} terminal --class mission-orbits --title mission-orbits ${pkgs.python3}/bin/python3 $HOME/.config/mission-control/orbits.py";
 in
 {
   # This file is imported only by chloe-laptop-sway-prototype. The other
@@ -44,7 +44,12 @@ in
         resolution = "1920x1080@60.001Hz";
         scale = "1";
       };
-      startup = [ { command = "${control} start"; always = true; } ];
+      # Sway has no native per-workspace tile cap. The IPC guard relocates
+      # overflow leaves without restricting floating windows.
+      startup = [
+        { command = "${control} start"; always = true; }
+        { command = "${pkgs.python3}/bin/python3 $HOME/.config/mission-control/workspace_guard.py"; }
+      ];
       keybindings = lib.mkOptionDefault {
         "Mod4+Return" = "exec ${terminal}";
         "Mod4+d" = "exec ${launcher}";
@@ -52,6 +57,7 @@ in
         "Mod4+b" = "exec ${control} expand";
         "Mod4+p" = "exec ${pet}";
         "Mod4+o" = "exec ${orbits}";
+        "Mod4+F1" = "exec ${control} keys";
         "Mod4+Shift+f" = "fullscreen toggle";
         "Mod4+Shift+l" = "exec ${pkgs.swaylock}/bin/swaylock -f";
         "Mod4+Shift+n" = "exec ${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
@@ -65,6 +71,7 @@ in
     };
     extraConfig = ''
       include /etc/sway/config.d/*
+      default_orientation horizontal
       # When plugged in, reserve the sidebar only on the built-in monitor.
       # External outputs keep their full work area and independent workspaces.
       workspace 1 output eDP-1

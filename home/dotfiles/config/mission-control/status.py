@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+from workspace_guard import workspaces as tree_workspaces, tiled_leaves
 
 
 def run(*args):
@@ -29,9 +30,46 @@ def gpu():
 def workspaces():
     try:
         spaces = json.loads(run("swaymsg", "-t", "get_workspaces", "-r"))
-        return "WS " + "  ".join(f"[{s['name']}]" if s['focused'] else s['name'] for s in spaces)
+        tree = json.loads(run("swaymsg", "-t", "get_tree", "-r"))
+        by_number = {s["num"]: s for s in tree_workspaces(tree)}
+        focused = next((s["num"] for s in spaces if s["focused"]), None)
+        numbers = sorted(set(range(1, 10)) | set(by_number))
+        lines = ["WORKSPACES"]
+        for number in numbers:
+            ws = by_number.get(number, {})
+            windows = list(tiled_leaves(ws)) + list(floating_leaves(ws))
+            icons = " ".join(window_icon(win) for win in windows) or "·"
+            lines.append(f"{'●' if number == focused else '○'} {number:<2}  {icons}")
+        return "\n".join(lines)
     except (ValueError, KeyError, TypeError):
         return "WS --"
+
+
+def floating_leaves(node):
+    for child in node.get("floating_nodes", []):
+        if child.get("app_id") or child.get("window"):
+            yield child
+        yield from floating_leaves(child)
+
+
+def window_icon(window):
+    title = (window.get("name") or "").lower()
+    app = (window.get("app_id") or window.get("window_properties", {}).get("class") or "").lower()
+    if "mission-pet" in title or "mission-pet" in app:
+        return "♥"
+    if "mission-orbits" in title or "mission-orbits" in app:
+        return "◎"
+    if any(name in app for name in ("firefox", "chrom", "brave")):
+        return "◉"
+    if any(name in app for name in ("code", "codium")):
+        return "⌘"
+    if "kitty" in app or "terminal" in app:
+        return ">_"
+    if any(name in app for name in ("discord", "steam")):
+        return "♫"
+    if any(name in app for name in ("nautilus", "dolphin", "thunar")):
+        return "▤"
+    return "▣"
 
 
 def metrics():

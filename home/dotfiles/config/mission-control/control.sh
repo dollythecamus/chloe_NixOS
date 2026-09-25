@@ -52,5 +52,8 @@ case "${1:-}" in
   launcher)
     exec wofi --show drun --style "$config/wofi-$current.css"
     ;;
-  *) printf 'usage: %s {start|theme|expand|terminal|launcher}\n' "$0" >&2; exit 2 ;;
+  keys)
+    exec bash "$0" terminal --title mission-keys less "$config/keys.txt"
+    ;;
+  *) printf 'usage: %s {start|theme|expand|terminal|launcher|keys}\n' "$0" >&2; exit 2 ;;
 esac

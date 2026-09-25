@@ -1,9 +1,11 @@
 ;; Only this EWW configuration runs in the Sway prototype. Neither window
 ;; accepts focus; Sway reserves the right-hand exclusive zone automatically.
 (defvar dark false)
-(defpoll status :interval "15s" :initial "{}" `python3 $EWW_CONFIG_DIR/status.py`)
-(defpoll gpu :interval "45s" :initial "GPU --" `python3 $EWW_CONFIG_DIR/status.py gpu`)
-(defpoll workspaces :interval "3s" :initial "WS --" `python3 $EWW_CONFIG_DIR/status.py workspaces`)
+;; EWW_CONFIG_DIR is an EWW variable, not exported to poll subprocesses.
+;; HOME is exported by the session, so shell expansion reaches the HM symlink.
+(defpoll status :interval "15s" :initial "{}" `python3 $HOME/.config/mission-control/status.py`)
+(defpoll gpu :interval "45s" :initial "GPU --" `python3 $HOME/.config/mission-control/status.py gpu`)
+(defpoll workspaces :interval "3s" :initial "WS --" `python3 $HOME/.config/mission-control/status.py workspaces`)
 (defpoll clock :interval "30s" `date '+%a %d %b · %H:%M'`)
 
 (defwidget panel []
@@ -11,7 +13,7 @@
     (box :orientation "v" :class "header" :space-evenly false
       (label :xalign 0 :text "MISSION // CONTROL")
       (label :xalign 0 :class "sub" :text "SWAY · PROTOTYPE 01"))
-    (label :xalign 0 :class "workspace" :text workspaces)
+    (label :xalign 0 :yalign 0 :class "workspace" :text workspaces)
     (box :orientation "v" :class "telemetry" :space-evenly false
       (label :xalign 0 :text {status.battery ?: "BAT --"})
       (label :xalign 0 :text {status.cpu ?: "CPU --"})
@@ -20,10 +22,12 @@
       (label :xalign 0 :text {status.disk ?: "DISK --"})
       (label :xalign 0 :text {status.audio ?: "AUDIO --"}))
     (label :xalign 0 :class "clock" :text clock)
-    (button :class "control" :onclick "bash $EWW_CONFIG_DIR/control.sh theme"
+    (button :class "control" :onclick "bash $HOME/.config/mission-control/control.sh theme"
       "THEME // SUPER+T")
-    (button :class "control" :onclick "bash $EWW_CONFIG_DIR/control.sh expand"
+    (button :class "control" :onclick "bash $HOME/.config/mission-control/control.sh expand"
       "EXPAND // SUPER+B")
+    (button :class "control" :onclick "bash $HOME/.config/mission-control/control.sh keys"
+      "KEYS // SUPER+F1")
     (label :xalign 0 :class "sub" :text "SUPER+P pet · SUPER+O orbits")
     (box :expand true)
     (label :xalign 0 :class "footer" :text "FULLSCREEN: SUPER+SHIFT+F")))
