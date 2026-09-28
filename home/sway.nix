@@ -24,6 +24,13 @@ in
     # HM owns configuration; the NixOS wrapper owns the session entry, GPU
     # opt-in and environment. Keep an HM package for build-time config validation.
     systemd.enable = false;
+    # In practice the session launches THIS package, not the NixOS module's
+    # wrapper: the ly session PATH puts /etc/profiles/per-user/chloe/bin (HM)
+    # ahead of /run/current-system/sw/bin, so programs.sway.extraOptions never
+    # reaches the running binary. Sway 1.12's NVIDIA gate is a non-fatal
+    # swaynag (sway main.c) but still interrupts startup, so the flag has to
+    # ride the wrapper that actually executes.
+    extraOptions = [ "--unsupported-gpu" ];
     config = {
       modifier = "Mod4";
       terminal = terminal;
@@ -51,14 +58,21 @@ in
         { command = "${pkgs.python3}/bin/python3 $HOME/.config/mission-control/workspace_guard.py"; }
       ];
       keybindings = lib.mkOptionDefault {
-        "Mod4+Return" = "exec ${terminal}";
-        "Mod4+d" = "exec ${launcher}";
+        # A user-set mkOptionDefault binding overrides the Home Manager
+        # default for that key; keys left unset keep the HM defaults
+        # (live-verified: Mod4+b beats the default splith while the
+        # untouched defaults still bind Mod4+e/s/w/v). A binding set to
+        # null is disabled outright — plain removal is not enough for
+        # Mod4+d, whose HM default is the menu launcher itself.
+        "Mod4+Return" = "exec ${terminal} ${pkgs.fish}/bin/fish";
+        "Mod4+e" = "exec ${launcher}";
+        "Mod4+d" = null;
+        "Mod4+x" = "kill";
         "Mod4+t" = "exec ${control} theme";
         "Mod4+b" = "exec ${control} expand";
         "Mod4+p" = "exec ${pet}";
         "Mod4+o" = "exec ${orbits}";
         "Mod4+F1" = "exec ${control} keys";
-        "Mod4+q" = "kill";
         "Mod4+Shift+f" = "fullscreen toggle";
         "Mod4+Shift+l" = "exec ${pkgs.swaylock}/bin/swaylock -f";
         "Mod4+Shift+n" = "exec ${pkgs.networkmanagerapplet}/bin/nm-connection-editor";

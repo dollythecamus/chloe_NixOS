@@ -1,8 +1,12 @@
 { pkgs, lib, ... }:
 {
   # Niri and ly remain installed in this generation as a recovery session.
-  # The proprietary NVIDIA driver drives eDP-1; Sway requires explicit opt-in
-  # to its unsupported-GPU path. This is only a launch gate, not proof it works.
+  # The proprietary NVIDIA driver drives eDP-1. Sway 1.12's unsupported-GPU
+  # gate is a non-fatal swaynag dialog (sway main.c), not a launch refusal.
+  # This wrapper is normally shadowed: the ly session PATH resolves `sway` to
+  # the Home Manager profile wrapper first, so the flag on the launched binary
+  # comes from wayland.windowManager.sway.extraOptions in home/sway.nix. This
+  # module still owns the session entry and the PAM environment clean-up.
   programs.sway = {
     enable = true;
     extraOptions = [ "--unsupported-gpu" ];
