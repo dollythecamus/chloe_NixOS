@@ -44,6 +44,11 @@ proxy:
 memory:
   memory_enabled: true
   user_profile_enabled: true
+  provider: holographic
+plugins:
+  hermes-memory-store:
+    db_path: $HERMES_HOME/memory_store.db
+    auto_extract: true
 # Never auto-reset sessions/memory between runs.
 session_reset:
   mode: none

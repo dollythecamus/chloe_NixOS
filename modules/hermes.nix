@@ -32,8 +32,7 @@
     createUser = false;
 
     extraDependencyGroups = ["messaging" "anthropic"];
-    # messaging  = discord
-    # hindsight  = memory provider
+    # messaging = Discord; Holographic memory is bundled and uses local SQLite.
 
     configFile = ./config/hermes/config.yaml;
 
