@@ -57,9 +57,14 @@
       # re-clone of the profile.
       "profiles/code/SOUL.md" = ./config/hermes/SOUL-code.md;
 
+      # The nixos profile keeps its existing model/tool preferences, with the
+      # memory provider managed declaratively alongside them. This full config
+      # is installed on activation; edit the source, not the profile copy.
+      "profiles/nixos/config.yaml" = ./config/hermes/config-nixos.yaml;
+
       # ── The `nixos` profile's identity ──────────────────────────────────
       # Same mechanism, same reason: the NixOS configuration profile reads
-      # its identity from profiles/nixos/SOUL.md, so it is declared here and
+      # its SOUL.md from profiles/nixos/SOUL.md, so it is declared here and
       # not left as a runtime edit.
       "profiles/nixos/SOUL.md" = ./config/hermes/SOUL-nixos.md;
     };
