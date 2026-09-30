@@ -67,6 +67,15 @@
       # its SOUL.md from profiles/nixos/SOUL.md, so it is declared here and
       # not left as a runtime edit.
       "profiles/nixos/SOUL.md" = ./config/hermes/SOUL-nixos.md;
+
+      # ── The `learn` profile's identity ──────────────────────────────────
+      # The hobby-learning profile (drawing/painting, animation, music —
+      # composition, guitar, singing). Same mechanism and same reason as the
+      # others: the profile reads its SOUL.md from its own HERMES_HOME, so the
+      # identity is recorded in git instead of living as a runtime edit that
+      # no repository can restore. Its skills live under the profile's own
+      # skills/ directory as runtime state.
+      "profiles/learn/SOUL.md" = ./config/hermes/SOUL-learn.md;
     };
 
     # Path to the environment files containing API tokens/keys
