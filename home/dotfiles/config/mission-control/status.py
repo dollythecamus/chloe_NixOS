@@ -48,7 +48,7 @@ def workspaces():
             lines.append("  ".join(
                 f"{icons[row] if row < len(icons) else '':>3}" for icons in app_icons
             ))
-        return "\n".join(lines)
+        return "".join(lines)
     except (ValueError, KeyError, TypeError):
         return "WS --"
 
