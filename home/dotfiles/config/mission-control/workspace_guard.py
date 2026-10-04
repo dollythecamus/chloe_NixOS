@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Keep at most two tiled leaves per numbered Sway workspace.
+"""Limit ordinary tiled windows to two per numbered Sway workspace.
 
 Sway has no tile-count limit. Subscribe to window events rather than polling;
-move only the incoming leaf, leaving existing tiles and floating windows alone.
+move only the incoming ordinary leaf, leaving creative applications and floats
+alone. Editors may create temporary drag windows before supplying dialog hints.
 """
 import json
 import os
@@ -26,10 +27,28 @@ def tiled_leaves(node):
             yield from tiled_leaves(child)
 
 
+# Match identities, never window titles: titles may be shared by the editor
+# and a popup, and they change while dragging or opening a document.
+CREATIVE_APPS = frozenset({
+    "unity", "krita", "org.kde.krita", "lmms", "io.lmms.lmms",
+    "godot", "godot_editor", "godot_engine", "godot_projectmanager",
+    "org.godotengine.godot",
+})
+
+
+def creative_window(node):
+    properties = node.get("window_properties") or {}
+    identities = (node.get("app_id"), properties.get("class"), properties.get("instance"))
+    return any((identity or "").casefold() in CREATIVE_APPS for identity in identities)
+
+
 def relocation(tree, window_id):
     spaces = list(workspaces(tree))
     source = next((ws for ws in spaces if any(c["id"] == window_id for c in tiled_leaves(ws))), None)
     if source is None or len(list(tiled_leaves(source))) <= 2:
+        return None
+    incoming = next(c for c in tiled_leaves(source) if c["id"] == window_id)
+    if creative_window(incoming):
         return None
     counts = {ws["num"]: len(list(tiled_leaves(ws))) for ws in spaces}
     target = source["num"] + 1

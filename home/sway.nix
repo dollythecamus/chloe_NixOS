@@ -5,6 +5,22 @@ let
   terminal = "${control} terminal";
   launcher = "${control} launcher";
   pet = "${control} terminal --class mission-pet --title mission-pet ${petPackage}/bin/termagotchi";
+  # Opt-in launchers: keep ordinary desktop entries/backends until the real
+  # drag-and-drop/tablet acceptance tests pass. Absolute paths avoid recursion.
+  lmmsX11 = pkgs.writeShellScriptBin "lmms-x11" ''
+    export QT_QPA_PLATFORM=xcb
+    exec ${pkgs.lmms}/bin/lmms "$@"
+  '';
+  kritaX11 = pkgs.writeShellScriptBin "krita-x11" ''
+    export QT_QPA_PLATFORM=xcb
+    exec ${pkgs.krita}/bin/krita "$@"
+  '';
+  godotX11 = pkgs.writeShellScriptBin "godot-x11" ''
+    exec ${pkgs.godot}/bin/godot --display-driver x11 "$@"
+  '';
+  godotSingleWindow = pkgs.writeShellScriptBin "godot-single-window" ''
+    exec ${pkgs.godot}/bin/godot --single-window "$@"
+  '';
   orbits = "${control} terminal --class mission-orbits --title mission-orbits ${pkgs.python3}/bin/python3 $HOME/.config/mission-control/orbits.py";
 in
 {
@@ -17,7 +33,37 @@ in
     recursive = true;
   };
   programs.eww.enable = true;
-  home.packages = [ petPackage ];
+  home.packages = [ petPackage lmmsX11 kritaX11 godotX11 godotSingleWindow ];
+  xdg.desktopEntries = {
+    lmms-x11 = {
+      name = "LMMS (X11 compatibility)";
+      exec = "${lmmsX11}/bin/lmms-x11 %f";
+      icon = "lmms";
+      categories = [ "AudioVideo" "Audio" ];
+      terminal = false;
+    };
+    krita-x11 = {
+      name = "Krita (X11 compatibility)";
+      exec = "${kritaX11}/bin/krita-x11 %F";
+      icon = "krita";
+      categories = [ "Graphics" "2DGraphics" ];
+      terminal = false;
+    };
+    godot-x11 = {
+      name = "Godot (X11 compatibility)";
+      exec = "${godotX11}/bin/godot-x11 --project-manager";
+      icon = "godot";
+      categories = [ "Development" "IDE" ];
+      terminal = false;
+    };
+    godot-single-window = {
+      name = "Godot (single-window compatibility)";
+      exec = "${godotSingleWindow}/bin/godot-single-window --editor %f";
+      icon = "godot";
+      categories = [ "Development" "IDE" ];
+      terminal = false;
+    };
+  };
 
   wayland.windowManager.sway = {
     enable = true;
@@ -86,6 +132,8 @@ in
     };
     extraConfig = ''
       include /etc/sway/config.d/*
+      # Store path: Home Manager can validate the include before activation.
+      include ${./dotfiles/config/mission-control/creative-windows.conf}
       default_orientation horizontal
       # When plugged in, reserve the sidebar only on the built-in monitor.
       # External outputs keep their full work area and independent workspaces.

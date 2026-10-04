@@ -36,5 +36,17 @@ Super+Shift+E        Confirm and exit Sway (ends this session)
 Volume/Brightness    Laptop media keys adjust audio and display
 
 New workspaces default to horizontal splits (side by side). When a third
-TILED window opens or moves into a workspace, the guard moves it to the
-next numbered workspace with room. Floating windows do not count.
+ordinary TILED window opens or moves into a workspace, the guard moves it to
+the next numbered workspace with room. Floating windows do not count.
+Unity, Krita, Godot and LMMS windows are never automatically relocated;
+creative workspaces can intentionally exceed the two-tile cap.
+
+CREATIVE APP COMPATIBILITY (opt-in; ordinary launchers are unchanged)
+Wofi entries: LMMS/Krita/Godot (X11 compatibility),
+              Godot (single-window compatibility).
+Terminal commands: lmms-x11, krita-x11, godot-x11,
+                   godot-single-window --editor /path/to/project.godot
+X11 compatibility uses XWayland; the desktop remains Wayland.
+Godot single-window disables detached editor panels and game embedding.
+Close the ordinary app first before comparing backends; do not run two
+instances against an unsaved document or the same project.
