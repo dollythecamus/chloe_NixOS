@@ -13,14 +13,20 @@
 
   programs.home-manager.enable = true;
 
-  # GitHub accepts the registered key, not the default id_ed25519 identity.
+  # GitHub accepts the registered GitHub key, not the default id_ed25519 identity.
   # Keep this user-specific client mapping in Home Manager, not secrets.nix:
   # it selects an SSH client identity and contains no secret material.
-  programs.ssh.matchBlocks.github = {
-    hostname = "github.com";
-    user = "git";
-    identityFile = "~/.ssh/id_ed25519_github";
-    identitiesOnly = true;
+  programs.ssh = {
+    enable = true;
+    # Keep the generated config limited to explicit host mappings; the HM default
+    # Host * block is deprecated and adds unrelated client-wide behavior.
+    enableDefaultConfig = false;
+    matchBlocks."github.com" = {
+      hostname = "github.com";
+      user = "git";
+      identityFile = "~/.ssh/id_ed25519_github";
+      identitiesOnly = true;
+    };
   };
 
   home = {
