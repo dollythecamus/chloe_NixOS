@@ -44,6 +44,14 @@ case "${1:-}" in
       eww -c "$config" open expanded
     fi
     ;;
+  toggle-visibility)
+    if eww -c "$config" active-windows | grep -Eq ': (compact|expanded)$'; then
+      eww -c "$config" close-all
+    else
+      eww -c "$config" open compact
+      eww -c "$config" update "dark=$([[ "$current" == dark ]] && printf true || printf false)"
+    fi
+    ;;
   terminal)
     exec kitty --config "$HOME/.config/kitty/kitty.conf" --config "$config/kitty-$current.conf" \
       --override allow_remote_control=socket-only \
@@ -55,5 +63,5 @@ case "${1:-}" in
   keys)
     exec bash "$0" terminal --title mission-keys less "$config/keys.txt"
     ;;
-  *) printf 'usage: %s {start|theme|expand|terminal|launcher|keys}\n' "$0" >&2; exit 2 ;;
+  *) printf 'usage: %s {start|theme|expand|toggle-visibility|terminal|launcher|keys}\n' "$0" >&2; exit 2 ;;
 esac

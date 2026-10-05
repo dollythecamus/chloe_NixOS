@@ -119,6 +119,9 @@ in
         "Mod4+p" = "exec ${pet}";
         "Mod4+o" = "exec ${orbits}";
         "Mod4+F1" = "exec ${control} keys";
+        # Hide the EWW layer to give tiled windows the full output without
+        # setting Sway's per-window fullscreen state.
+        "Mod4+f" = "exec ${control} toggle-visibility";
         "Mod4+Shift+f" = "fullscreen toggle";
         "Mod4+Shift+l" = "exec ${pkgs.swaylock}/bin/swaylock -f";
         "Mod4+Shift+n" = "exec ${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
