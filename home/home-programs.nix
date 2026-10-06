@@ -92,7 +92,7 @@
     slurp
     glow
     pkgs-unstable.btop-cuda
-    nvtopPackages.nvidia
+    signal-desktop
     neocities
     vlc
     wl-clipboard
@@ -106,49 +106,49 @@
     presenterm # terminal slides presentation tool
     kew # music player
     qutebrowser # minimal web browser
-        # torrent
-        qbittorrent
-# browser, office
-        google-chrome
-        librewolf # to replace by qute
-	libreoffice 
+    # torrent
+    qbittorrent
+    # browser, office
+    google-chrome
+    librewolf # to replace by qute
+	  libreoffice 
       
-        # art
-        krita
-        gimp 
+    # art
+    krita
+    gimp 
 
-        # vtuber (Inochi2D): creator = puppet editor (.INP), session =
-        # the runtime that drives a puppet live for OBS
-        inochi-creator
-        inochi-session
-        openseeface
+    # vtuber (Inochi2D): creator = puppet editor (.INP), session =
+    # the runtime that drives a puppet live for OBS
+    inochi-creator
+    inochi-session
+    openseeface
 
-        # music
-        lmms
+    # music
+    lmms
 
-        # audio: routing/level GUI -- output & input device selection, per-device
-        # profiles (analog/headset/etc.), per-app volume and stream routing.
-        # Talks to the system-wide pipewire-pulse socket (/var/run/pulse/native).
-        pavucontrol
+    # audio: routing/level GUI -- output & input device selection, per-device
+    # profiles (analog/headset/etc.), per-app volume and stream routing.
+    # Talks to the system-wide pipewire-pulse socket (/var/run/pulse/native).
+    pavucontrol
 
-        # dev
-        github-desktop
+    # dev
+    github-desktop
 
-        # desktop integration applets (nm-applet systemd service lives above;
-        # nm-connection-editor is in the same package)
-        networkmanagerapplet
+    # desktop integration applets (nm-applet systemd service lives above;
+    # nm-connection-editor is in the same package)
+    networkmanagerapplet
 
-        # 3d printer slicer (UltiMaker Cura 5.12, wrapped AppImage —
-        # native cura was dropped from nixpkgs; binary is `cura`)
-        cura-appimage
+    # 3d printer slicer (UltiMaker Cura 5.12, wrapped AppImage —
+    # native cura was dropped from nixpkgs; binary is `cura`)
+    cura-appimage
 
-        # screen locker (the niri Super+Alt+L bind spawns this)
-        swaylock
-        # DPMS on/off for wayland. No config uses it any more: the swayidle
-        # timeouts and Mod+Shift+S/Mod+Shift+P all use niri's own
-        # power-off/on-monitors actions (wlopm --off requires an output name).
-        # Kept for manual use only.
-        wlopm
+    # screen locker (the niri Super+Alt+L bind spawns this)
+    swaylock
+    # DPMS on/off for wayland. No config uses it any more: the swayidle
+    # timeouts and Mod+Shift+S/Mod+Shift+P all use niri's own
+    # power-off/on-monitors actions (wlopm --off requires an output name).
+    # Kept for manual use only.
+    wlopm
   ];
 
 }
