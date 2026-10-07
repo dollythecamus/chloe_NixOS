@@ -38,9 +38,11 @@ class WorkspaceTests(unittest.TestCase):
     def test_eww_polls_use_exported_home_not_eww_expression_variable(self):
         yuck = (SOURCE / "eww.yuck").read_text()
         poll_lines = [line for line in yuck.splitlines() if line.startswith("(defpoll")]
-        self.assertEqual(len(poll_lines), 4)
+        self.assertEqual(len(poll_lines), 6)
+        self.assertIn("$HOME/.config/mission-control/widgets.py network", poll_lines[0])
+        self.assertIn("$HOME/.config/mission-control/widgets.py audio", poll_lines[1])
         self.assertTrue(all("$HOME/.config/mission-control/status.py" in line
-                            for line in poll_lines[:3]))
+                            for line in poll_lines[2:5]))
 
     def test_new_third_goes_to_next_workspace_with_room(self):
         tree = {"type": "root", "nodes": [ws(1, win(1), win(2), win(3)),

@@ -118,6 +118,8 @@ in
         "Mod4+b" = "exec ${control} expand";
         "Mod4+p" = "exec ${pet}";
         "Mod4+o" = "exec ${orbits}";
+        "Mod4+n" = "exec ${control} widget network";
+        "Mod4+m" = "exec ${control} widget audio";
         "Mod4+F1" = "exec ${control} keys";
         # Hide the EWW layer to give tiled windows the full output without
         # setting Sway's per-window fullscreen state.

@@ -1,6 +1,9 @@
 ;; Only this EWW configuration runs in the Sway prototype. Neither window
 ;; accepts focus; Sway reserves the right-hand exclusive zone automatically.
 (defvar dark false)
+(defvar view "home")
+(defpoll network :interval "15s" :initial "{\"wifi\":false,\"profiles\":[],\"available\":[]}" `python3 $HOME/.config/mission-control/widgets.py network`)
+(defpoll audio :interval "3s" :initial "{\"sink\":0,\"source\":0,\"sink_muted\":false,\"source_muted\":false,\"sink_available\":false,\"source_available\":false}" `python3 $HOME/.config/mission-control/widgets.py audio`)
 ;; EWW_CONFIG_DIR is an EWW variable, not exported to poll subprocesses.
 ;; HOME is exported by the session, so shell expansion reaches the HM symlink.
 (defpoll status :interval "15s" :initial "{}" `python3 $HOME/.config/mission-control/status.py`)
@@ -13,15 +16,51 @@
     (box :orientation "v" :class "header" :space-evenly false
       (label :xalign 0 :text "MISSION // CONTROL")
       (label :xalign 0 :class "sub" :text "SWAY · PROTOTYPE 01"))
-    (label :xalign 0 :yalign 0 :class "workspace" :text workspaces)
-    (label :xalign 0 :class "hotkey-hint" :text "SUPER+F1 // HOTKEYS")
-    (box :orientation "v" :class "telemetry" :space-evenly false
-      (label :xalign 0 :text {status.battery ?: "BAT --"})
-      (label :xalign 0 :text {status.cpu ?: "CPU --"})
-      (label :xalign 0 :text gpu)
-      (label :xalign 0 :text {status.memory ?: "MEM --"})
-      (label :xalign 0 :text {status.disk ?: "DISK --"})
-      (label :xalign 0 :text {status.audio ?: "AUDIO --"}))
+    (box :orientation "h" :class "widget-nav" :space-evenly false
+      (button :timeout "5s" :onclick "bash $HOME/.config/mission-control/control.sh widget home" "HOME")
+      (button :timeout "5s" :onclick "bash $HOME/.config/mission-control/control.sh widget network" "NETWORK")
+      (button :timeout "5s" :onclick "bash $HOME/.config/mission-control/control.sh widget audio" "AUDIO"))
+    (box :orientation "v" :visible {view == "home"} :space-evenly false
+      (label :xalign 0 :yalign 0 :class "workspace" :text workspaces)
+      (label :xalign 0 :class "hotkey-hint" :text "SUPER+F1 // HOTKEYS")
+      (box :orientation "v" :class "telemetry" :space-evenly false
+        (label :xalign 0 :text {status.battery ?: "BAT --"})
+        (label :xalign 0 :text {status.cpu ?: "CPU --"})
+        (label :xalign 0 :text gpu)
+        (label :xalign 0 :text {status.memory ?: "MEM --"})
+        (label :xalign 0 :text {status.disk ?: "DISK --"})
+        (label :xalign 0 :text {status.audio ?: "AUDIO --"})))
+    (box :orientation "v" :visible {view == "network"} :class "widget-body" :space-evenly false
+      (label :xalign 0 :class "widget-title" :text "NETWORK // MANAGER")
+      (label :xalign 0 :text {network.error ?: (network.wifi ? "Wi-Fi on" : "Wi-Fi off")})
+      (button :timeout "15s" :onclick "bash $HOME/.config/mission-control/control.sh action wifi-toggle" {network.wifi ? "Turn Wi-Fi off" : "Turn Wi-Fi on"})
+      (label :xalign 0 :class "widget-title" :text "SAVED CONNECTIONS")
+      (scroll :vscroll true :hscroll false :height 240
+        (box :orientation "v" :space-evenly false
+          (for profile in {network.profiles}
+            (button :timeout "20s" :onclick "bash $HOME/.config/mission-control/control.sh action connect ${profile.uuid}"
+              (label :xalign 0 :limit-width 28 :text {profile.active ? "● " + profile.name : "○ " + profile.name})))))
+      (label :xalign 0 :class "widget-title" :text "NEARBY // READ ONLY")
+      (scroll :vscroll true :hscroll false :height 200
+        (box :orientation "v" :space-evenly false
+          (for access in {network.available}
+            (label :xalign 0 :limit-width 32 :text {access.ssid + " · " + access.signal + "% · " + access.security}))))
+      (button :onclick "nm-connection-editor >/dev/null 2>&1 &" "Add / edit connections…"))
+    (box :orientation "v" :visible {view == "audio"} :class "widget-body" :space-evenly false
+      (label :xalign 0 :class "widget-title" :text "AUDIO // CONTROL")
+      (label :xalign 0 :text {audio.sink_available ? "Output · " + audio.sink + "%" : "No output device"})
+      ;; Read-only level: EWW's scale fires onchange during programmatic poll
+      ;; updates, which can overwrite the real volume without user input.
+      (progress :value {audio.sink} :active {audio.sink_available})
+      (box :orientation "h" :space-evenly false
+        (button :timeout "5s" :active {audio.sink_available} :onclick "bash $HOME/.config/mission-control/control.sh action volume-down" "− 5%")
+        (button :timeout "5s" :active {audio.sink_available} :onclick "bash $HOME/.config/mission-control/control.sh action volume-up" "+ 5%"))
+      (button :timeout "5s" :active {audio.sink_available} :onclick "bash $HOME/.config/mission-control/control.sh action sink-mute"
+        {audio.sink_muted ? "Unmute output" : "Mute output"})
+      (label :xalign 0 :text {audio.source_available ? "Input · " + audio.source + "%" : "No input device"})
+      (button :timeout "5s" :active {audio.source_available} :onclick "bash $HOME/.config/mission-control/control.sh action source-mute"
+        {audio.source_muted ? "Unmute microphone" : "Mute microphone"})
+      (button :onclick "pavucontrol >/dev/null 2>&1 &" "Audio devices / routing…"))
     (label :xalign 0 :class "clock" :text clock)
     ))
 

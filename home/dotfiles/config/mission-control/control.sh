@@ -20,7 +20,7 @@ case "${1:-}" in
     done
     eww -c "$config" close-all || true
     eww -c "$config" open compact
-    eww -c "$config" update "dark=$([[ "$current" == dark ]] && printf true || printf false)"
+    eww -c "$config" update "view=home" "dark=$([[ "$current" == dark ]] && printf true || printf false)"
     ;;
   theme)
     if [[ "$current" == light ]]; then current=dark; else current=light; fi
@@ -51,6 +51,22 @@ case "${1:-}" in
       eww -c "$config" open compact
       eww -c "$config" update "dark=$([[ "$current" == dark ]] && printf true || printf false)"
     fi
+    ;;
+  widget)
+    case "${2:-}" in home|network|audio) ;; *) exit 2 ;; esac
+    # A hotkey can restore a hidden sidebar before selecting its page.
+    if ! eww -c "$config" active-windows | grep -Eq ': (compact|expanded)$'; then
+      eww -c "$config" open compact
+    fi
+    eww -c "$config" update "view=$2"
+    eww -c "$config" poll "$2" 2>/dev/null || true
+    ;;
+  action)
+    python3 "$config/widgets.py" action "${@:2}"
+    case "${2:-}" in
+      wifi-toggle|connect) eww -c "$config" poll network || true ;;
+      *) eww -c "$config" poll audio || true ;;
+    esac
     ;;
   terminal)
     exec kitty --config "$HOME/.config/kitty/kitty.conf" --config "$config/kitty-$current.conf" \

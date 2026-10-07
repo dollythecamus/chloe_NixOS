@@ -8,6 +8,8 @@ Super+P              Termagotchi pet
 Super+O              Planetary orbits
 Super+T              Toggle light/dark panel and managed Kitty palette
 Super+B              Expand/collapse right sidebar
+Super+N              Network widget (also from sidebar)
+Super+M              Audio widget (also from sidebar)
 Super+F1             Show this hotkey list
 
 WORKSPACES / WINDOWS
