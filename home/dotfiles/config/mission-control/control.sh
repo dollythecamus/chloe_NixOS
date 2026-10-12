@@ -26,6 +26,10 @@ case "${1:-}" in
     if [[ "$current" == light ]]; then current=dark; else current=light; fi
     printf '%s\n' "$current" > "$state/theme"
     eww -c "$config" update "dark=$([[ "$current" == dark ]] && printf true || printf false)"
+    # The pinned EWW/GTK can update `dark` without repainting CSS on an
+    # already-open panel. Reload reconstructs it from the current variable
+    # values, preserving page/width; verified against rendered pixel colours.
+    eww -c "$config" reload
     # Managed Kitty windows expose per-process sockets only to this user.
     # Unlike a static include, this also updates already-open terminals.
     if [[ -n "${XDG_RUNTIME_DIR:-}" ]]; then
@@ -58,8 +62,11 @@ case "${1:-}" in
     if ! eww -c "$config" active-windows | grep -Eq ': (compact|expanded)$'; then
       eww -c "$config" open compact
     fi
-    eww -c "$config" update "view=$2"
-    eww -c "$config" poll "$2" 2>/dev/null || true
+    eww -c "$config" update "view=$2" "dark=$([[ "$current" == dark ]] && printf true || printf false)"
+    case "$2" in
+      home) eww -c "$config" poll status || true ;;
+      *) eww -c "$config" poll "$2" || true ;;
+    esac
     ;;
   action)
     python3 "$config/widgets.py" action "${@:2}"
@@ -79,5 +86,5 @@ case "${1:-}" in
   keys)
     exec bash "$0" terminal --title mission-keys less "$config/keys.txt"
     ;;
-  *) printf 'usage: %s {start|theme|expand|toggle-visibility|terminal|launcher|keys}\n' "$0" >&2; exit 2 ;;
+  *) printf 'usage: %s {start|theme|expand|toggle-visibility|widget <home|network|audio>|action <name> [value]|terminal|launcher|keys}\n' "$0" >&2; exit 2 ;;
 esac

@@ -24,6 +24,71 @@ def ws(number, *windows, floats=()):
 
 
 class WorkspaceTests(unittest.TestCase):
+    def test_sidebar_is_a_text_command_surface_not_a_mouse_control_panel(self):
+        yuck = (SOURCE / "eww.yuck").read_text()
+        for widget in ("button", "scale", "progress", "scroll"):
+            self.assertNotIn(f"({widget} ", yuck)
+        for hint in ("[BS] STATUS", "[N] NET", "[M] AUDIO", "SHIFT+N", "CTRL+N",
+                     "[ / ]", "SHIFT+M", "CTRL+M", "SHIFT+A"):
+            self.assertIn(hint, yuck)
+        self.assertIn(':text {network.report', yuck)
+        self.assertIn(':text {audio.report', yuck)
+        self.assertEqual(yuck.count(':focusable false'), 2)
+
+    def test_widget_navigation_restores_theme_and_has_a_keyboard_home_route(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            eww = root / "eww"
+            eww.write_text('#!/bin/sh\nif [ "$3" = active-windows ]; then\n'
+                           '  printf "%s" "$EWW_ACTIVE"\nelse\n  printf "%s\\n" "$*"\nfi\n')
+            eww.chmod(0o755)
+            state = root / "state/mission-control"
+            state.mkdir(parents=True)
+            (state / "theme").write_text("dark\n")
+            env = dict(os.environ, PATH=directory + os.pathsep + os.environ["PATH"],
+                       XDG_STATE_HOME=str(root / "state"), XDG_CONFIG_HOME=str(root / "config"))
+            for view, active in (("home", ""), ("network", ""), ("audio", "expanded: expanded")):
+                with self.subTest(view=view):
+                    result = subprocess.run(["bash", str(SOURCE / "control.sh"), "widget", view],
+                                            capture_output=True, text=True, check=True,
+                                            env=dict(env, EWW_ACTIVE=active)).stdout
+                    self.assertIn(f"update view={view} dark=true", result)
+                    if not active:
+                        self.assertIn("open compact", result)
+                    else:
+                        self.assertNotIn("open compact", result)
+                    self.assertIn(f"poll {'status' if view == 'home' else view}", result)
+                    self.assertNotIn("poll home", result)
+
+    def test_theme_change_reloads_css_after_updating_the_theme_variable(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            eww = root / "eww"
+            eww.write_text('#!/bin/sh\nprintf "%s\\n" "$*"\n')
+            eww.chmod(0o755)
+            env = dict(os.environ, PATH=directory + os.pathsep + os.environ["PATH"],
+                       XDG_STATE_HOME=str(root / "state"), XDG_CONFIG_HOME=str(root / "config"),
+                       XDG_RUNTIME_DIR="")
+            for value in ("true", "false"):
+                result = subprocess.run(["bash", str(SOURCE / "control.sh"), "theme"],
+                                        capture_output=True, text=True, check=True, env=env).stdout
+                self.assertIn(f"update dark={value}", result)
+                self.assertIn("reload", result)
+                self.assertLess(result.index("update"), result.index("reload"))
+
+    def test_sway_binds_every_visible_system_command(self):
+        sway = (SOURCE.parents[2] / "sway.nix").read_text()
+        for key, command in {
+            "Mod4+BackSpace": "widget home", "Mod4+n": "widget network",
+            "Mod4+m": "widget audio", "Mod4+Control+n": "action wifi-toggle",
+            "Mod4+bracketleft": "action volume-down", "Mod4+bracketright": "action volume-up",
+            "Mod4+Shift+m": "action sink-mute", "Mod4+Control+m": "action source-mute",
+            "XF86AudioMicMute": "action source-mute", "XF86AudioRaiseVolume": "action volume-up",
+        }.items():
+            self.assertIn(f'"{key}" = "exec ${{control}} {command}";', sway)
+        self.assertIn('${pkgs.networkmanager}/bin/nmtui', sway)
+        self.assertNotIn('${pkgs.networkmanagerapplet}/bin/nm-connection-editor', sway)
+
     def test_keys_dispatches_to_kitty_pager(self):
         with tempfile.TemporaryDirectory() as directory:
             kitty = Path(directory) / "kitty"

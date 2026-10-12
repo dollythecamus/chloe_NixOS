@@ -2,26 +2,20 @@
 .panel { padding: 22px; }
 .panel.light { background: #f6edec; color: #481d32; }
 .panel.dark { background: #250c23; color: #ffe9ef; }
-.header { margin: 0 0 30px 0; font-weight: bold; font-size: 18px; }
+.header { margin: 0 0 24px 0; font-weight: bold; font-size: 18px; }
 .light .header, .light .clock { color: #ae3158; }
 .dark .header, .dark .clock { color: #ff718f; }
-.sub { opacity: 0.8; font-size: 12px; margin-bottom: 8px; }
-.workspace { font-size: 13px; margin-bottom: 5px; }
-.hotkey-hint { font-size: 11px; color: #ae3158; margin: 0 0 14px 0; }
-.dark .hotkey-hint { color: #ff718f; }
-.telemetry { padding: 16px 12px; border: 2px solid #ac4968; }
+.sub { opacity: 0.8; font-size: 12px; margin: 8px 0; }
+.workspace { font-size: 13px; margin-bottom: 14px; }
+.command-nav { font-size: 12px; margin-bottom: 18px; }
+.readout { padding: 16px 12px; border: 2px solid #ac4968; }
+.dark .readout { border-color: #ff718f; }
+.section-title { font-weight: bold; margin-bottom: 14px; }
+.light .section-title, .light .command-nav, .light .hotkey-hint { color: #ae3158; }
+.dark .section-title, .dark .command-nav, .dark .hotkey-hint { color: #ff718f; }
 .telemetry label { margin: 8px 0; }
-.clock { margin: 30px 0; font-weight: bold; }
-.widget-nav { margin-bottom: 18px; }
-.widget-nav button { margin-right: 6px; padding: 6px; font-size: 12px; }
-.widget-body { padding: 14px 12px; border: 2px solid #ac4968; }
-.widget-body > label { margin: 8px 0; }
-.widget-title { font-weight: bold; }
-.widget-body button { padding: 7px 10px; margin: 3px 0; }
-.widget-body progressbar { margin: 12px 0; min-height: 12px; }
-.widget-body progressbar trough { min-width: 280px; min-height: 12px; }
-.widget-body progressbar progress { background: #ae3158; }
-.light button { background: #f2dbe2; color: #481d32; border: 1px solid #ac4968; }
-.dark button { background: #48223e; color: #ffe9ef; border: 1px solid #ff718f; }
-button:hover { border-width: 2px; }
-.dark .widget-body { border-color: #ff718f; }
+.console-text { font-size: 13px; }
+.commands { margin-top: 24px; font-size: 13px; }
+.commands label { margin-bottom: 8px; }
+.hotkey-hint { font-size: 11px; margin-top: 18px; }
+.clock { margin: 24px 0; font-weight: bold; }

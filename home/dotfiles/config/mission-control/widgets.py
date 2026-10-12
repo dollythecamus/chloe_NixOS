@@ -2,7 +2,7 @@
 """EWW panel data and bounded NetworkManager/WirePlumber actions.
 
 Never pass SSIDs or profile names to a shell. New networks and credentials belong
-in NetworkManager's connection editor, not an EWW command-line argument.
+in NetworkManager's TUI, not an EWW command-line argument.
 """
 import json
 import re
@@ -70,6 +70,32 @@ def network():
     return {"wifi": wifi, "profiles": profiles, "available": available[:8]}
 
 
+def display_text(value, width):
+    """Bound ASCII display columns; escape Unicode and disable terminal controls."""
+    text = "".join(char if char.isprintable() else "?" for char in str(value))
+    text = text.encode("ascii", "backslashreplace").decode("ascii")
+    return text if len(text) <= width else text[:width - 3] + "..."
+
+
+def network_report(data):
+    """Plain text only: a cached readout, never a list of shell commands."""
+    if data.get("error"):
+        return "RADIO   --\nSTATE   " + display_text(data["error"], 28)
+    profiles = sorted(data["profiles"], key=lambda profile: not profile["active"])
+    lines = [f"RADIO   {'ON' if data['wifi'] else 'OFF'}", "", "SAVED // > ACTIVE"]
+    lines += [f"{'>' if profile['active'] else '-'} {display_text(profile['name'], 30)}"
+              for profile in profiles[:4]] or ["  (none)"]
+    if len(profiles) > 4:
+        lines.append("  ... SHIFT+N for all")
+    lines += ["", "NEARBY // CACHED", "SSID                   RX AUTH"]
+    lines += [f"{display_text(access['ssid'], 22):<22} {display_text(access['signal'], 3):>3}% "
+              f"{display_text(access['security'], 8)}"
+              for access in data["available"][:5]] or ["  (none)"]
+    if len(data["available"]) > 5:
+        lines.append("  ... SHIFT+N for all")
+    return "\n".join(lines)
+
+
 def audio():
     data = {}
     for name, target in (("sink", "@DEFAULT_AUDIO_SINK@"), ("source", "@DEFAULT_AUDIO_SOURCE@")):
@@ -84,6 +110,20 @@ def audio():
             data[f"{name}_available"] = False
             data[f"{name}_muted"] = False
     return data
+
+
+def audio_report(data):
+    """Read-only ASCII gauges; polling cannot trigger a volume change."""
+    sections = []
+    for label, name in (("OUTPUT", "sink"), ("INPUT", "source")):
+        if not data[f"{name}_available"]:
+            sections.append(f"{label:<6}  -- // NO DEVICE")
+            continue
+        value = data[name]
+        filled = min(10, max(0, value // 10))
+        state = "MUTED" if data[f"{name}_muted"] else "LIVE"
+        sections.append(f"{label:<6} {value:>3}% {state}\n        [{'#' * filled}{'.' * (10 - filled)}]")
+    return "\n\n".join(sections)
 
 
 def action(name, value=None):
@@ -112,9 +152,11 @@ def action(name, value=None):
 if __name__ == "__main__":
     try:
         if sys.argv[1:] == ["network"]:
-            print(json.dumps(network()))
+            data = network()
+            print(json.dumps(dict(data, report=network_report(data))))
         elif sys.argv[1:] == ["audio"]:
-            print(json.dumps(audio()))
+            data = audio()
+            print(json.dumps(dict(data, report=audio_report(data))))
         elif len(sys.argv) >= 2 and sys.argv[1] == "action":
             action(*sys.argv[2:])
         else:

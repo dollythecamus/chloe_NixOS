@@ -8,8 +8,9 @@ Super+P              Termagotchi pet
 Super+O              Planetary orbits
 Super+T              Toggle light/dark panel and managed Kitty palette
 Super+B              Expand/collapse right sidebar
-Super+N              Network widget (also from sidebar)
-Super+M              Audio widget (also from sidebar)
+Super+Backspace      Status page / return from network or audio
+Super+N              Network readout
+Super+M              Audio readout
 Super+F1             Show this hotkey list
 
 WORKSPACES / WINDOWS
@@ -32,8 +33,12 @@ Super+-              Show scratchpad
 Super+Shift+-        Move focused window to scratchpad
 
 SYSTEM / SESSION
-Super+Shift+N        Network connection editor
-Super+Shift+A        Audio routing (pavucontrol)
+Super+Shift+N        NetworkManager TUI in Kitty (nmtui)
+Super+Ctrl+N         Toggle Wi-Fi radio (off disconnects Wi-Fi)
+Super+[ / ]          Output volume - / + 5% (increase capped at 100%)
+Super+Shift+M        Toggle output mute
+Super+Ctrl+M         Toggle microphone mute
+Super+Shift+A        Advanced audio routing (pavucontrol; GUI fallback)
 Super+Shift+C        Reload Sway configuration
 Super+Shift+E        Confirm and exit Sway (ends this session)
 Volume/Brightness    Laptop media keys adjust audio and display

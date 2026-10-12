@@ -118,6 +118,8 @@ in
         "Mod4+b" = "exec ${control} expand";
         "Mod4+p" = "exec ${pet}";
         "Mod4+o" = "exec ${orbits}";
+        # Read-only command panes: hotkeys are the primary controls, not buttons.
+        "Mod4+BackSpace" = "exec ${control} widget home";
         "Mod4+n" = "exec ${control} widget network";
         "Mod4+m" = "exec ${control} widget audio";
         "Mod4+F1" = "exec ${control} keys";
@@ -126,11 +128,18 @@ in
         "Mod4+f" = "exec ${control} toggle-visibility";
         "Mod4+Shift+f" = "fullscreen toggle";
         "Mod4+Shift+l" = "exec ${pkgs.swaylock}/bin/swaylock -f";
-        "Mod4+Shift+n" = "exec ${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
+        "Mod4+Shift+n" = "exec ${terminal} --class mission-network --title mission-network ${pkgs.networkmanager}/bin/nmtui";
+        "Mod4+Control+n" = "exec ${control} action wifi-toggle";
+        "Mod4+bracketleft" = "exec ${control} action volume-down";
+        "Mod4+bracketright" = "exec ${control} action volume-up";
+        "Mod4+Shift+m" = "exec ${control} action sink-mute";
+        "Mod4+Control+m" = "exec ${control} action source-mute";
+        # Routing is the explicit GUI escape hatch, not the ordinary control path.
         "Mod4+Shift+a" = "exec ${pkgs.pavucontrol}/bin/pavucontrol";
-        "XF86AudioRaiseVolume" = "exec ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
-        "XF86AudioLowerVolume" = "exec ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
-        "XF86AudioMute" = "exec ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+        "XF86AudioRaiseVolume" = "exec ${control} action volume-up";
+        "XF86AudioLowerVolume" = "exec ${control} action volume-down";
+        "XF86AudioMute" = "exec ${control} action sink-mute";
+        "XF86AudioMicMute" = "exec ${control} action source-mute";
         "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set +5%";
         "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%-";
       };
