@@ -1,9 +1,6 @@
 {config, pkgs, lib, inputs, ... }:
 {
-    # SearXNG — self-hosted search engine
-      # used by hermesn
     imports = [
-      #./searxng.nix
     ];
 
     # createUser = false also disables the module's `users.groups.hermes = {}`

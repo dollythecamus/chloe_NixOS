@@ -1,6 +1,8 @@
 {config, pkgs, ...}:
 
 {
+  # search engine used by hermes 
+  # not used currently! 
   services.searx = {
     enable = true;
     settings = {
