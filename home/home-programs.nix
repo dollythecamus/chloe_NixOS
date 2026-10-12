@@ -2,12 +2,14 @@
 
 {
   imports = [
-       # gamedev
-        ./programs/unity.nix
-        ./programs/godot.nix
-        ./programs/blender.nix
-       # general
-        ./terminal.nix
+        # gamedev
+         ./programs/unity.nix
+         ./programs/godot.nix
+         ./programs/blender.nix
+        # 3d printing
+         ./programs/crealityprint.nix
+        # general
+         ./terminal.nix
 
        # gaming
   	./gaming.nix
