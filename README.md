@@ -10,3 +10,6 @@ preview/build gates and the source-brief location.
 
 [Desktop feature roadmap](docs/mission-control-desktop-roadmap.md): audited
 backend/integration gaps and a prioritized keyboard-first feature backlog.
+
+[Step-by-step implementation plan](docs/mission-control-implementation-plan.md):
+foundation repairs, delivery steps and acceptance/rollback gates for every feature.

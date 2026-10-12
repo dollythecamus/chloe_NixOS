@@ -3,6 +3,8 @@
 Audit: 2026-10-12. Scope: the Sway prototype on the daily-use machine.
 This is an inventory and proposed implementation order, not permission to enable
 all services or replace the desktop. Follow [the design contract](mission-control-design.md).
+The [step-by-step implementation plan](mission-control-implementation-plan.md)
+expands every backlog item into implementation, testing, acceptance and rollback work.
 
 ## Current state: source is not the running shell
 
@@ -58,7 +60,7 @@ assumption that an end-to-end workflow has passed acceptance.
 | F03 | Screenshots | grim/slurp installed; no relevant live Sway screenshot binding found | Hotkeys for selected area, output and focused-window capture; save/copy options with explicit destination and completion feedback. Recording is a later extension. | P1 |
 | F04 | Clipboard history | wl-clipboard installed; no history manager found | Searchable keyboard picker for text/images; pause and clear controls. Decide retention/privacy before enabling; avoid persistent history by default and do not promise perfect secret detection. | P1 |
 | F05 | Session/power menu | Manual lock and confirmed session exit exist; no unified menu | Searchable text command menu for lock/logout/reboot/power-off; confirmation for disruptive actions. No normal suspend command while resume is broken. | P1 |
-| F06 | Displays and hotplug profiles | Built-in output configured; no kanshi/wdisplays found | Keyboard selection of mirror/extend/output/resolution/scale presets; automatic known-monitor profiles only after testing. Keep sidebar on built-in output and restore workspaces/focus safely. | P2 |
+| F06 | Displays and hotplug profiles | Built-in output configured; no kanshi/wdisplays found | Keyboard selection of extend/output/resolution/scale presets; mirror through a tested native capability or separate client such as wl-mirror, never overlapping-position assumptions. Automatic known-monitor profiles only after testing. Keep sidebar on built-in output and restore workspaces/focus safely. | P2 |
 | F07 | Audio devices and application mixer | PipeWire/basic controls present; routing uses pavucontrol | Keyboard output/input selection, per-app levels/routing, mute and Bluetooth-headset profiles. Evaluate a TUI before building a custom mixer; retain pavucontrol fallback. | P2 |
 | F08 | Brightness, battery and idle inhibition | Brightness keys, power alerts and TLP present; no unified controls; idle service needs repair | Brightness percentage, battery state/time where available, explicit display-off and temporary keep-awake controls with a visible indicator. Do not stack a competing power-profiles daemon on TLP without review. | P2 |
 | F09 | Media transport | playerctl installed; no relevant live playerctl binding found | Play/pause/previous/next hotkeys, active-player choice and a bounded track readout. No forced always-on media animation. | P2 |
