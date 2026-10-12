@@ -6,6 +6,7 @@ mocks — none launches a real screenshot, clipboard action or session change.
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -94,6 +95,48 @@ class KeyTests(unittest.TestCase):
         names = [line.split('"')[1] for line in inner.splitlines()
                  if line.strip().startswith('"')]
         self.assertEqual(len(names), len(set(names)), f"dup keys: {names}")
+
+    def test_every_advertised_keys_txt_hotkey_is_bound(self):
+        """Regression for the 3484f20 Super+F1 regression: keys.txt is the
+        authoritative-advertised list, so any single hotkey it advertises must
+        exist in the sway binding block (case-insensitive; Enter aliases
+        Return). Range/collection rows are skipped."""
+        sway = sway_text()
+        inner = sway.split("keybindings = lib.mkOptionDefault {", 1)[1]
+        inner = inner.split("\n      };\n", 1)[0]
+        bound = set()
+        for line in inner.splitlines():
+            if line.strip().startswith('"'):
+                name = line.split('"')[1]
+                bound.add(name.upper().replace("+RETURN", "+ENTER")
+                          .replace("+CTRL+", "+CONTROL+"))
+        # HM mkOptionDefault bindings are merged at runtime and are not in the
+        # user dict; these are the documented defaults keys.txt relies on
+        # (live-verified against HM's sway module defaultConfig).
+        bound |= {"MOD4+SHIFT+Q", "MOD4+SHIFT+C", "MOD4+SHIFT+E",
+                  "MOD4+SHIFT+SPACE",
+                  "MOD4+SPACE", "MOD4+A", "MOD4+R", "MOD4+SHIFT+-",
+                  "MOD4+-", "MOD4+SHIFT+H", "MOD4+SHIFT+J", "MOD4+SHIFT+K",
+                  "MOD4+H", "MOD4+J", "MOD4+K", "MOD4+L", "MOD4+W", "MOD4+S",
+                  "MOD4+LEFT", "MOD4+RIGHT", "MOD4+UP", "MOD4+DOWN",
+                  "MOD4+SHIFT+LEFT", "MOD4+SHIFT+RIGHT", "MOD4+SHIFT+UP",
+                  "MOD4+SHIFT+DOWN"}
+        skip = ("1..9", "H/J", "S / W", "[ / ]", "V ", "Volume/")
+        missing = []
+        for line in (SOURCE / "keys.txt").read_text().splitlines():
+            m = re.match(r"(XF86\w+|Super\+\S+(?:\s/\s\S+?)?)\s{2,}", line)
+            if not m:
+                continue
+            name = m.group(1).replace("Super+", "Mod4+").upper()
+            name = name.replace("+CTRL+", "+CONTROL+").replace("+RETURN", "+ENTER")
+            if any(part in name for part in skip):
+                continue
+            # compound rows like "Mod4+[ / ]"/"Mod4+S / W" already skipped
+            if not re.fullmatch(r"(XF86[\w]+|MOD4\+[\w+-]+)", name):
+                continue
+            if name not in bound:
+                missing.append(name)
+        self.assertEqual(missing, [], f"keys.txt advertises unbound hotkeys: {missing}")
 
     def test_session_menu_has_no_suspend_entry(self):
         src = (SOURCE / "session.py").read_text()

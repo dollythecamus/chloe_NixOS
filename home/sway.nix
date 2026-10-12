@@ -11,6 +11,7 @@ let
   notifications = "${pkgs.dunst}/bin/dunstctl";
   # F03: grim/slurp/wl-copy helper (mission-control/screenshots.py).
   screenshot = "${control} screenshot";
+  keysPane = "${control} keys";
   # F04: clipboard history picker lives in control.sh (`clipboard` command);
   # cliphist binaries are referenced directly in the keybinding.
   pet = "${control} terminal --class mission-pet --title mission-pet ${petPackage}/bin/termagotchi";
@@ -162,6 +163,7 @@ in
         # roster/history, clipboard entries, storage devices, mounts) is made
         # by the focused UI; hotkeys open the application, never execute
         # selected data.
+        "Mod4+F1" = "exec ${keysPane}";
         # Lenovo P1/P2 hardware keys are NOT bound: xkeyboard-config has no
         # `P1`/`P2` keysym names and the Ideapad extra-buttons device emits raw
         # evdev codes that need a live press test (operator present, evtest/web)
