@@ -34,7 +34,6 @@
   environment.systemPackages = with pkgs; [
     ffmpeg
     winetricks
-    proton-vpn
     openssl
   ];
 

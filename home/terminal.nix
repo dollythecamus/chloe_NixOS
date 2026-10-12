@@ -13,9 +13,8 @@
 
     fzf        # fuzzy finder
     carapace   # completion
-    
+
     terminaltexteffects
-    fastfetch 
   ];
     
   programs.kitty.enable = true;

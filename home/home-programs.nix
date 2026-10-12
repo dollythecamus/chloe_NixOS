@@ -101,25 +101,16 @@
     glow
     pkgs-unstable.btop-cuda
     signal-desktop
-    neocities
     vlc
     wl-clipboard
     nautilus
-    peaclock
     starship # customizeable prompts for any shell
-    bacon # rust compiler
-    cargo-info # get data about rust packages from the internet without going through the browser
-    rusty-man # rust docs in cli
-    mask # command runner in a markdown file, woa
-    presenterm # terminal slides presentation tool
-    kew # music player
-    qutebrowser # minimal web browser
     # torrent
     qbittorrent
     # browser, office
     google-chrome
-    librewolf # to replace by qute
-	  libreoffice 
+    librewolf
+ 	  libreoffice 
       
     # art
     krita

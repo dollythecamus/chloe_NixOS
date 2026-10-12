@@ -3,21 +3,23 @@
 {
   # Services
 
-  # Enable OpenTabletDriver
-  #hardware.opentabletdriver.enable = true;
+  # Tablet driver: OpenTabletDriver was tried and disabled (commented); the
+  # xserver.wacom option was removed 2026-10-12 -- xserver.enable is false in
+  # every output, so it never applied anything.
 
-  services.xserver.wacom.enable = true;
-
-  # enable flatpak
-  services.flatpak.enable = true;
   xdg.portal.enable = true;
   xdg.portal.xdgOpenUsePortal = true;
+  # services.flatpak removed 2026-10-12: zero flatpak apps installed since the
+  # system was set up (2026-09-05), only 7 empty stale ~/.var/app scaffolds.
+  # Portals are kept -- they serve non-flatpak apps too (portal-gnome is the
+  # top file-open path in recently-used.xbel).
 
-  #enable bluetooth manager
-  services.blueman.enable = true;
+  # blueman removed 2026-10-12 -- bluetuith (Super+I, mission-control F01) owns
+  # bluetooth; blueman-applet also has no tray to dock into in the prototype.
 
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
+  # CUPS removed 2026-10-12: no printer has ever been configured (no printers
+  # in /etc/cups/printers.conf, no ppds, empty page_log since install) while
+  # cupsd + cups-browsed ran at every boot.
 
   #enable docker
   virtualisation.docker = {

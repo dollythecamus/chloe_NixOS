@@ -4,7 +4,7 @@
   imports = [
     ./stylix.nix
     ./home-programs.nix
-    ./neofetch.nix
+
     ./wofi.nix
     ./vscode.nix
   ] ++ (if desktop == "sway-prototype"
