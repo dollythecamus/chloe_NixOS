@@ -49,9 +49,11 @@
 	      config.allowUnfree = true;
       };
 
-      # A separate Sway prototype shares hardware and services but isolates its
-      # session, Home Manager imports and palette. The default Niri output stays
-      # unchanged; Sway is not installed until that generation is activated.
+      # Adopted (2026-10-12): the Sway mission-control session is the default
+      # daily driver. Niri and Plasma rewire into named fallback outputs so
+      # an A/B session stays reachable via ly without touching the default.
+      # The former chloe-laptop-sway-prototype output is identical to
+      # chloe-laptop and was dropped to keep the built output unambiguous.
       mkSystem = desktop: nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs system pkgs-unstable self desktop; };
         modules = [
@@ -82,9 +84,9 @@
   in
   {
     nixosConfigurations = {
-      chloe-laptop = mkSystem "niri";
+      chloe-laptop = mkSystem "sway-prototype";
+      chloe-laptop-niri = mkSystem "niri";
       chloe-laptop-plasma = mkSystem "plasma";
-      chloe-laptop-sway-prototype = mkSystem "sway-prototype";
     };
   };
 }
