@@ -112,3 +112,11 @@ known_builtin_toolsets:
     - web
     - x_search
     - yuanbao
+mcp_servers:
+  godot:
+    command: "npx"
+    args: ["-y", "github:Coding-Solo/godot-mcp"]
+    env:
+      GODOT_PATH: "/etc/profiles/per-user/chloe/bin/godot"
+    timeout: 120        # scene ops can be slow
+    connect_timeout: 60
