@@ -18,11 +18,19 @@
   # and the tray (network/battery/bluetooth applets), and powerdevil +
   # kscreenlocker own idle and locking. Running the niri-era daemons there would
   # put two processes behind org.freedesktop.Notifications (one loses the name
-  # and logs it) and double the tray. `desktop` comes from the flake's
-  # home-manager.extraSpecialArgs.
+  # and logs it) and double the tray. In the Sway prototype, nm-applet and
+  # poweralertd are dropped rather than repaired:
+  #   * nm-applet needs a tray to dock into (the prototype EWW panel is a
+  #     non-focusable text surface with no tray), and it died for weeks with
+  #     "cannot open display" before that was traced; nmtui (Super+Shift+N)
+  #     covers the workflow. NetworkManager itself, portals and notification
+  #     routing are untouched.
+  #   * poweralertd needs a notification daemon alive at start; Dunst (kept)
+  #     serves that role.
+  # `desktop` comes from the flake's home-manager.extraSpecialArgs.
   services.dunst.enable = desktop != "plasma";
-  services.network-manager-applet.enable = desktop != "plasma";
-  services.poweralertd.enable = desktop != "plasma";
+  services.network-manager-applet.enable = desktop != "plasma" && desktop != "sway-prototype";
+  services.poweralertd.enable = desktop != "plasma" && desktop != "sway-prototype";
   services.swayidle.enable = desktop != "plasma";
 
   # idle: dim/lock only -- NO automatic suspend (see below). niri serves

@@ -5,6 +5,7 @@ Never pass SSIDs or profile names to a shell. New networks and credentials belon
 in NetworkManager's TUI, not an EWW command-line argument.
 """
 import json
+import os
 import re
 import subprocess
 import sys
@@ -149,6 +150,40 @@ def action(name, value=None):
         raise ValueError("Unknown widget action")
 
 
+def system_report():
+    """F18 — bounded read-only generation/service/disk summary."""
+    lines = ["MISSION // SYSTEM"]
+    try:
+        gen = run("readlink", "--", "/run/current-system").replace("/nix/store/", "")
+        lines.append("GEN      " + display_text(gen.split("-", 2)[-1], 40))
+    except (OSError, subprocess.SubprocessError):
+        lines.append("GEN      --")
+    try:
+        rev = run("nix", "eval", "--raw", "~/nixos#self.rev", "--apply", "x: x")
+        lines.append("SRC REV  " + display_text(rev, 12))
+    except (OSError, subprocess.SubprocessError):
+        lines.append("SRC REV  --")
+    try:
+        failed = run("systemctl", "--user", "--failed", "--plain", "--no-legend")
+        lines.append("FAILED SVCS")
+        lines += ["  " + display_text(line.split()[0], 36)
+                  for line in failed.splitlines()[:4]] if failed.strip() else ["  (none)"]
+    except (OSError, subprocess.SubprocessError):
+        lines.append("FAILED SVCS --")
+    try:
+        fs = os.statvfs("/")
+        pct = (fs.f_blocks - fs.f_bavail) * 100 // fs.f_blocks
+        lines.append(f"DISK     {pct}% used")
+    except (NameError, OSError):
+        pass
+    try:
+        boot = run("systemctl", "--user", "is-active", "graphical-session.target")
+        lines.append(f"GRAPHICAL SESSION {boot}")
+    except (OSError, subprocess.SubprocessError):
+        lines.append("GRAPHICAL SESSION --")
+    return "\n".join(lines)
+
+
 if __name__ == "__main__":
     try:
         if sys.argv[1:] == ["network"]:
@@ -157,10 +192,12 @@ if __name__ == "__main__":
         elif sys.argv[1:] == ["audio"]:
             data = audio()
             print(json.dumps(dict(data, report=audio_report(data))))
+        elif sys.argv[1:] == ["system"]:
+            print(system_report())
         elif len(sys.argv) >= 2 and sys.argv[1] == "action":
             action(*sys.argv[2:])
         else:
-            raise ValueError("usage: widgets.py {network|audio|action <name> [value]}")
+            raise ValueError("usage: widgets.py {network|audio|system|action <name> [value]}")
     except (ValueError, OSError, subprocess.SubprocessError) as exc:
         print(exc, file=sys.stderr)
         sys.exit(2)

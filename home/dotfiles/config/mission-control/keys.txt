@@ -13,6 +13,16 @@ Super+N              Network readout
 Super+M              Audio readout
 Super+F1             Show this hotkey list
 
+PERIPHERALS / DAILY WORK
+Super+I              Bluetooth manager (bluetuith TUI)
+Super+U              Notification history (dunstctl)
+Super+V              Clipboard history picker
+XF86Select           Screenshot: selected area (Save to ~/Pictures)
+Super+Pause          Screenshot: built-in display output
+Super+Delete         Removable storage (udiskie)
+Super+Ctrl+D         Display profiles (kanshi)
+Super+Shift+A        Audio mixer TUI (pulsemixer)
+
 WORKSPACES / WINDOWS
 Super+1..9, 0        Go to workspace 1..9, 10
 Super+Shift+1..9, 0  Move focused window to workspace 1..9, 10
@@ -33,12 +43,16 @@ Super+-              Show scratchpad
 Super+Shift+-        Move focused window to scratchpad
 
 SYSTEM / SESSION
+Super+Escape         Session menu: lock / logout / reboot / power-off
+                     (reboot & power-off require typing "yes"; no suspend —
+                     resume is broken on this hardware)
+Super+Shift+S        System maintenance overview (read-only)
 Super+Shift+N        NetworkManager TUI in Kitty (nmtui)
 Super+Ctrl+N         Toggle Wi-Fi radio (off disconnects Wi-Fi)
 Super+[ / ]          Output volume - / + 5% (increase capped at 100%)
 Super+Shift+M        Toggle output mute
+Super+Shift+A        Audio mixer TUI (pulsemixer)
 Super+Ctrl+M         Toggle microphone mute
-Super+Shift+A        Advanced audio routing (pavucontrol; GUI fallback)
 Super+Shift+C        Reload Sway configuration
 Super+Shift+E        Confirm and exit Sway (ends this session)
 Volume/Brightness    Laptop media keys adjust audio and display

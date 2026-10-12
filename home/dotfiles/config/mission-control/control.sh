@@ -75,6 +75,37 @@ case "${1:-}" in
       *) eww -c "$config" poll audio || true ;;
     esac
     ;;
+  screenshot)
+    # F03: grim/slurp/wl-copy. Paths and geometry flow as separate arguments —
+    # never interpolated into a shell string. Subscription feedback reports the
+    # concrete effect; a slurp cancellation aborts before any write.
+    exec python3 "$config/screenshots.py" "${@:2}"
+    ;;
+  clipboard)
+    # F04: cliphist picker replacing the HM default binder. Bound store,
+    # pause/clear as explicit allowlisted subcommands, never arbitrary input
+    # re-executed. Single instance; the watcher lives with the session service.
+    exec python3 "$config/clipboard.py" "${@:2}"
+    ;;
+  session)
+    # F05: session/power menu. Backend actions and confirmation flow live in
+    # the Python dispatcher; suspend/hibernate are deliberately absent.
+    exec python3 "$config/session.py" "${@:2}"
+    ;;
+  layout)
+    # F12: unsupported until identifier detection is wired live; exit-code 2.
+    echo "layout: not yet implemented" >&2
+    exit 2
+    ;;
+  storage)
+    # F10: no silent automount; picker opens in a terminal in scope for now.
+    exec bash "$0" terminal --class mission-storage --title mission-storage \
+      "${pkgs.udiskie}/bin/udiskie" --notify
+    ;;
+  system)
+    # F18: bounded read-only overview via widgets.py + terminal shortcuts.
+    python3 "$config/widgets.py" system || true
+    ;;
   terminal)
     exec kitty --config "$HOME/.config/kitty/kitty.conf" --config "$config/kitty-$current.conf" \
       --override allow_remote_control=socket-only \
@@ -86,5 +117,5 @@ case "${1:-}" in
   keys)
     exec bash "$0" terminal --title mission-keys less "$config/keys.txt"
     ;;
-  *) printf 'usage: %s {start|theme|expand|toggle-visibility|widget <home|network|audio>|action <name> [value]|terminal|launcher|keys}\n' "$0" >&2; exit 2 ;;
+  *) printf 'usage: %s {start|theme|expand|toggle-visibility|widget <home|network|audio>|action <name> [value]|screenshot <mode>|clipboard|session|storage|system|terminal|launcher|keys}\n' "$0" >&2; exit 2 ;;
 esac
