@@ -47,11 +47,29 @@ class ClipboardTests(unittest.TestCase):
     def test_cliphist_service_is_bounded_and_session_tied(self):
         sway = sway_text()
         self.assertIn("mission-cliphist", sway)
-        self.assertIn("cliphist watch", sway)
-        # Bounded store path: XDG state, not a permanent default cache.
+        # cliphist 0.7.0 removed `watch`; capture is wl-paste --watch + store.
+        self.assertIn("wl-paste --no-newline --watch", sway)
+        self.assertIn("store'", sway)
+        # Bounded store path: XDG state, not a permanent default cache. Flags
+        # must precede the subcommand or cliphist silently uses the default db.
         self.assertIn("XDG_STATE_HOME", sway)
+        # word order is load-bearing: flag strictly before the `store` subcommand
+        svc = re.search(r'ExecStart = (.*)', sway)
+        self.assertIsNotNone(svc)
+        self.assertIn('-db-path \\"', svc.group(1))
+        self.assertIn("store'", svc.group(1))
+        self.assertGreater(svc.group(1).index('-db-path'),
+                           svc.group(1).index('cliphist'))
+        self.assertLess(svc.group(1).index('-db-path'),
+                        svc.group(1).index("store'"))
         # Dies with the owning session.
         self.assertIn('PartOf = [ "graphical-session.target" ]', sway)
+
+    def test_cliphist_picker_shares_bounded_store(self):
+        picker = (SOURCE / "clipboard.py").read_text()
+        self.assertIn("-db-path", picker)
+        self.assertIn("XDG_STATE_HOME", picker)
+        self.assertIn("DB_ARGS", picker)
 
     def test_clipboard_picker_cancels_neutral(self):
         module = SOURCE / "clipboard.py"

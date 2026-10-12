@@ -13,8 +13,20 @@ import sys
 CLIPHIST = "cliphist"
 
 
+def _db_path():
+    state = os.environ.get("XDG_STATE_HOME") or os.path.expanduser(
+        "~/.local/state")
+    return os.path.join(state, "mission-control", "cliphist.db")
+
+
+# cliphist 0.7 flags must precede the subcommand; `cmd -db-path x` silently
+# falls back to the default unbounded cache db. The watcher (sway.nix unit)
+# and the picker must therefore resolve the same path the same way.
+DB_ARGS = ["-db-path", _db_path()]
+
+
 def run(args, **kw):
-    return subprocess.run([CLIPHIST, *args], capture_output=True, text=True, **kw)
+    return subprocess.run([CLIPHIST, *DB_ARGS, *args], capture_output=True, text=True, **kw)
 
 
 def pick():
@@ -36,7 +48,7 @@ def pick():
     if not chosen:
         return 0
     # pipe the chosen line back through cliphist decode; args are a fixed list
-    dec = subprocess.run([CLIPHIST, "decode"], input=chosen,
+    dec = subprocess.run([CLIPHIST, *DB_ARGS, "decode"], input=chosen,
                          capture_output=True, check=False)
     if dec.returncode != 0:
         print("decode failed", file=sys.stderr)

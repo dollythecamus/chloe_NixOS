@@ -226,9 +226,12 @@ in
     { timeout = 720; command = "${pkgs.swaylock}/bin/swaylock -f"; }
   ];
 
-  # F04 — cliphist watcher. Bounded, session-only store under XDG_RUNTIME
-  # state so it cannot survive a logout as a permanent log; max 200 entries,
-  # images included. The watcher dies with the graphical session.
+  # F04 — cliphist watcher. Bounded, session-only store under XDG state so it
+  # cannot survive a logout as a permanent log (max 200 entries). cliphist
+  # 0.7.0 removed the `watch` subcommand: capture is wl-paste --watch driving
+  # `cliphist store`. Flags must precede the subcommand — `store -db-path X`
+  # is silently parsed with defaults instead. The picker and controller scripts
+  # resolve the same -db-path, so all F04 actors share one store.
   systemd.user.services.mission-cliphist = {
     Unit = {
       Description = "mission-control clipboard history (bounded, session-only)";
@@ -237,10 +240,7 @@ in
     };
     Install = { WantedBy = [ "graphical-session.target" ]; };
     Service = {
-      ExecStart = "${pkgs.cliphist}/bin/cliphist watch";
-      Environment = [
-        "CLIPHIST_DB=${"$"}{XDG_STATE_HOME:-$HOME/.local/state}/mission-control/cliphist.db"
-      ];
+      ExecStart = "/bin/sh -c 'exec ${pkgs.wl-clipboard}/bin/wl-paste --no-newline --watch ${pkgs.cliphist}/bin/cliphist -db-path \"${"$"}{XDG_STATE_HOME:-$HOME/.local/state}\"/mission-control/cliphist.db -max-items 200 store'";
       Restart = "on-failure";
       RestartSec = "2s";
     };
