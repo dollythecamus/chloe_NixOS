@@ -30,6 +30,18 @@
 
     extraDependencyGroups = ["messaging" "anthropic"];
     # messaging = Discord; Holographic memory is bundled and uses local SQLite.
+    # numpy is NOT in the sealed venv: the holographic memory plugin moved out of
+    # core into the community catalog (cloned pinned copy at
+    # /var/lib/hermes/.hermes/plugins/holographic, v0.6.1 — PM install is broken
+    # on the sealed layout, missing uv.lock). Without numpy the plugin self-reports
+    # fact_store stats structural_recall: "off (numpy missing)" — keyword recall
+    # works, HRR structural related/reason recall degraded. numpy's interpreter
+    # MUST come from the plugin lockfile's interpreter (package.python.pkgs), not a
+    # nixpkgs python-set: the lockfile pins the version. Evidence + steps:
+    # docs/holographic-numpy-handoff.md (2026-10-12).
+    extraPythonPackages = [
+      config.services.hermes-agent.package.python.pkgs.numpy
+    ];
 
     configFile = ./config/hermes/config.yaml;
 
