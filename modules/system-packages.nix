@@ -6,6 +6,8 @@
   environment.systemPackages = with pkgs; [
     python313
     nodejs_22
+    (pkgs.callPackage ../pkgs/lightpanda.nix { })
+    inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.agent-browser
     gnome-keyring
     jdk17_headless
     dotnetCorePackages.runtime_10_0-bin

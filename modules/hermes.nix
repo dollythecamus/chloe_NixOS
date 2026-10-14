@@ -29,6 +29,13 @@
     createUser = false;
 
     extraDependencyGroups = ["messaging" "anthropic"];
+    # Local speech-to-text and local Lightpanda browser runtime. Keep these in
+    # the Hermes service closure/PATH as well as the system profile so gateway
+    # turns do not depend on an interactive shell's environment.
+    extraPackages = [
+      (pkgs.callPackage ../pkgs/lightpanda.nix { })
+      inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.agent-browser
+    ];
     # messaging = Discord; Holographic memory is bundled and uses local SQLite.
     # numpy is NOT in the sealed venv: the holographic memory plugin moved out of
     # core into the community catalog (cloned pinned copy at
@@ -41,6 +48,9 @@
     # docs/holographic-numpy-handoff.md (2026-10-12).
     extraPythonPackages = [
       config.services.hermes-agent.package.python.pkgs.numpy
+      (pkgs.callPackage ../pkgs/hermes-faster-whisper.nix {
+        python = config.services.hermes-agent.package.python;
+      })
     ];
 
     configFile = ./config/hermes/config.yaml;

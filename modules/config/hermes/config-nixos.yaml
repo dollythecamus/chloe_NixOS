@@ -13,6 +13,12 @@ web:
     firecrawl: free
 browser:
   cloud_provider: local
+  engine: lightpanda
+stt:
+  enabled: true
+  provider: local
+  local:
+    model: small
 display:
   tool_progress: all
 computer_use:
@@ -48,6 +54,7 @@ platform_toolsets:
     - memory
     - session_search
     - skills
+    - stt
     - terminal
     - todo
     - tts

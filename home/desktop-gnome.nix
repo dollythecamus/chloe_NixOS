@@ -28,8 +28,15 @@
   # .override { extraDependencyGroups; extraPythonPackages }). The derivation
   # dedupes with the gateway's; no extra build.
   services.hermes-agent.extraDependencyGroups = [ "messaging" "anthropic" ];
+  services.hermes-agent.extraPackages = [
+    (pkgs.callPackage ../pkgs/lightpanda.nix { })
+    inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.agent-browser
+  ];
   services.hermes-agent.extraPythonPackages = [
     inputs.hermes-agent.packages.${pkgs.system}.default.python.pkgs.numpy
+    (pkgs.callPackage ../pkgs/hermes-faster-whisper.nix {
+      python = inputs.hermes-agent.packages.${pkgs.system}.default.python;
+    })
   ];
 
   # GNOME daily-desktop-only settings: install the Electron app + XDG
