@@ -14,7 +14,6 @@
     ./modules/users/chloe.nix
 
     ./modules/desktop/space-home.nix
-    ./modules/desktop/niri.nix
     
     ./modules/system-packages.nix
     ./modules/services.nix
@@ -31,23 +30,30 @@
     # outside nix (npm-installed tools, appimages).
     ./modules/nix-ld.nix
 ]
-  # Desktop layer. Both generations use the SAME login manager (ly) and keep
-  # niri, so the only thing the plasma output changes is which desktop session is
-  # on offer: the GNOME desktop-manager shim on one side, Plasma 6 on the other.
-  # `desktop` comes from the flake's specialArgs
-  # (nixosConfigurations.chloe-laptop = "niri", .chloe-laptop-plasma = "plasma").
-  # ly is shared on purpose: it comes up on this laptop, and its session list is
-  # built from the same sessionData.desktops directory that holds plasma.desktop,
-  # so the Plasma generation cannot cost a working login screen. (SDDM was tried
-  # for the plasma output on 2026-09-15 and showed nothing at all -- see the
-  # WAYLAND_DISPLAY note in modules/desktop/plasma.nix for the cause.)
-  ++ [ ./modules/desktop/ly.nix ]
+  # Desktop layer. The daily output boots GNOME via GDM (modules/desktop/
+  # gnome.nix, chosen 2026-10-14 after the Sway mission-control week was
+  # reverted on main -- simplest stack that just works, owning the whole
+  # desktop). ly + niri are the login manager and recovery session of the two
+  # A/B fallback outputs only: their configuration is byte-identical to
+  # before this change, so a working-of-record fallback remains reachable
+  # from any generation's boot menu. (SDDM was tried for the plasma output on
+  # 2026-09-15 and showed nothing at all -- see the WAYLAND_DISPLAY note in
+  # modules/desktop/plasma.nix for the cause; modules/desktop/gnome.nix
+  # carries the same PAM-unset for GDM's Wayland greeter.)
+  ++ (if desktop == "gnome"
+      then [ ./modules/desktop/gnome.nix ]
+      else [ ./modules/desktop/niri.nix ./modules/desktop/ly.nix ])
   ++ (if desktop == "plasma"
       then [ ./modules/desktop/plasma.nix ]
-      else [ ./modules/desktop/gnome-shim.nix ])
-  ++ (if desktop == "sway-prototype"
-      then [ ./modules/desktop/sway.nix ]
-      else []);
+      else if desktop == "gnome"
+      then [ ]
+      else [ ./modules/desktop/gnome-shim.nix ]);
+
+  # The "sway-prototype" value of `desktop` is gone from this flake alongside
+  # the reverted adoption (revert commit d037b73). The Sway/niri system +
+  # Home Manager modules remain in the tree, imported only by the fallback
+  # outputs (and, where not imported at all, alive in git history and on the
+  # project branches). New files still need an explicit reachable import.
 
   # Garbage collection. Until now there was no policy at all: 75 GiB in
   # /nix/store and the root filesystem at 85% (42 GiB free). Weekly, dropping

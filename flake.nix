@@ -49,11 +49,12 @@
 	      config.allowUnfree = true;
       };
 
-      # Adopted (2026-10-12): the Sway mission-control session is the default
-      # daily driver. Niri and Plasma rewire into named fallback outputs so
-      # an A/B session stays reachable via ly without touching the default.
-      # The former chloe-laptop-sway-prototype output is identical to
-      # chloe-laptop and was dropped to keep the built output unambiguous.
+      # Daily driver (2026-10-14): GNOME + GDM on chloe-laptop -- the simplest
+      # stack that just works, owning the desktop entirely. ly + niri remain
+      # the login manager and recovery session of the two A/B fallback
+      # outputs (chloe-laptop-niri, chloe-laptop-plasma), byte-identical to
+      # the adopted era. The "sway-prototype" desktop value is gone from this
+      # flake alongside the reverted adoption (revert commit d037b73 on main).
       mkSystem = desktop: nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs system pkgs-unstable self desktop; };
         modules = [
@@ -77,14 +78,16 @@
             home-manager.useGlobalPkgs = false;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable desktop; };
-            home-manager.users.chloe = ./home/chloe.nix;
+            # Arm by desktop: the homie file branches on `desktop` from
+            # extraSpecialArgs (gnome/niri/plasma).
+            home-manager.users.chloe = ./home/chloe.desktop.nix;
           }
         ];
       };
   in
   {
     nixosConfigurations = {
-      chloe-laptop = mkSystem "sway-prototype";
+      chloe-laptop = mkSystem "gnome";
       chloe-laptop-niri = mkSystem "niri";
       chloe-laptop-plasma = mkSystem "plasma";
     };

@@ -28,10 +28,12 @@
   #   * poweralertd needs a notification daemon alive at start; Dunst (kept)
   #     serves that role.
   # `desktop` comes from the flake's home-manager.extraSpecialArgs.
-  services.dunst.enable = desktop != "plasma";
-  services.network-manager-applet.enable = desktop != "plasma" && desktop != "sway-prototype";
-  services.poweralertd.enable = desktop != "plasma" && desktop != "sway-prototype";
-  services.swayidle.enable = desktop != "plasma";
+  services.dunst.enable = desktop != "plasma" && desktop != "gnome";
+  services.network-manager-applet.enable =
+    desktop != "plasma" && desktop != "gnome" && desktop != "sway-prototype";
+  services.poweralertd.enable =
+    desktop != "plasma" && desktop != "gnome" && desktop != "sway-prototype";
+  services.swayidle.enable = desktop != "plasma" && desktop != "gnome";
 
   # idle: dim/lock only -- NO automatic suspend (see below). niri serves
   # ext-idle-notify, which swayidle >=1.8 speaks. graphical-session.target works

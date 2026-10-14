@@ -7,8 +7,8 @@
 
     ./wofi.nix
     ./vscode.nix
-  ] ++ (if desktop == "sway-prototype"
-        then [ ./sway.nix ]
+  ] ++ (if desktop == "gnome"
+        then [ ] # GNOME session owns the desktop: no niri/eww/ironbar rice.
         else [ ./niri.nix ./eww.nix ./ironbar.nix ]);
 
   programs.home-manager.enable = true;
