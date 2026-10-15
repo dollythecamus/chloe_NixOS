@@ -11,6 +11,9 @@
     gnome-keyring
     jdk17_headless
     dotnetCorePackages.runtime_10_0-bin
+    # KeePassXC: offline password manager — one .kdbx file per identity sphere
+    # (P/I/J/F). See ~/online-privacy/password-manager-migration.md for why.
+    keepassxc
   ];
 
   environment.variables = {
