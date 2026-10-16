@@ -134,3 +134,14 @@ mcp_servers:
       GODOT_PATH: "/etc/profiles/per-user/chloe/bin/godot"
     timeout: 120        # scene ops can be slow
     connect_timeout: 60
+
+  unity:
+    # MCP for Unity (CoplayDev/unity-mcp v10.0.0, UPM git package in
+    # ~/projects/UnityXR_3DMuseu). The Unity package spawns its own MCP server
+    # over HTTP (uvx mcpforunityserver==10.0.0) at the package's hardcoded
+    # default http://127.0.0.1:8080 (Editor/Helpers/HttpEndpointUtility.cs).
+    # Reachable only while the Unity Editor has UnityXR_3DMuseu open; when the
+    # editor is closed, discovery fails after backoff and retries next restart.
+    url: "http://127.0.0.1:8080/mcp"
+    timeout: 180        # scene/profiling ops can be slow
+    connect_timeout: 60
