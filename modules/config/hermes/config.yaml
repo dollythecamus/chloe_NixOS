@@ -1,10 +1,10 @@
 model:
-  default: glm-5.3-flash
+  default: deepseek-v4.1-flash
   provider: opencode-go
   base_url: https://opencode.ai/zen/go/v1
-  api_mode: chat_completions
 agent:
-  max_turns: 150
+  max_turns: 300
+  reasoning_effort: high
 terminal:
   backend: local
 web:
