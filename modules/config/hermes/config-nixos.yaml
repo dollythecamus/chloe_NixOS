@@ -36,6 +36,16 @@ plugins:
     auto_extract: true
 session_reset:
   mode: none
+mcp_servers:
+  godot-mcp-toolkit:
+    command: "/run/current-system/sw/bin/npx"
+    args: ["-y", "@npgamedev/godot-mcp-server"]
+    env:
+      PATH: "/run/current-system/sw/bin"
+      GODOT_MCP_PROJECT_PATH: "/home/chloe/projects/magical-collector"
+      GODOT_MCP_CONFIG_VERSION: "1"
+    timeout: 120
+    connect_timeout: 60
 redact_secrets: true
 _config_version: 45
 platform_toolsets:

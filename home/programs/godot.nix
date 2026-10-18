@@ -1,15 +1,11 @@
 {config, pkgs, pkgs-unstable, inputs, ...}:
 
 {
-  # install godot
-  home.packages = with pkgs; [
-    godot # 4.6
-    # with recent nixpkgs update, godot is available
-    # pkgs-unstable.godot # 4.6.3 most recent
-    
-    # for android work
-    scrcpy
-    android-tools
+  # Use the already-locked unstable pin for Godot alone; leave the main nixpkgs pin unchanged.
+  home.packages = [
+    pkgs-unstable.godot # 4.7.2-stable
+    pkgs.scrcpy
+    pkgs.android-tools
   ];
 
 }

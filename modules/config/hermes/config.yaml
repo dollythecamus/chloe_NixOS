@@ -120,19 +120,17 @@ known_builtin_toolsets:
     - x_search
     - yuanbao
 mcp_servers:
-  godot:
-    # godot-mcp, built from source into the project (knowledge via smoke test
-    # 2026-10-12: registry @coding-solo/godot-mcp 0.1.1 lags the repo head where
-    # the RCE fix for arbitrary GDScript instantiation lives; and this npm has
-    # git fetching disabled (EALLOWGIT), so "npx -y github:..." fails to start).
-    # Local build: ~/projects/magical-collector/.godot-mcp (node_modules + build/,
-    # includes tsc dev dependency). Plain "node" resolves because node/npm are in
-    # hermes-agent's runtimeDeps on the gateway PATH.
-    command: "node"
-    args: ["/home/chloe/projects/magical-collector/.godot-mcp/build/index.js"]
+  godot-mcp-toolkit:
+    # NPGameDev Godot MCP Toolkit: editor addon + npm stdio-to-WebSocket bridge.
+    # The addon is already enabled in magical-collector; point discovery at this project
+    # because the Hermes gateway's working directory is not the Godot project root.
+    command: "/run/current-system/sw/bin/npx"
+    args: ["-y", "@npgamedev/godot-mcp-server"]
     env:
-      GODOT_PATH: "/etc/profiles/per-user/chloe/bin/godot"
-    timeout: 120        # scene ops can be slow
+      PATH: "/run/current-system/sw/bin"
+      GODOT_MCP_PROJECT_PATH: "/home/chloe/projects/magical-collector"
+      GODOT_MCP_CONFIG_VERSION: "1"
+    timeout: 120
     connect_timeout: 60
 
   unity:
