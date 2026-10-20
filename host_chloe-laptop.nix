@@ -18,6 +18,7 @@
     ./modules/system-packages.nix
     ./modules/services.nix
     ./modules/programs.nix
+    ./modules/network.nix
 
     # 2026-09-23: revive the tree's existing modules/nix-ld.nix so dynamically
     # linked, non-nix executables can run. Hermes' browser toolset shells
@@ -119,10 +120,8 @@
   	efi.canTouchEfiVariables = true;
   };
   
-  networking.hostName = "chloe-laptop"; # Define your hostname.
-
-  # Enable networking
-  networking.networkmanager.enable = true;
+  # networking.* (hostname, NetworkManager, firewall) lives in
+  # modules/network.nix as of 2026-10-20.
 
   # Set your time zone.
   time.timeZone = "America/Recife";
