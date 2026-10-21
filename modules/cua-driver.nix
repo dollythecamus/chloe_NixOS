@@ -19,5 +19,11 @@
     # wlroots set (foreign-toplevel, screencopy, virtual-pointer). Verified with
     # `hermes computer-use doctor` + a 1920x1080 screencopy capture on niri.
     CUA_DRIVER_RS_ENABLE_WAYLAND = "1";
+    # The desktop app's backend (`hermes serve`) is spawned from the GNOME
+    # session, not from the systemd gateway unit, so it does not inherit the
+    # unit's environment. The computer_use resolver only honours this variable
+    # (or a pm-installed driver); without it the desktop backend reports the
+    # toolset as unavailable even though the gateway has it.
+    HERMES_CUA_DRIVER_CMD = "/run/current-system/sw/bin/cua-driver";
   };
 }

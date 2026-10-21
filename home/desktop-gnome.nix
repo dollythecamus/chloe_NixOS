@@ -58,4 +58,17 @@
     sleep-inactive-ac-type = "nothing";
     sleep-inactive-battery-type = "nothing";
   };
+
+  # cua-driver's WinRects GNOME Shell helper, bundled with the driver. GNOME 50
+  # exposes no foreign-toplevel/screencopy/virtual-pointer globals, so without
+  # this helper Wayland capture falls back to X11 GetImage and fails with
+  # BadMatch, and foreground input dispatch is refused. The extension is loaded
+  # at shell startup, so it needs a log out/in — a rebuild alone is not enough.
+  home.file.".local/share/gnome-shell/extensions/winrects@cua".source =
+    "${pkgs.callPackage ../pkgs/cua-driver.nix { }}/libexec/cua-driver/wayland-helper/winrects@cua";
+  dconf.settings."org/gnome/shell".enabled-extensions = [
+    "user-theme@gnome-shell-extensions.gcampax.github.com"
+    "terminal-quicktype@chloe"
+    "winrects@cua"
+  ];
 }
