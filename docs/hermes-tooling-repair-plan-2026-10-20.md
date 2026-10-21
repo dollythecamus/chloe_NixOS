@@ -309,4 +309,8 @@ Total: ~1.5 h of agent work, 2–3 rebuilds.
 - Memory: MEMORY.md 2,176 → 1,525 chars; USER.md 1,234 → 1,042; Godot path and the
   config-source rule moved to `fact_store`; the detailed tooling record moved to
   `~/wiki/concepts/nixos-hermes-integration.md` (wiki commit `1959392`).
-- Remaining: NixOS build result, operator switch, post-switch verification matrix.
+- NixOS build **exit 0** (`/nix/store/90lzjkk5slkgr5rj1sk5mfg2wd313a09-nixos-system-chloe-laptop-26.05.20260719.fd14620`).
+  Built unit carries the CUA environment; `/etc/hermes/piper/` resolves to the fetched voice;
+  the built config contains `piper-cli` and the 3000/1600 caps. The command-provider code path
+  was exercised directly against the built Piper binary: 123 KB WAV in 1.9 s.
+- Remaining: operator switch, then the post-switch verification matrix.
