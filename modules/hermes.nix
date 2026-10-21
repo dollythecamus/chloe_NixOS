@@ -1,7 +1,29 @@
 {config, pkgs, lib, inputs, ... }:
+let
+  # Local Piper voice (en_US-amy-medium, 63 MB) fetched at build time and
+  # installed read-only under /etc/hermes/piper. Edge TTS is unusable here:
+  # Microsoft's endpoint rejects the websocket handshake with 403 (verified
+  # 2026-10-21), so TTS uses the local Piper CLI via a command provider.
+  piperVoice = pkgs.fetchurl {
+    url = "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx";
+    sha256 = "sha256-s6bke1e4x/vmoM4lGBYaUPWanN2KUINcAssCvdYgbBg=";
+  };
+  piperVoiceConfig = pkgs.fetchurl {
+    url = "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx.json";
+    sha256 = "sha256-laI+tNQpCdON9zu5rH9F9Zfb/N4tG/lSb96vVGaXfXc=";
+  };
+in
 {
     imports = [
     ];
+
+    # Piper CLI for the `tts` toolset's command provider. The binary is not on
+    # the gateway unit's PATH, so config.yaml calls it by absolute path.
+    environment.systemPackages = [ pkgs.piper-tts ];
+    environment.etc = {
+      "hermes/piper/en_US-amy-medium.onnx".source = piperVoice;
+      "hermes/piper/en_US-amy-medium.onnx.json".source = piperVoiceConfig;
+    };
 
     # createUser = false also disables the module's `users.groups.hermes = {}`
     # creation — without it the gateway unit fails at step GROUP ("Unknown
@@ -104,6 +126,25 @@
 
     # links the 'hermes' CLI tool to system packages
     addToSystemPackages = true;
+  };
+
+  # ── Gateway environment for computer_use ────────────────────────────────
+  # The driver is packaged by modules/cua-driver.nix, but the gateway unit's
+  # PATH is a fixed store list without /run/current-system/sw/bin, and its
+  # environment has no graphical-session variables. The computer_use resolver
+  # only honours HERMES_CUA_DRIVER_CMD (or a pm-installed package), so the path
+  # must be explicit. WAYLAND_* reaches niri-native windows; DISPLAY is the
+  # XWayland fallback.
+  #
+  # computer_use is enabled for CLI/desktop and Discord, and deliberately NOT
+  # for cron: platform_toolsets.cron in config.yaml omits it. The socket name
+  # (wayland-0) and uid (1000) are this host's values as of 2026-10-21.
+  systemd.services.hermes-agent.environment = {
+    HERMES_CUA_DRIVER_CMD = "/run/current-system/sw/bin/cua-driver";
+    CUA_DRIVER_RS_ENABLE_WAYLAND = "1";
+    XDG_RUNTIME_DIR = "/run/user/1000";
+    WAYLAND_DISPLAY = "wayland-0";
+    DISPLAY = ":0";
   };
 
   # ── Interactive users share the gateway's state store ────────────────────

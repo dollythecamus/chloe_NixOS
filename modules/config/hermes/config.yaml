@@ -35,6 +35,18 @@ stt:
   provider: local
   local:
     model: small
+tts:
+  # Edge TTS (upstream default) is blocked: Microsoft's endpoint rejects the
+  # websocket handshake with 403 (verified 2026-10-21), independent of this
+  # host. Local Piper is the working path. The CLI and voice are installed by
+  # modules/hermes.nix; PYTHONPATH is dropped because the gateway exports the
+  # sealed venv's Python 3.14 packages and piper is built for 3.13.
+  provider: piper-cli
+  providers:
+    piper-cli:
+      type: command
+      format: wav
+      command: "/run/current-system/sw/bin/env -u PYTHONPATH /run/current-system/sw/bin/piper -m /etc/hermes/piper/en_US-amy-medium.onnx -i {input_path} -f {output_path}"
 display:
   tool_progress: all
 computer_use:
@@ -51,6 +63,12 @@ memory:
   memory_enabled: true
   user_profile_enabled: true
   provider: holographic
+  # Built-in MEMORY.md/USER.md budget. Raised from 2,200/1,375 on 2026-10-21
+  # because the store hit 98% and rejected writes. Cost: ~+370 tokens injected
+  # per API call. Consolidation still happens before adding; see the tooling
+  # repair plan Phase 3.
+  memory_char_limit: 3000
+  user_char_limit: 1600
 plugins:
   hermes-memory-store:
     db_path: $HERMES_HOME/memory_store.db
@@ -59,22 +77,21 @@ plugins:
 session_reset:
   mode: none
 redact_secrets: true
-_config_version: 41
+_config_version: 50
 platforms:
   discord:
     gateway_restart_notification: false
 platform_toolsets:
   cli:
-    - a2a
     - browser
     - clarify
     - code_execution
     - computer_use
+    - connections
     - context_engine
     - cronjob
     - delegation
     - file
-    - image_gen
     - memory
     - session_search
     - skills
@@ -83,10 +100,30 @@ platform_toolsets:
     - todo
     - tts
     - video
-    - video_gen
     - vision
     - web
-    - yuanbao
+  # Cron gets everything the CLI gets EXCEPT computer_use: unattended jobs must
+  # never grab the mouse/keyboard. Discord keeps the hermes-discord bundle
+  # (which includes computer_use), so GUI requests can arrive from chat.
+  cron:
+    - browser
+    - clarify
+    - code_execution
+    - connections
+    - context_engine
+    - cronjob
+    - delegation
+    - file
+    - memory
+    - session_search
+    - skills
+    - stt
+    - terminal
+    - todo
+    - tts
+    - video
+    - vision
+    - web
 known_plugin_toolsets:
   cli:
     - a2a
@@ -97,6 +134,7 @@ known_builtin_toolsets:
     - clarify
     - code_execution
     - computer_use
+    - connections
     - context_engine
     - cronjob
     - delegation
@@ -143,3 +181,8 @@ mcp_servers:
     url: "http://127.0.0.1:8080/mcp"
     timeout: 180        # scene/profiling ops can be slow
     connect_timeout: 60
+
+# Runtime-added on the live config 2026-10-20 and synced back so activation
+# cannot drop it.
+gateway:
+  multiplex_profiles: true
