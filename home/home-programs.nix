@@ -95,14 +95,22 @@
     
     # rice
     wofi
-    nvtopPackages.nvidia
+    # nvtopPackages.nvidia removed 2026-10-22: it dragged cuda-merged-12.9 (the
+    # whole CUDA toolkit, ~67 derivations) into every `nix flake update nixpkgs`,
+    # because the nvidia variant is not on cache.nixos.org. Verified with
+    # `nix why-depends --derivation <system.drv> <cuda_nvrtc.drv>` and by a
+    # dry-build that showed zero cuda entries once it was gone. GPU monitoring
+    # stays covered by pkgs-unstable.btop-cuda below and nvidia-smi from the driver.
     playerctl
     brightnessctl
     grim
     slurp
     glow
     pkgs-unstable.btop-cuda
-    signal-desktop
+    # signal-desktop removed 2026-10-22: never worked on this machine, and
+    # 8.15.0 bundled RingRTC 2.69.3 (< 2.72.0, CVE-2026-113380: a caller can
+    # flood the call FSM queue so a hangup never tears down mic/camera) on a
+    # months-old Electron. Signal on the phone is the real client.
     vlc
     wl-clipboard
     nautilus

@@ -7,6 +7,17 @@
     
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
+    # Blender is pinned to its OWN nixpkgs input (2026-10-22) on purpose.
+    # blender.override { cudaSupport = true; } produces a derivation that is
+    # never on cache.nixos.org (Hydra only builds the default cudaSupport=false
+    # variant -- narinfo for the live output returns 404), so it compiles
+    # locally, which on this laptop is hours. If it rode the `nixpkgs` pin,
+    # every `nix flake update nixpkgs` would force that full rebuild.
+    # Bumping this input is the deliberate act that pays the cost; keep the
+    # flake update targeted: `nix flake update nixpkgs`, never a bare
+    # `nix flake update`. Locked at the rev blender 5.1.1 was built from.
+    nixpkgs-blender.url = "github:NixOS/nixpkgs/fd1462031fdee08f65fd0b4c6b64e22239a77870";
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";

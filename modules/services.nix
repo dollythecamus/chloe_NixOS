@@ -66,8 +66,11 @@
     };
   };
 
-  # hamachi vpn
-  services.logmein-hamachi.enable = true;
-  programs.haguichi.enable = true;
+  # hamachi removed 2026-10-22: superseded by Tailscale (modules/remote-access.nix),
+  # which is the mesh VPN the phone actually uses. The daemon had been active
+  # with a live ham0 interface (25.30.251.179) and no join reason since install,
+  # which is an extra inbound path to everything bound 0.0.0.0 (sshd 22,
+  # Syncthing 22000, mDNS) for a service nothing depends on. haguichi was its
+  # only consumer. Removal verified by `ip -brief addr` no longer showing ham0.
 
 }
