@@ -1,5 +1,10 @@
 {config, pkgs, lib, inputs, ... }:
 let
+  # HERMES_HOME exactly as the upstream module derives it (stateDir + /.hermes).
+  # Used only by the permission block below; stateDir has a plain default, so
+  # reading it here is not recursive.
+  hermesHome = "${config.services.hermes-agent.stateDir}/.hermes";
+
   # Local Piper voice (en_US-amy-medium, 63 MB) fetched at build time and
   # installed read-only under /etc/hermes/piper. Edge TTS is unusable here:
   # Microsoft's endpoint rejects the websocket handshake with 403 (verified
@@ -57,6 +62,11 @@ in
     extraPackages = [
       (pkgs.callPackage ../pkgs/lightpanda.nix { })
       inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.agent-browser
+      # cua-driver calls `gdbus` by name to reach the WinRects GNOME helper
+      # (org.cua.WinRects). The unit PATH is a fixed store list that does not
+      # include /run/current-system/sw/bin, so without this the adapter probe
+      # fails even when the extension is active.
+      pkgs.glib.bin
     ];
     # messaging = Discord; Holographic memory is bundled and uses local SQLite.
     # numpy is NOT in the sealed venv: the holographic memory plugin moved out of
@@ -128,6 +138,35 @@ in
     addToSystemPackages = true;
   };
 
+  # ── HERMES_HOME must not stay group-writable ─────────────────────────────
+  # hermes_cli/gateway_runtime_discovery.home_mode_unsafe() refuses a HERMES_HOME
+  # that is group-writable unless the group is the owner's own PRIVATE group
+  # (gr_name == pw_name, gid == the user's primary gid). Our group is `hermes`,
+  # so the upstream module's 2770 — its `d` tmpfiles rule plus the
+  # `chmod 2770` inside activationScripts."hermes-agent-setup" — makes every
+  # Desktop/TUI connection fail after a reboot with:
+  #   Gateway inaccessible (unsafe_control_permissions).
+  #   /var/lib/hermes/.hermes has mode 2770, writable by another user;
+  #   chmod go-w /var/lib/hermes/.hermes
+  # (seen in the desktop log at 09:02 on 2026-10-21, fixed by hand, back on the
+  # next boot). Under single-owner state the gateway IS chloe, so group write
+  # buys nothing — there is no second uid to use it. Drop g+w and keep setgid so
+  # files created inside still land in group `hermes` (0640/0660 stays readable).
+  # Two hooks because the 2770 arrives from two independent places:
+  #  * tmpfiles: a `z` line in its own 90-* file. Rules are processed in file
+  #    order, so this runs after 00-nixos.conf's `d` line; `z` only adjusts an
+  #    existing path's mode (no create, no chown) — verified with
+  #    `systemd-tmpfiles --create` across two config files → 2750.
+  #  * activation: a script ordered after `hermes-agent-setup`, which is what
+  #    re-applies 2770 on every `nixos-rebuild switch`.
+  environment.etc."tmpfiles.d/90-hermes-home-mode.conf".text = ''
+    z ${hermesHome} 2750 - - - -
+  '';
+
+  system.activationScripts."hermes-home-mode" = lib.stringAfter [ "hermes-agent-setup" ] ''
+    chmod 2750 ${hermesHome}
+  '';
+
   # ── Gateway environment for computer_use ────────────────────────────────
   # The driver is packaged by modules/cua-driver.nix, but the gateway unit's
   # PATH is a fixed store list without /run/current-system/sw/bin, and its
@@ -145,6 +184,14 @@ in
     XDG_RUNTIME_DIR = "/run/user/1000";
     WAYLAND_DISPLAY = "wayland-0";
     DISPLAY = ":0";
+    # The cua-driver MCP server is a child of this unit. It reaches the
+    # WinRects GNOME helper over the session bus with `gdbus`; without the bus
+    # address and desktop identity the adapter probe fails even when the
+    # extension is active. gdbus itself comes from pkgs.glib.bin in
+    # extraPackages.
+    DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/1000/bus";
+    XDG_SESSION_TYPE = "wayland";
+    XDG_CURRENT_DESKTOP = "GNOME";
   };
 
   # ── Interactive users share the gateway's state store ────────────────────
