@@ -49,7 +49,10 @@ by key. Do not start a second change in the same pass.
 - ~~Which host config is active: `chloe-laptop`, `-niri`, or `-plasma`?~~ Answered 2026-10-22 —
   `chloe-laptop` (`/run/current-system` →
   `nixos-system-chloe-laptop-26.05.20260719.fd14620`).
-- Kanban trial go/no-go (briefing in the operations plan; decision still pending).
+- Kanban trial: **go, one week, review 2026-10-29** (Chloe, 2026-10-22). Open sub-question: the
+  gateway dispatcher cannot be turned off from config (`hermes config set` refuses — the install is
+  nixos-managed), so the only control is keeping the board empty except for approved work. Turning
+  `kanban.dispatch_in_gateway` off for a passive trial would need a module line plus a switch.
 - image_gen / video_gen providers: still off, still a purchase decision.
 - Memory caps: committed at 3000/1600 without the two-week measurement the tooling plan
   suggested. Watch for rejection traffic before raising further.
@@ -73,6 +76,13 @@ by key. Do not start a second change in the same pass.
 - 2026-10-20 — project goals recorded from Chloe, replacing both README inferences:
   UnityXR = interactive virtual museum exhibit for Quest 3; chloes-2d-library = modular Godot
   code library extracted from existing projects and reused on new games.
+- 2026-10-22 — **kanban trial starts now, one week** (Chloe, explicit: "Yes — trial it for one
+  week"). Semantics that govern the trial, discovered the hard way the same hour: `kanban.
+  dispatch_in_gateway: true` (60 s tick) and `auto_decompose: true` (3/tick) are **Hermes defaults,
+  not our config**, so the gateway spawns profile workers for `ready` cards on its own and splits
+  `triage` cards into `ready` subtasks. A card on the board is therefore a *start signal*, not a
+  note. Trial rule: the board holds only work Chloe has already approved, one card at a time;
+  anything seeded for display is a mistake.
 - 2026-10-22 — **`computer_use` is closed as upstream-blocked, not fixed** (Chloe, explicit).
   Re-verified from this session and from the capture session `20261021_083351_5ae925`: every
   capture mode fails or returns a 0×0 empty AX tree, and there is no local fix available — the
@@ -92,6 +102,14 @@ by key. Do not start a second change in the same pass.
   2898 B each, `diff` clean.
 - `hermes config check` — live v41 at that checkpoint. **Superseded 2026-10-22:** live v50
   (v51 offered is an upstream schema bump).
+- 2026-10-22 — kanban seeding incident, contained with no damage. 7 cards created for the trial
+  queue (6 via `--triage`); within ~2 minutes the gateway dispatcher had auto-decomposed 3 of them
+  into 6 subtasks and had 3 workers running (`code` on the choice.tscn probe, `nixos` on SSH module
+  wiring + a switch runbook), one subtask reaching `done`. Halted by `reclaim` → kill of
+  `hermes_cli.kanban_worker_client` → `archive` of all 13 ids; board back to 0 in every column.
+  Post-incident check of `~/nixos`, `chloes-2d-library` and `UnityXR_3DMuseu`: no new commits, no
+  new files, working trees exactly as before (nixos `50f4245` + the same 5 pending paths; 2d-library
+  clean at `823124d`; UnityXR `251d0f9` + the same 3 paths).
 - 2026-10-22 — `/run/current-system` = `nixos-system-chloe-laptop-26.05.20260719.fd14620`,
   activated 12:11; `stat -c %a /var/lib/hermes/.hermes` → `2750`; `systemctl is-active
   tailscaled` → active, enabled; live `firewall-start` (`/nix/store/6wnqczzg…`) contains
