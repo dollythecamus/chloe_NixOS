@@ -83,7 +83,7 @@ by key. Do not start a second change in the same pass.
   `triage` cards into `ready` subtasks. A card on the board is therefore a *start signal*, not a
   note. Trial rule, as Chloe decided after the incident: **dispatch stays ON**, and only work she
   has approved goes on the board, one card at a time — nothing idle, nothing for display. Review
-  date 2026-10-29 (one-shot cron job `b3d8ec0e2f3d`).
+  date 2026-10-29 (one-shot cron job `41232264b587`).
 - 2026-10-22 — **`computer_use` is closed as upstream-blocked, not fixed** (Chloe, explicit).
   Re-verified from this session and from the capture session `20261021_083351_5ae925`: every
   capture mode fails or returns a 0×0 empty AX tree, and there is no local fix available — the
