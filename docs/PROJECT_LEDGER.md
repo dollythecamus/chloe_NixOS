@@ -1,6 +1,6 @@
 # Project ledger — nixos host configuration
 
-Updated: 2026-10-22 12:40 (-03) · session local-ac603f060594711b1d97ed3a61663f8ee93493394a8d453a8c575c66d3138968 · owner default
+Updated: 2026-10-22 15:02 (-03) · session local-1d5eb9d91fade0d8dce675950bceca2d0a008195b50678b33cf114c1c5fd9a60 · owner default
 Next review: 2026-10-27
 
 ## Goal
@@ -26,23 +26,33 @@ check` reports live **v50** (the offered v51 is an upstream schema bump, not a r
 `/var/lib/hermes/.hermes` is mode `2750`, not the upstream `2770`; `tailscaled` is active and
 enabled; the running `firewall-start` carries both 27015 and 27016.
 
-One staged change is **not activated** as of this update: `modules/remote-access.nix` (staged, not
-committed) sets `PasswordAuthentication = false` and `KbdInteractiveAuthentication = false`, while
-the running `/etc/ssh/sshd_config` still has both at `yes` (lines 4 and 8). `~/nixos` is dirty:
-2 staged (`docs/phone-access-runbook.md`, `modules/remote-access.nix`), 3 modified
-(`flake.lock`, `host_chloe-laptop.nix`, `modules/hermes.nix`), 1 untracked
-(`docs/stationeers-hosting-plan.md`); HEAD `cc59d60`.
+The phone-access workstream is **committed and activated**. Commits `208fcba` (module + host
+import + runbook) and `496867d` (`flake.lock`), behind the 13:38 switch. Verified 2026-10-22
+15:00 against the live system: `tailscaled`, `syncthing`, `sshd` all **active and enabled**;
+`tailscale ip -4` → `<tailnet-ip>`; `/etc/ssh/sshd_config` shows `no` on both
+`PasswordAuthentication` and `KbdInteractiveAuthentication`; `~chloe/.ssh/authorized_keys` holds
+exactly one ed25519 line (`@ Termux`, mode 600); `receive.denyCurrentBranch = updateInstead` in
+**13/13** repos under `~/projects`. `nix eval` on the flake (with a writable `XDG_CACHE_HOME`)
+returns `PasswordAuthentication=false`, `KbdInteractiveAuthentication=false`, `UsePAM=true`,
+`trustedInterfaces=[tailscale0, lo]`, syncthing `user=chloe group=users openDefaultPorts=false`,
+and its `ExecStart` uses `--data=/home/chloe/.config/syncthing`, so `dataDir` does **not** scatter
+cert/db files into the home root.
+
+**Not started:** the phone-side half. `~/.config/syncthing/config.xml` has **zero folders** and
+only the `chloe-laptop` device, so no vault is shared yet; and no phone clone of a repo has been
+verified — the repo-side push setting is prepared, untested from the device.
 
 ## Next action
 
-Chloe: commit the pending `~/nixos` paths (2 staged, 3 modified, 1 untracked — see
-"Uncommitted at 2026-10-22" below), then
-`sudo nixos-rebuild switch --flake ~/nixos#chloe-laptop`. The flake host is confirmed:
-`/run/current-system` is `nixos-system-chloe-laptop-26.05.20260719.fd14620`.
+**Next action (Chloe, needs the phone):** runbook §4 — pair Syncthing. `ssh -N -L 8384:localhost:8384
+pc` from Termux, add the phone's device ID on the host, accept on the phone, share `~/Mind`
+(optionally `~/wiki`), put `.obsidian/workspace*.json` in the folder's ignore patterns. Then §5:
+clone `ai-research-lab` from mobile data with `GIT_LFS_SKIP_SMUDGE=1` on the LFS repo, push a
+trivial commit, and confirm it lands in the host's checked-out tree.
 
-**Stopping point:** `grep -iE '^(PasswordAuthentication|KbdInteractiveAuthentication)'
-/etc/ssh/sshd_config` shows `no` on both lines and `ssh pc` from the phone still authenticates
-by key. Do not start a second change in the same pass.
+**Stopping point:** a file edited in Obsidian on the phone appears in `~/Mind` on the host, and a
+phone push shows up in `git -C ~/projects/ai-research-lab log -1` on the host. Nothing is left to
+change in `~/nixos` for this workstream; do not start a second change in the same pass.
 
 ## Open questions
 
@@ -90,6 +100,13 @@ by key. Do not start a second change in the same pass.
   blocker is in the upstream driver, so this is parked rather than worked around. Nothing in
   `modules/hermes.nix` should chase it again until upstream moves. Remove it from the
   "Done when" matrix rather than leaving it as permanently-red.
+- 2026-10-22 — **network identifiers never enter this repo** (Chloe, explicit: "scrub
+  identifiers"). `origin` is `git@github.com:dollythecamus/chloe_NixOS.git` and it is **public**,
+  so any doc recording a WAN address, LAN address, gateway MAC or the host's tailnet address
+  carries `<wan-ipv4>`, `<lan-ipv4>`, `<gateway-mac>`, `<isp-reverse-dns>`, `<tailnet-ip>` plus a
+  note naming the command that re-derives each one (`curl -s https://api.ipify.org`,
+  `ip -4 -o addr show wlo1`, `ip neigh show 192.168.0.1`, `tailscale ip -4`). Checked before committing: `git grep` over `HEAD` had none of
+  those values, so the first commit of such a doc is the exposure.
 
 ## Evidence
 
@@ -111,11 +128,25 @@ by key. Do not start a second change in the same pass.
   Post-incident check of `~/nixos`, `chloes-2d-library` and `UnityXR_3DMuseu`: no new commits, no
   new files, working trees exactly as before (nixos `50f4245` + the same 5 pending paths; 2d-library
   clean at `823124d`; UnityXR `251d0f9` + the same 3 paths).
-- 2026-10-22 — `/run/current-system` = `nixos-system-chloe-laptop-26.05.20260719.fd14620`,
+- 2026-10-22 12:11 — `/run/current-system` = `nixos-system-chloe-laptop-26.05.20260719.fd14620`,
   activated 12:11; `stat -c %a /var/lib/hermes/.hermes` → `2750`; `systemctl is-active
   tailscaled` → active, enabled; live `firewall-start` (`/nix/store/6wnqczzg…`) contains
   `dport 27015` and `dport 27016`; `grep -iE '^(PasswordAuthentication|KbdInteractive)'
-  /etc/ssh/sshd_config` → both `yes`.
+  /etc/ssh/sshd_config` → both `yes`. **Superseded 15:00** — same system path, link reactivated
+  13:38; sshd_config now `KbdInteractiveAuthentication no` / `PasswordAuthentication no`;
+  `tailscale ip -4` → `<tailnet-ip>`; `syncthing` active + enabled.
+- 2026-10-22 15:00 — pre-commit verification of the dirty tree: `nix eval` on
+  `.#nixosConfigurations.chloe-laptop.config.{services.openssh.settings,services.syncthing,networking.firewall.trustedInterfaces}`
+  (needs `XDG_CACHE_HOME` pointed at a writable dir — the default fetcher cache under
+  `/var/lib/hermes/.cache/nix` is not writable from this shell) returns the values quoted in
+  Status; `systemctl show syncthing -p ExecStart` → `--data=/home/chloe/.config/syncthing`;
+  `awk '{print $1, $3}' ~chloe/.ssh/authorized_keys` → one `ssh-ed25519 … @ Termux` line, mode
+  600; `receive.denyCurrentBranch` loop over `~/projects/*/` → 13/13 `updateInstead`.
+- 2026-10-22 15:00 — **the runbook contradicted the module before this pass**: §1 told the reader
+  to run `tailscale up` and §2 claimed `authorized_keys` was empty with `PasswordAuthentication`
+  commented out, while the key was in place, the node had a 100.x address and both sshd options
+  were already `false` in the module and `no` live. Corrected in `208fcba`; the `100.x.y.z`
+  placeholders in the Termux block became `<tailscale-ip>` with the command that prints it.
 - `hermes doctor` / `config check` — no `stt` unknown-toolset warning surfaced; `stt` is kept
   in all three platform toolset lists.
 - `hermes profile list` — 4 profiles, all gateways running.
@@ -130,8 +161,9 @@ This workstream — committed in the same commit as this ledger:
 - `docs/hermes-operations-plan-2026-10-20.md`
 - `docs/PROJECT_LEDGER.md` (this file)
 
-Not this workstream, deliberately left untracked: `docs/stationeers-hosting-plan.md` (written
-by an earlier session; no review of it in this session).
+Not this workstream, now committed: `docs/stationeers-hosting-plan.md` went in as `cf5eab5`, with
+its measured identifiers replaced by placeholders — the GitHub remote is public and its history
+carried none of those values.
 
 Already committed by the concurrent session: `modules/config/hermes/config.yaml`,
 `modules/hermes.nix`, `docs/hermes-{behavior,tooling-repair}-plan-2026-10-20.md`.
@@ -139,13 +171,15 @@ Already committed by the concurrent session: `modules/config/hermes/config.yaml`
 Outside this repo, committed in their own repos: `UnityXR_3DMuseu/docs/PROJECT_LEDGER.md`,
 `chloes-2d-library/docs/PROJECT_LEDGER.md`.
 
-## Uncommitted at 2026-10-22 (current)
+## Uncommitted at 2026-10-22 15:02
 
-`git status --porcelain -uall` in `~/nixos`, 6 paths — 2 staged, 3 modified, 1 untracked:
-`A  docs/phone-access-runbook.md`, `A  modules/remote-access.nix`, `M  flake.lock`,
-`M  host_chloe-laptop.nix`, `M  modules/hermes.nix`, `?? docs/stationeers-hosting-plan.md`.
-HEAD `cc59d60 hermes/cua: gdbus on gateway PATH, session bus env for WinRects` (written by a
-concurrent session during this pass; `ddd6fcc` was HEAD when the counts were taken).
+`git status --porcelain -uall` in `~/nixos`: **clean** — 0 staged, 0 modified, 0 untracked.
+HEAD `496867d flake: hermes-agent 53df274 -> 69c7d67`, with this ledger commit on top.
+
+Superseded snapshot (12:40, HEAD `cc59d60`): 6 paths — 2 staged (`docs/phone-access-runbook.md`,
+`modules/remote-access.nix`), 3 modified (`flake.lock`, `host_chloe-laptop.nix`,
+`modules/hermes.nix`), 1 untracked (`docs/stationeers-hosting-plan.md`). `modules/hermes.nix` was
+committed by the concurrent session; the rest are in `208fcba` / `cf5eab5` / `496867d`.
 
 ## Handoff
 
@@ -194,5 +228,10 @@ point; the CUA environment was untested, the kanban trial had not run, the `code
   task-doing profile" → lane B encoded as the default for authoring work.
 - 2026-10-20 (session 20261020_222629_e4ff94) — "ledger only for multi-session projects" →
   scope line in the `project-ledger` skill; one-evening jams excluded.
+- 2026-10-22 (session local-1d5eb9d9…) — "verify dirty changes in this repo to commit" → the
+  three phone-access paths verified against the live system, three stale runbook claims and the
+  stale ledger status corrected, committed as `208fcba`; the stationeers doc that
+  `modules/network.nix` cites committed as `cf5eab5` with identifiers scrubbed; `flake.lock`
+  committed separately as `496867d` (Chloe's choice of order).
 - 2026-10-20 (session 20261020_222629_e4ff94) — goals stated for UnityXR and chloes-2d-library
   → written into both repo ledgers, replacing the README inferences.
