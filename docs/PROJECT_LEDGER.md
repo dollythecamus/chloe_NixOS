@@ -1,6 +1,6 @@
 # Project ledger — nixos host configuration
 
-Updated: 2026-10-20 23:52 (-03) · session 20261020_222629_e4ff94 · owner default
+Updated: 2026-10-22 12:40 (-03) · session local-ac603f060594711b1d97ed3a61663f8ee93493394a8d453a8c575c66d3138968 · owner default
 Next review: 2026-10-27
 
 ## Goal
@@ -13,27 +13,42 @@ declarative source for system config, Hermes identity, and the agent's operating
 - `sudo nixos-rebuild switch --flake ~/nixos#<host>` succeeds and the running system matches
   the built store path already produced by the tooling session.
 - `/var/lib/hermes/.hermes/SOUL.md` matches `modules/config/hermes/SOUL.md` (diff clean).
-- The tooling plan's verification matrix passes with **real calls**: TTS, computer_use, memory
-  write, browser, MCP.
+- The tooling plan's verification matrix passes with **real calls**: TTS, memory write, browser,
+  MCP. `computer_use` is **excluded** — upstream-blocked, not fixable here (see Decisions,
+  2026-10-22).
 
 ## Status
 
-active — repo is committed and **builds exit 0**; the operator switch has not run, so live
-state lags by one activation (`hermes config check`: live v41 → repo v50; live SOUL 1832 B vs
-repo 2898 B).
+active — the switch **has now run**: `/run/current-system` was activated 2026-10-22 12:11 and
+the live system matches source. Verified 2026-10-22: `/var/lib/hermes/.hermes/SOUL.md` is
+byte-identical to `modules/config/hermes/SOUL.md` (2898 B each, `diff` clean); `hermes config
+check` reports live **v50** (the offered v51 is an upstream schema bump, not a repo change);
+`/var/lib/hermes/.hermes` is mode `2750`, not the upstream `2770`; `tailscaled` is active and
+enabled; the running `firewall-start` carries both 27015 and 27016.
+
+One staged change is **not activated** as of this update: `modules/remote-access.nix` (staged, not
+committed) sets `PasswordAuthentication = false` and `KbdInteractiveAuthentication = false`, while
+the running `/etc/ssh/sshd_config` still has both at `yes` (lines 4 and 8). `~/nixos` is dirty:
+2 staged (`docs/phone-access-runbook.md`, `modules/remote-access.nix`), 3 modified
+(`flake.lock`, `host_chloe-laptop.nix`, `modules/hermes.nix`), 1 untracked
+(`docs/stationeers-hosting-plan.md`); HEAD `cc59d60`.
 
 ## Next action
 
-Chloe: `sudo nixos-rebuild switch --flake ~/nixos#chloe-laptop` (or `#chloe-laptop-niri` if
-that is the active session), then `systemctl restart hermes-agent`.
+Chloe: commit the pending `~/nixos` paths (2 staged, 3 modified, 1 untracked — see
+"Uncommitted at 2026-10-22" below), then
+`sudo nixos-rebuild switch --flake ~/nixos#chloe-laptop`. The flake host is confirmed:
+`/run/current-system` is `nixos-system-chloe-laptop-26.05.20260719.fd14620`.
 
-**Stopping point:** after the switch — one `diff` of live vs source SOUL, one `config check`
-showing v50, and one real `text_to_speech` call. No further rebuilds in the same pass.
+**Stopping point:** `grep -iE '^(PasswordAuthentication|KbdInteractiveAuthentication)'
+/etc/ssh/sshd_config` shows `no` on both lines and `ssh pc` from the phone still authenticates
+by key. Do not start a second change in the same pass.
 
 ## Open questions
 
-- Which host config is active: `chloe-laptop` (gnome), `-niri`, or `-plasma`? Affects where the
-  CUA/mission-control env actually lands.
+- ~~Which host config is active: `chloe-laptop`, `-niri`, or `-plasma`?~~ Answered 2026-10-22 —
+  `chloe-laptop` (`/run/current-system` →
+  `nixos-system-chloe-laptop-26.05.20260719.fd14620`).
 - Kanban trial go/no-go (briefing in the operations plan; decision still pending).
 - image_gen / video_gen providers: still off, still a purchase decision.
 - Memory caps: committed at 3000/1600 without the two-week measurement the tooling plan
@@ -58,6 +73,12 @@ showing v50, and one real `text_to_speech` call. No further rebuilds in the same
 - 2026-10-20 — project goals recorded from Chloe, replacing both README inferences:
   UnityXR = interactive virtual museum exhibit for Quest 3; chloes-2d-library = modular Godot
   code library extracted from existing projects and reused on new games.
+- 2026-10-22 — **`computer_use` is closed as upstream-blocked, not fixed** (Chloe, explicit).
+  Re-verified from this session and from the capture session `20261021_083351_5ae925`: every
+  capture mode fails or returns a 0×0 empty AX tree, and there is no local fix available — the
+  blocker is in the upstream driver, so this is parked rather than worked around. Nothing in
+  `modules/hermes.nix` should chase it again until upstream moves. Remove it from the
+  "Done when" matrix rather than leaving it as permanently-red.
 
 ## Evidence
 
@@ -66,9 +87,16 @@ showing v50, and one real `text_to_speech` call. No further rebuilds in the same
   `94c8a9d networked`.
 - Build result (from the committed plan): exit 0,
   `/nix/store/90lzjkk5slkgr5rj1sk5mfg2wd313a09-nixos-system-chloe-laptop-26.05.20260719.fd14620`.
-- `diff -q /var/lib/hermes/.hermes/SOUL.md modules/config/hermes/SOUL.md` — DIFFERS; live is
-  still 1832 B, repo is 2898 B (10 rules vs 6).
-- `hermes config check` — live v41, repo v50.
+- `diff -q /var/lib/hermes/.hermes/SOUL.md modules/config/hermes/SOUL.md` — DIFFERS at the
+  2026-10-20 checkpoint (live 1832 B vs repo 2898 B). **Superseded 2026-10-22:** identical,
+  2898 B each, `diff` clean.
+- `hermes config check` — live v41 at that checkpoint. **Superseded 2026-10-22:** live v50
+  (v51 offered is an upstream schema bump).
+- 2026-10-22 — `/run/current-system` = `nixos-system-chloe-laptop-26.05.20260719.fd14620`,
+  activated 12:11; `stat -c %a /var/lib/hermes/.hermes` → `2750`; `systemctl is-active
+  tailscaled` → active, enabled; live `firewall-start` (`/nix/store/6wnqczzg…`) contains
+  `dport 27015` and `dport 27016`; `grep -iE '^(PasswordAuthentication|KbdInteractive)'
+  /etc/ssh/sshd_config` → both `yes`.
 - `hermes doctor` / `config check` — no `stt` unknown-toolset warning surfaced; `stt` is kept
   in all three platform toolset lists.
 - `hermes profile list` — 4 profiles, all gateways running.
@@ -92,6 +120,14 @@ Already committed by the concurrent session: `modules/config/hermes/config.yaml`
 Outside this repo, committed in their own repos: `UnityXR_3DMuseu/docs/PROJECT_LEDGER.md`,
 `chloes-2d-library/docs/PROJECT_LEDGER.md`.
 
+## Uncommitted at 2026-10-22 (current)
+
+`git status --porcelain -uall` in `~/nixos`, 6 paths — 2 staged, 3 modified, 1 untracked:
+`A  docs/phone-access-runbook.md`, `A  modules/remote-access.nix`, `M  flake.lock`,
+`M  host_chloe-laptop.nix`, `M  modules/hermes.nix`, `?? docs/stationeers-hosting-plan.md`.
+HEAD `cc59d60 hermes/cua: gdbus on gateway PATH, session bus env for WinRects` (written by a
+concurrent session during this pass; `ddd6fcc` was HEAD when the counts were taken).
+
 ## Handoff
 
 **Changed (this session):** SOUL source gains a six-rule continuity/routing section;
@@ -109,13 +145,13 @@ skills load through `skill_view`; both project ledgers re-checked against `git s
 --porcelain -uall` and corrected (each had undercounted its own untracked file); no worker
 committed anything; the tooling session's build returned exit 0.
 
-**NOT verified:** nothing here has been through a switch — live SOUL, live config (v41), the
-Piper voice, and the CUA environment are all untested on the running system; the kanban trial
-has not run; the `code` profile has no `project-ledger` skill installed (the template was given
-inline).
+**NOT verified (2026-10-20 text, kept for history):** nothing had been through a switch at that
+point; the CUA environment was untested, the kanban trial had not run, the `code` profile had no
+`project-ledger` skill installed.
 
-**Next:** the switch, then the four real-call checks above. If `text_to_speech` fails, the
-committed plan's Piper note is the first place to read.
+**Superseded 2026-10-22:** the switch has run and live matches source (SOUL, config v50,
+`.hermes` mode). Still open: the phone-SSH hardening activation, the kanban go/no-go, and
+`computer_use` (parked, upstream-blocked).
 
 ## Dispatches
 
