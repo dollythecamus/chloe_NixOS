@@ -20,6 +20,11 @@
     ./modules/programs.nix
     ./modules/network.nix
 
+    # 2026-10-22: phone access (Tailscale mesh + Syncthing for the small
+    # vaults). Owns both because they serve one purpose; ~/projects stays out
+    # of sync on purpose -- see the header comment in that module.
+    ./modules/remote-access.nix
+
     # 2026-09-23: revive the tree's existing modules/nix-ld.nix so dynamically
     # linked, non-nix executables can run. Hermes' browser toolset shells
     # agent-browser via `npx agent-browser`, and agent-browser's Linux binary
