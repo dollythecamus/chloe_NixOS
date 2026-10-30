@@ -48,12 +48,14 @@
   # carries the same PAM-unset for GDM's Wayland greeter.)
   ++ (if desktop == "gnome"
       then [ ./modules/desktop/gnome.nix ]
+      else if desktop == "xfce"
+      then [ ./modules/desktop/xfce.nix ./modules/desktop/ly.nix ]
       else [ ./modules/desktop/niri.nix ./modules/desktop/ly.nix ])
   ++ (if desktop == "plasma"
       then [ ./modules/desktop/plasma.nix ]
-      else if desktop == "gnome"
-      then [ ]
-      else [ ./modules/desktop/gnome-shim.nix ]);
+      else if desktop == "niri"
+      then [ ./modules/desktop/gnome-shim.nix ]
+      else [ ]);
 
   # The "sway-prototype" value of `desktop` is gone from this flake alongside
   # the reverted adoption (revert commit d037b73). The Sway/niri system +

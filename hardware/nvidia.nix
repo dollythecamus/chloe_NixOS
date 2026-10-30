@@ -39,7 +39,12 @@
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer). (includes my RTX 3050)
-    powerManagement.finegrained = true;
+    #
+    # 2026-10-29: off, because this laptop has no iGPU to hand the panel to
+    # (see the prime block below) and nixpkgs asserts finegrained == offload
+    # enabled. Runtime powering-down of the only display GPU is not a state
+    # that can work here: the panel is wired to the RTX 3050.
+    powerManagement.finegrained = false;
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
@@ -58,15 +63,35 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  # prime is laptop specific
+  # prime is laptop specific — and NOT this laptop's current GPU state.
+  #
+  # 2026-10-29: PRIME offload is off because the headless iGPU it assumes does
+  # not exist here. With offload enabled and amdgpuBusId = PCI:54:0:0 the
+  # generated xorg.conf had a single Screen backed by Device-amdgpu[0]
+  # (BusID PCI:54:0:0) and the NVIDIA card only as an offload GPUDevice:
+  #
+  #   ServerLayout "Layout[all]"  ->  Screen "Screen-amdgpu[0]"
+  #   Device "Device-amdgpu[0]"      Driver "amdgpu"  BusID "PCI:54:0:0"
+  #   Device "Device-nvidia[0]"      Driver "nvidia"  BusID "PCI:1:0:0"  (GPUDevice)
+  #
+  # Measured on the running machine: exactly one graphics function exists —
+  # 0000:01:00.0, 10de:25ec, driver nvidia — and /dev/dri holds only
+  # card1/renderD128. There is no AMD VGA function at all (the only AMD device
+  # is 0000:05:00.0, class 0x130000, the Sensor Fusion Hub; note it is nowhere
+  # near 54:0:0). So the X server had no usable screen: the first X11 session
+  # this host ever ran (XFCE, generation 116, boot 2026-10-29 21:28) got 8 s
+  # past ly's greeter and came straight back. Wayland outputs never read
+  # xorg.conf, which is why GNOME/niri/Plasma were fine all along.
+  #
+  # With offload disabled, services.xserver.drivers is the NVIDIA entry alone
+  # with display = true, i.e. one Device/Screen driven by the RTX 3050 — what
+  # Wayland already does for this panel. Restore the block with the *real* bus
+  # IDs if the firmware MUX is ever switched back to hybrid graphics.
   hardware.nvidia.prime = {
-	  offload = {
-      enable = true;
-      enableOffloadCmd = true;
-	  };
-	  nvidiaBusId = "PCI:1:0:0";
-	  amdgpuBusId = "PCI:54:0:0";
-
+    offload.enable = false;
+    offload.enableOffloadCmd = false;
+    nvidiaBusId = "PCI:1:0:0";
+    amdgpuBusId = ""; # iGPU absent; PCI:54:0:0 was never this machine's bus
   };
 
 # End of Nvidia Configuration

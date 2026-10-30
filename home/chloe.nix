@@ -7,8 +7,8 @@
 
     ./wofi.nix
     ./vscode.nix
-  ] ++ (if desktop == "gnome"
-        then [ ] # GNOME session owns the desktop: no niri/eww/ironbar rice.
+  ] ++ (if desktop == "gnome" || desktop == "xfce"
+        then [ ] # GNOME owns its desktop; XFCE is X11-only and loads no niri rice.
         else [ ./niri.nix ./eww.nix ./ironbar.nix ]);
 
   programs.home-manager.enable = true;

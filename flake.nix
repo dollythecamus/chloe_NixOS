@@ -90,7 +90,7 @@
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable desktop; };
             # Arm by desktop: the homie file branches on `desktop` from
-            # extraSpecialArgs (gnome/niri/plasma).
+            # extraSpecialArgs (gnome/niri/plasma/xfce).
             home-manager.users.chloe = ./home/chloe.desktop.nix;
           }
         ];
@@ -101,6 +101,7 @@
       chloe-laptop = mkSystem "gnome";
       chloe-laptop-niri = mkSystem "niri";
       chloe-laptop-plasma = mkSystem "plasma";
+      chloe-laptop-xfce = mkSystem "xfce";
     };
   };
 }
