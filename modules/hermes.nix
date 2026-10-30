@@ -157,6 +157,17 @@ in
     hermesHomeFiles = {
       "SOUL.md" = ./config/hermes/SOUL.md;
 
+      # ── Intent snapshot ─────────────────────────────────────────────────
+      # ETHOS.md records what this agent is for, what it must not do, and
+      # what a good result looks like (fourteen required sections, schema
+      # v1). It is what a person or agent reads before evaluating, reviewing
+      # or changing the agent, so it belongs in the store beside SOUL.md for
+      # the same reason: a runtime copy is reverted by the next switch.
+      # Installed identically (install -o chloe -g hermes -m 0640); nothing
+      # reads it at runtime — it is reference, not prompt input.
+      # Written 2026-10-29.
+      "ETHOS.md" = ./config/hermes/ETHOS.md;
+
       # ── The `code` profile's identity ───────────────────────────────────
       # A profile has its own HERMES_HOME ($HERMES_HOME/profiles/<name>), and
       # Hermes reads that profile's SOUL.md from there — so the identity of
