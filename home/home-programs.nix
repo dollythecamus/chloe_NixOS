@@ -1,6 +1,25 @@
 {config, pkgs, pkgs-unstable, inputs, desktop, lib, ...}:
 
+let
+  # Dayboard's Android app targets API 35. AGP 8.7.2 (android/build.gradle)
+  # requires JDK 17 and defaults to Build Tools 34.0.0; include 35.0.0 too.
+  androidSdk = pkgs.androidenv.composeAndroidPackages {
+    platformVersions = [ "35" ];
+    buildToolsVersions = [ "34.0.0" "35.0.0" ];
+    includeEmulator = false;
+    includeSources = false;
+    includeSystemImages = false;
+    includeNDK = false;
+  };
+in
 {
+  # This is scoped to Home Manager's package set; the Android SDK is distributed
+  # under Google's SDK license, separate from allowUnfree.
+  nixpkgs.config.android_sdk.accept_license = true;
+  home.sessionVariables = {
+    ANDROID_HOME = "${androidSdk.androidsdk}/libexec/android-sdk";
+    ANDROID_SDK_ROOT = "${androidSdk.androidsdk}/libexec/android-sdk";
+  };
   imports = [
        # gamedev
         ./programs/unity.nix
@@ -13,10 +32,13 @@
   	./gaming.nix
   ];
 
-  # Desktop-session pieces -- niri's, not Plasma's. In the plasma generation the
-  # session owns all four roles itself: plasmashell *is* the notification daemon
-  # and the tray (network/battery/bluetooth applets), and powerdevil +
-  # kscreenlocker own idle and locking. Running the niri-era daemons there would
+  # Desktop-session pieces -- niri's, not Plasma's. XFCE also excludes the
+  # Wayland idle/lock daemons. home/chloe.desktop.nix intentionally keeps
+  # importing desktop-gnome.nix for Hermes desktop wiring; its dconf blocks are
+  # inert under XFCE. In the plasma generation the session owns all four roles
+  # itself: plasmashell *is* the notification daemon and the tray
+  # (network/battery/bluetooth applets), and powerdevil + kscreenlocker own idle
+  # and locking. Running the niri-era daemons there would
   # put two processes behind org.freedesktop.Notifications (one loses the name
   # and logs it) and double the tray. In the Sway prototype, nm-applet and
   # poweralertd are dropped rather than repaired:
@@ -28,12 +50,12 @@
   #   * poweralertd needs a notification daemon alive at start; Dunst (kept)
   #     serves that role.
   # `desktop` comes from the flake's home-manager.extraSpecialArgs.
-  services.dunst.enable = desktop != "plasma" && desktop != "gnome";
+  services.dunst.enable = desktop != "plasma" && desktop != "gnome" && desktop != "xfce";
   services.network-manager-applet.enable =
     desktop != "plasma" && desktop != "gnome" && desktop != "sway-prototype";
   services.poweralertd.enable =
     desktop != "plasma" && desktop != "gnome" && desktop != "sway-prototype";
-  services.swayidle.enable = desktop != "plasma" && desktop != "gnome";
+  services.swayidle.enable = desktop != "plasma" && desktop != "gnome" && desktop != "xfce";
 
   # idle: dim/lock only -- NO automatic suspend (see below). niri serves
   # ext-idle-notify, which swayidle >=1.8 speaks. graphical-session.target works
@@ -91,6 +113,11 @@
   };
 
   home.packages = with pkgs; [
+    # Android/Capacitor builds: JDK 17 is required by AGP 8.7.2; the project
+    # supplies its own Gradle 8.11.1 wrapper, but keep Gradle available too.
+    jdk17
+    gradle
+    androidSdk.androidsdk
     home-manager # make home-manager available for use in the terminal
     
     # rice
@@ -125,6 +152,9 @@
     # art
     krita
     gimp 
+    # pixel-art / animated-sprite editor (Aseprite fork). nixpkgs 1.2, gpl2Only,
+    # platforms.all -- evaluated against the pinned nixpkgs on 2026-10-27.
+    libresprite
 
     # vtuber (Inochi2D): creator = puppet editor (.INP), session =
     # the runtime that drives a puppet live for OBS
