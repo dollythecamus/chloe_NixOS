@@ -7,7 +7,12 @@
   # (that is how the 3d683ee branch shipped it — the dconf/suspend block
   # below already lands in all three outputs the same way), so the desktop
   # app installs in the niri and plasma fallback outputs too.
-  imports = [ inputs.hermes-agent.homeManagerModules.default ];
+  imports = [
+    inputs.hermes-agent.homeManagerModules.default
+    # GNOME launcher override: HERMES_DESKTOP_NVIDIA_SWIFTSHADER=0 plus an
+    # explicit --ozone-platform=wayland, in home/hermes-desktop-launcher.nix.
+    ./hermes-desktop-launcher.nix
+  ];
 
   # THIS `services.hermes-agent` is the HOME-module instance's option set —
   # a separate module system from the system-level one in modules/hermes.nix,
