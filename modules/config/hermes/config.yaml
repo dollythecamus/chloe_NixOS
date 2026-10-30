@@ -70,6 +70,10 @@ memory:
   memory_char_limit: 3000
   user_char_limit: 1600
 plugins:
+  enabled: [dayboard]
+  entries:
+    dayboard:
+      allow_tool_override: false
   hermes-memory-store:
     db_path: $HERMES_HOME/memory_store.db
     auto_extract: true
@@ -79,10 +83,17 @@ session_reset:
 redact_secrets: true
 _config_version: 50
 platforms:
+  a2a:
+    # A2A v1.0 inbound/outbound. No bearer token configured => the adapter binds
+    # 127.0.0.1 only; add A2A_PEER_TOKENS (peer:token,...) before exposing beyond
+    # localhost. Outbound toolset `a2a` is listed in platform_toolsets.cli below.
+    enabled: true
+    port: 9900
   discord:
     gateway_restart_notification: false
 platform_toolsets:
   cli:
+    - a2a
     - browser
     - clarify
     - code_execution
@@ -92,6 +103,7 @@ platform_toolsets:
     - cronjob
     - delegation
     - file
+    - kanban
     - memory
     - session_search
     - skills
@@ -186,3 +198,11 @@ mcp_servers:
 # cannot drop it.
 gateway:
   multiplex_profiles: true
+
+# Kanban swarm: re-enabled 2026-10-29 (Chloe: full reversal of the earlier
+# same-day "stop kanban trial" call). No `kanban:` block here on purpose —
+# dispatch_in_gateway, auto_decompose, review_dispatch, notify_in_gateway and
+# auto_subscribe_on_create are all left at upstream defaults (true), which is
+# what lets the gateway spawn worker profiles for swarm cards. The toolset is
+# listed in platform_toolsets.cli above; `hermes kanban swarm` needs >=2 worker
+# profiles + a verifier + a synthesizer.
