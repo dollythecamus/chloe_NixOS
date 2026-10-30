@@ -77,15 +77,32 @@ sides and the dirty-tree refusal gets annoying, move it to a bare mirror
 
 ## 4. Syncthing pairing (notes only)
 
+**Fully declarative as of 2026-10-29.** `services.syncthing.settings` in `modules/remote-access.nix`
+declares the phone as a device (ID in the module on purpose — it is a public-key fingerprint, not a
+credential; the reasoning is the 2026-10-29 decision in `docs/PROJECT_LEDGER.md`) and shares `Mind`
+and `wiki` with it. `.obsidian/workspace*.json`, `.trash`, `.stversions` (plus `.git` for `wiki`)
+are ignore patterns there, and both folders keep 30 days of staggered versions.
+
+`overrideDevices` / `overrideFolders` are `true`, so anything added through the web UI is **deleted
+at the next activation**: never pair by hand, never add a folder in the GUI. Folder devices must be
+written as `devices = [ "phone" ];` (the attrset form breaks evaluation in this nixpkgs pin).
+
+The phone side is therefore three taps, once:
+
+1. Start Syncthing-Fork — its toggle must be on, or nothing listens on 22000 and the host's
+   connection attempts die unanswered (`ss -ltn | grep 22000` shows it on the phone side).
+2. Accept the incoming connection request from `chloe-laptop` (no IDs to type on either side).
+3. Accept the `Mind` and `wiki` shares into real folders; point Obsidian at `Mind` (and `wiki`).
+
+The web UI stays useful for reading state from the phone:
+
 ```bash
-# on the phone, in Termux: reach the host's web UI (bound to 127.0.0.1 by design)
+# in Termux — the GUI is bound to 127.0.0.1 on the host by design
 ssh -N -L 8384:localhost:8384 pc
 # then open http://localhost:8384 in the phone browser
 ```
 
-Add the phone's device ID on the host, accept on the phone, share **`~/Mind`** and optionally
-**`~/wiki`**. Never add `~/projects`. In each folder's ignore patterns put
-`.obsidian/workspace*.json` (and `.stfolder` is automatic) so the vault stops churning.
+Never add `~/projects`.
 
 ## 5. Acceptance checks
 
