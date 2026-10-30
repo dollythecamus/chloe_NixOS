@@ -1,9 +1,14 @@
-{config, pkgs, lib, inputs, ... }:
+{config, pkgs, lib, inputs, desktop, ... }:
 let
   # HERMES_HOME exactly as the upstream module derives it (stateDir + /.hermes).
   # Used only by the permission block below; stateDir has a plain default, so
   # reading it here is not recursive.
   hermesHome = "${config.services.hermes-agent.stateDir}/.hermes";
+
+  # Read back through `config` for the container-mode gates at the bottom of
+  # this file. Lazy, and container.enable carries a plain default in the
+  # upstream module, so reading it here is not recursive.
+  hermesCfg = config.services.hermes-agent;
 
   # Local Piper voice (en_US-amy-medium, 63 MB) fetched at build time and
   # installed read-only under /etc/hermes/piper. Edge TTS is unusable here:
@@ -39,7 +44,17 @@ in
     services.hermes-agent = {
     enable = true;
 
-    # ── OCI container mode (2026-10-24) ──────────────────────────────────
+    # ── Working directory (2026-10-27) ───────────────────────────────────
+    # The container pinned `--workdir /home/chloe` (extraOptions below), so
+    # every session has started there since 2026-10-24. Native mode's default
+    # is the module's `<stateDir>/workspace` (= /var/lib/hermes/workspace),
+    # which nobody has used in that time and which holds no project context.
+    # Declared explicitly so the reversal does not silently move where terminal
+    # commands, AGENTS.md lookup and git run. Side effect: /home/chloe joins
+    # ReadWritePaths, which it already was in practice (ProtectHome=false).
+    workingDirectory = "/home/chloe";
+
+    # ── OCI container mode (2026-10-24) — REVERSED 2026-10-27 ────────────
     # Hermes runs from the sealed nix package bind-mounted read-only into a
     # plain Ubuntu container, with /var/lib/hermes mounted at /data and
     # /var/lib/hermes/home at /home/hermes. The point is self-modification:
@@ -74,8 +89,23 @@ in
     # 0.28.1, owner-proof failure) and portal screenshots only — so the tool
     # degrades to "driver unavailable" in the container instead of being wired
     # to a bus it cannot reach. See the CUA env block below for the native path.
+    # OFF since 2026-10-27 (Chloe): the option block below is kept verbatim so
+    # rollback stays a one-word edit. What the container cost, measured from
+    # inside it: systemctl/loginctl/systemd-run absent (no host control plane),
+    # /run/user absent (no session bus → computer_use "driver unavailable", no
+    # portals, no keyring, no PipeWire socket), /dev without nvidia*/dri/snd/kvm
+    # (no GPU or audio work at all), no nix daemon (/nix/var/nix absent, plain
+    # eval dies "Permission denied"; the --store workaround costs 58 s per
+    # whole-system eval and still cannot say which output is live), and an
+    # identity split (image account `ubuntu`, HOME=/home/hermes,
+    # HERMES_HOME=/data/.hermes, real home /home/chloe). The writable layer did
+    # not even extend the agent's own python: pip3 is the py3.12 venv while the
+    # gateway runs the sealed py3.14 over a store PYTHONPATH. What it bought was
+    # apt/sudo inside the container — and single-owner state (2026-09-23)
+    # already removed the permission lockout that partly justified it.
+    # Full analysis: docs/hermes-container-rollback-2026-10-27.md.
     container = {
-      enable = true;
+      enable = false;
       backend = "docker";
       image = "ubuntu:24.04";
       hostUsers = [ "chloe" ];
@@ -236,6 +266,52 @@ in
     chmod 2750 ${hermesHome}
   '';
 
+  # ── ~/.hermes bridge in NATIVE mode (2026-10-27) ────────────────────────
+  # Upstream's `hermes-agent-setup` REMOVES the ~/.hermes symlink for every
+  # container.hostUsers entry whenever container.enable is false — it treats
+  # the bridge as container-era metadata — and recreates it only in the
+  # container branch. Reversing the container therefore left chloe with no
+  # ~/.hermes at all, and every HOME-based client silently broke: the Desktop
+  # launcher carries HERMES_HOME=/home/chloe/.hermes (home/desktop-gnome.nix),
+  # so on 2026-10-27 it created a fresh empty home there (0 sessions, no .env,
+  # a 85-byte config.yaml) and spawned its own unconfigured gateway beside the
+  # real one — `hermes --profile default gateway run --quiet`, identity
+  # "supervisor: none, launch_supervisor: manual", `hermes_home:
+  # /home/chloe/.hermes`, serving none of her profiles. The app then showed a
+  # gateway with none of her configuration while the systemd gateway kept
+  # Discord. Evidence: `gateway_runtime_discovery._socket_path()` only ever
+  # looks at `$HERMES_HOME/gateway.sock`, so a second home means a second
+  # gateway, never a shared one.
+  #
+  # Native mode must recreate the bridge: the system gateway owns the state,
+  # and interactive clients (Desktop, TUI, a shell `hermes`) resolve
+  # HERMES_HOME onto it. A real directory at that path is moved aside, never
+  # merged or deleted — it may be a client's own state. Ordered after
+  # `hermes-agent-setup` because that is what removes the symlink.
+  system.activationScripts."hermes-home-bridge" = lib.mkIf (!hermesCfg.container.enable)
+    (lib.stringAfter [ "hermes-agent-setup" ] ''
+    _bridge=${config.users.users.chloe.home}/.hermes
+    if [ -L "$_bridge" ] && [ "$(readlink "$_bridge")" = "${hermesHome}" ]; then
+      :
+    elif [ -L "$_bridge" ]; then
+      ln -sfn ${hermesHome} "$_bridge"
+    elif [ -e "$_bridge" ]; then
+      _bak="$_bridge.bak.$(date +%s)"
+      echo "hermes-home-bridge: moving real directory $_bridge to $_bak" >&2
+      mv "$_bridge" "$_bak"
+      ln -s ${hermesHome} "$_bridge"
+    else
+      ln -s ${hermesHome} "$_bridge"
+    fi
+    chown -h chloe:${hermesCfg.group} "$_bridge" 2>/dev/null || true
+    # Loud guard: a bridge that does not resolve to the state dir breaks every
+    # HOME-based client silently (Desktop spawns a second gateway), so fail
+    # visibly instead of leaving a broken path behind.
+    if [ "$(readlink -f "$_bridge")" != "$(readlink -f ${hermesHome})" ]; then
+      echo "hermes-home-bridge: FAILED — $_bridge does not resolve to ${hermesHome}" >&2
+    fi
+  '');
+
   # ── Gateway environment for computer_use ────────────────────────────────
   # NATIVE MODE ONLY (container.enable = false). In container mode this
   # environment lands on the `docker start` process, not inside the container,
@@ -254,9 +330,7 @@ in
   # (wayland-0) and uid (1000) are this host's values as of 2026-10-21.
   systemd.services.hermes-agent.environment = {
     HERMES_CUA_DRIVER_CMD = "/run/current-system/sw/bin/cua-driver";
-    CUA_DRIVER_RS_ENABLE_WAYLAND = "1";
     XDG_RUNTIME_DIR = "/run/user/1000";
-    WAYLAND_DISPLAY = "wayland-0";
     DISPLAY = ":0";
     # The cua-driver MCP server is a child of this unit. It reaches the
     # WinRects GNOME helper over the session bus with `gdbus`; without the bus
@@ -264,9 +338,15 @@ in
     # extension is active. gdbus itself comes from pkgs.glib.bin in
     # extraPackages.
     DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/1000/bus";
+  } // (if desktop == "xfce" then {
+    XDG_SESSION_TYPE = "x11";
+    XDG_CURRENT_DESKTOP = "XFCE";
+  } else {
+    CUA_DRIVER_RS_ENABLE_WAYLAND = "1";
+    WAYLAND_DISPLAY = "wayland-0";
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "GNOME";
-  };
+  });
 
   # ── Interactive users share the gateway's state store ────────────────────
   # Upstream's container branch owns the ~/.hermes -> /var/lib/hermes/.hermes
@@ -295,7 +375,8 @@ in
   #    every `hermes` invocation failed with "unable to find user hermes: no
   #    matching entries in passwd file" (verified 2026-10-24). The grep below is
   #    the guard that makes such a silent corruption loud.
-  system.activationScripts."hermes-container-exec-user" = lib.stringAfter [ "hermes-agent-setup" ] ''
+  system.activationScripts."hermes-container-exec-user" = lib.mkIf hermesCfg.container.enable
+    (lib.stringAfter [ "hermes-agent-setup" ] ''
     _cm=${hermesHome}/.container-mode
     if [ -f "$_cm" ]; then
       _uid=$(id -u chloe)
@@ -313,7 +394,7 @@ in
              "the host CLI/TUI will not route into the container" >&2
       fi
     fi
-  '';
+  '');
 
   # 2. A container whose first-boot apt provisioning was interrupted must be
   #    discarded, not restarted. Upstream's entrypoint installs sudo/curl/node
@@ -327,7 +408,12 @@ in
   #    stopped + no provisioning sentinel ⇒ discard the layer, and preStart then
   #    creates a clean one. A provisioned container is never touched, so the
   #    agent's own apt/pip/npm installs survive ordinary restarts.
-  systemd.services.hermes-agent.preStart = lib.mkBefore ''
+  # Gated on container.enable (2026-10-27). Ungated, the native unit inherits
+  # three docker calls and would `docker rm -f` the stopped container on every
+  # start. With the gate false, upstream's own native preStart (the
+  # linger/user-bus wait) applies unchanged.
+  systemd.services.hermes-agent.preStart = lib.mkIf hermesCfg.container.enable
+    (lib.mkBefore ''
     if ${pkgs.docker}/bin/docker inspect hermes-agent >/dev/null 2>&1; then
       _h_running=$(${pkgs.docker}/bin/docker inspect -f '{{.State.Running}}' hermes-agent 2>/dev/null || echo false)
       if [ "$_h_running" != "true" ] \
@@ -336,7 +422,7 @@ in
         ${pkgs.docker}/bin/docker rm -f hermes-agent || true
       fi
     fi
-  '';
+  '');
 
   # 2. Cleanup of what the native install leaves lying around, evaluated
   #    statelessly on every activation instead of behind a marker file. The
@@ -348,7 +434,13 @@ in
   #    (activation runs before services, so a socket from the previous session is
   #    always stale) while a switch taken while the container runs leaves the
   #    live socket alone.
-  system.activationScripts."hermes-container-cleanup" = lib.stringAfter [ "hermes-agent-setup" ] ''
+  # Gated on container.enable (2026-10-27) — this hook is actively wrong in a
+  # native deployment: with the container merely stopped its "not running" test
+  # is true, so it would unlink the socket of a RUNNING native gateway on any
+  # switch that does not itself restart the unit, leaving the Desktop app and
+  # the TUI failing with ENOENT until the next restart.
+  system.activationScripts."hermes-container-cleanup" = lib.mkIf hermesCfg.container.enable
+    (lib.stringAfter [ "hermes-agent-setup" ] ''
     if ! ${pkgs.docker}/bin/docker inspect -f '{{.State.Running}}' hermes-agent 2>/dev/null | grep -qx true; then
       rm -f ${hermesHome}/gateway.sock ${hermesHome}/gateway.pid ${hermesHome}/gateway.lock
     fi
@@ -361,5 +453,5 @@ in
         ${pkgs.docker}/bin/docker rm -f "$_c" || true
       fi
     done
-  '';
+  '');
 }
