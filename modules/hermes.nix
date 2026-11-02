@@ -258,12 +258,25 @@ in
   #    `systemd-tmpfiles --create` across two config files → 2750.
   #  * activation: a script ordered after `hermes-agent-setup`, which is what
   #    re-applies 2770 on every `nixos-rebuild switch`.
+  #
+  # /home/chloe rides along in the same upstream `chmod 2770` line, and that is
+  # not cosmetic: sshd runs `StrictModes yes`, so a group-writable home makes it
+  # refuse the key before it is compared, and the phone gets
+  #   Authentication refused: bad ownership or modes for directory /home/chloe
+  #   Connection closed by authenticating user chloe 100.64.240.27 [preauth]
+  # which the client only renders as `Permission denied (publickey)`. Password
+  # and keyboard-interactive auth are off by design, so there is no fallback.
+  # chmod 2750 /home/chloe fixed it on 2026-10-31 and it was back after the next
+  # boot (2026-11-01 16:12) — activation runs at boot, not only on a switch.
+  # Same reasoning as above: group `hermes` holds only chloe, so g+w is useless
+  # here; keep setgid so anything created inside still lands in group `hermes`.
   environment.etc."tmpfiles.d/90-hermes-home-mode.conf".text = ''
     z ${hermesHome} 2750 - - - -
+    z /home/chloe 2750 - - - -
   '';
 
   system.activationScripts."hermes-home-mode" = lib.stringAfter [ "hermes-agent-setup" ] ''
-    chmod 2750 ${hermesHome}
+    chmod 2750 ${hermesHome} /home/chloe
   '';
 
   # ── ~/.hermes bridge in NATIVE mode (2026-10-27) ────────────────────────
