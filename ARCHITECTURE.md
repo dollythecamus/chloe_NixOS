@@ -49,7 +49,7 @@ activation script; a real directory at that path is moved aside, never merged. P
 | `hardware/nvidia.nix` | driver, modesetting, power management, `prime` (offload **off**: one GPU) |
 | `modules/desktop/` | one file per session (`gnome`, `gnome-shim`, `niri`, `plasma`, `xfce`) + `ly` |
 | `modules/hermes.nix` | gateway unit, config/identity files, state permissions, container-mode gates, dashboard-independent env |
-| `modules/config/hermes/` | `config.yaml` (default profile), `config-nixos.yaml` (nixos profile), SOUL/ETHOS files |
+| `modules/config/hermes/` | `config.yaml` (single default profile), SOUL/ETHOS files |
 | `modules/remote-access.nix` | Tailscale, key-only SSH, declarative Syncthing vaults, `hermes-dashboard` unit |
 | `modules/cua-driver.nix` | `computer_use` driver package and its env, per desktop |
 | `modules/network.nix`, `services.nix`, `programs.nix`, `system-packages.nix`, `llm.nix`, `nix-ld.nix`, `revision.nix` | networking, services (docker, pipewire, portals), system programs, packages, LLM tooling, nix-ld, flake revision in `configurationRevision` |

@@ -198,34 +198,9 @@ in
       # Written 2026-10-29.
       "ETHOS.md" = ./config/hermes/ETHOS.md;
 
-      # ── The `code` profile's identity ───────────────────────────────────
-      # A profile has its own HERMES_HOME ($HERMES_HOME/profiles/<name>), and
-      # Hermes reads that profile's SOUL.md from there — so the identity of
-      # the coding profile is declared here for the same reason as the root
-      # one. It is the same file Hermes would otherwise own at runtime; the
-      # difference is that this one is recorded in git and survives a
-      # re-clone of the profile.
-      "profiles/code/SOUL.md" = ./config/hermes/SOUL-code.md;
-
-      # The nixos profile keeps its existing model/tool preferences, with the
-      # memory provider managed declaratively alongside them. This full config
-      # is installed on activation; edit the source, not the profile copy.
-      "profiles/nixos/config.yaml" = ./config/hermes/config-nixos.yaml;
-
-      # ── The `nixos` profile's identity ──────────────────────────────────
-      # Same mechanism, same reason: the NixOS configuration profile reads
-      # its SOUL.md from profiles/nixos/SOUL.md, so it is declared here and
-      # not left as a runtime edit.
-      "profiles/nixos/SOUL.md" = ./config/hermes/SOUL-nixos.md;
-
-      # ── The `learn` profile's identity ──────────────────────────────────
-      # The hobby-learning profile (drawing/painting, animation, music —
-      # composition, guitar, singing). Same mechanism and same reason as the
-      # others: the profile reads its SOUL.md from its own HERMES_HOME, so the
-      # identity is recorded in git instead of living as a runtime edit that
-      # no repository can restore. Its skills live under the profile's own
-      # skills/ directory as runtime state.
-      "profiles/learn/SOUL.md" = ./config/hermes/SOUL-learn.md;
+      # No profile identities are installed: the code/nixos/learn profiles
+      # were removed 2026-11-05 (all work runs on this default profile), so
+      # their SOUL files and the nixos profile's config.yaml are gone too.
     };
 
     # Path to the environment files containing API tokens/keys
