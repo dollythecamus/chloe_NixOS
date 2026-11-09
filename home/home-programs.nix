@@ -175,6 +175,9 @@ in
 
     # dev
     github-desktop
+    # python venv/build tool — harness-square P0 builds its py3.12 venv with it;
+    # it downloads CPython itself, so no system python3.12 is needed.
+    uv
 
     # desktop integration applets (nm-applet systemd service lives above;
     # nm-connection-editor is in the same package)
