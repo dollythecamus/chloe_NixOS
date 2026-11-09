@@ -317,6 +317,27 @@ in
   # for cron: platform_toolsets.cron in config.yaml omits it. The socket name
   # (wayland-0) and uid (1000) are this host's values as of 2026-10-21.
   systemd.services.hermes-agent.environment = {
+    # ── HOME must be chloe's real home, not the state dir (2026-11-09) ─────
+    # The tools that carry credentials split into two classes:
+    #   * HOME-independent (verified under HOME=/var/lib/hermes): `git` https
+    #     via /etc/gitconfig's git-credential-libsecret over the keyring (the
+    #     unit already exports DBUS_SESSION_BUS_ADDRESS), `ssh` because
+    #     OpenSSH expands `~` through passwd, not $HOME, so it already reads
+    #     /home/chloe/.ssh/config + id_ed25519_github, and `opencode`, whose
+    #     key is referenced as {file:~/.hermes/.opencode-go-key} inside
+    #     HERMES_HOME.
+    #   * HOME-bound: `gh` (~/.config/gh/hosts.yml missing => "please run gh
+    #     auth login", exit 0, i.e. a silent failure an agent reads as
+    #     success) and `pi` (~/.pi/agent/auth.json = {} => "No API key found").
+    # Both only work when $HOME is /home/chloe. Copying the credentials into
+    # /var/lib/hermes was rejected: gh's token lives in the per-user keyring,
+    # so a copied hosts.yml isolates nothing and a copied token is a second
+    # secret that goes stale on the next rotation, and ssh needs nothing.
+    # The desktop app already spawns its gateway with HOME=/home/chloe, so
+    # this also removes the difference in behaviour between surfaces.
+    # HERMES_HOME stays /var/lib/hermes/.hermes: state is not moved.
+    # HOME is defined upstream without mkDefault, so overriding needs mkForce.
+    HOME = lib.mkForce "/home/chloe";
     HERMES_CUA_DRIVER_CMD = "/run/current-system/sw/bin/cua-driver";
     XDG_RUNTIME_DIR = "/run/user/1000";
     DISPLAY = ":0";

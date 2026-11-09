@@ -521,3 +521,19 @@ point; the CUA environment was untested, the kanban trial had not run, the `code
   questions asked, answers given: scope 8096 for security, keep `.md`-as-preview (the caveat
   comment was the agent's, not hers), ten workstream commits. Committed as ten workstream commits
   plus this ledger; nothing switched.
+- 2026-11-09 (session local-5efa0a6c…) — "hermes sessions hang when HOME is defined as not
+  /home/chloe … i'm undecided what is better, help me decide" → measured instead of guessed: the
+  only HOME-bound tool credentials are `gh` (`~/.config/gh/hosts.yml`, and its failure exits 0
+  with a "please run gh auth login" banner) and `pi` (`~/.pi/agent/auth.json` = `{}`); `git`
+  https works through `/etc/gitconfig`'s libsecret helper + the unit's `DBUS_SESSION_BUS_ADDRESS`,
+  `ssh` works because OpenSSH expands `~` via passwd so it already reads
+  `/home/chloe/.ssh/config`, and `opencode` reads its key from
+  `{file:~/.hermes/.opencode-go-key}` inside HERMES_HOME — so `ssh`/`git` need no copy at all and
+  `gh`'s token lives in the per-user keyring, which makes a copied `hosts.yml` isolation in name
+  only. Decision (hers): `HOME=/home/chloe` (`lib.mkForce`, upstream defines it without
+  `mkDefault`) with HERMES_HOME unchanged at `/var/lib/hermes/.hermes`; verified in
+  `nixos-rebuild build` output and by `gh auth status` / `pi -p` under that HOME. Separate,
+  unfixed finding: the system unit has restarted 147× because the desktop app's own gateway
+  (PID 4071, `app-hermes-3932.scope`) owns the host lock — "Attach is impossible: PID 4071
+  published no usable host record" — so cron/Discord are not running; which gateway should own
+  the host was asked and not answered. Switch not yet run.
