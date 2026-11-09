@@ -30,6 +30,13 @@
   services.gnome.gcr-ssh-agent.enable = true;
   services.gvfs.enable = true;
 
+  # 2026-11-02: computer_use on X11 needs the AT-SPI bridge. With this off the
+  # module exports NO_AT_BRIDGE=1 / GTK_A11Y=none (so no app exposes an
+  # accessibility tree) and cua-driver's doctor reports "org.a11y.Bus not
+  # reachable". Enabling it installs at-spi2-core and activates org.a11y.Bus in
+  # the session; apps started afterwards expose their element tree.
+  services.gnome.at-spi2-core.enable = true;
+
   # 2026-10-29: the Hermes gateway system unit runs as chloe with
   # HOME=/var/lib/hermes and has no XAUTHORITY. Permit its local CUA driver to
   # connect to this single-user laptop's X server; keep -nolisten tcp intact.
