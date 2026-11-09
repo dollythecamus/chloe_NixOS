@@ -24,7 +24,7 @@
         vaultNames = ["Mind"];
       };
     };
-    
+
     cursor = {
       name = "DMZ-Black";
       size = 24;
@@ -52,6 +52,19 @@
 
     polarity = if desktop == "sway-prototype" then "light" else "dark";
   };
+
+  # 2026-11-02: `home-manager-chloe` failed to start on switch ("Existing file
+  # '/home/chloe/Mind/.obsidian/appearance.json.__backup' would be clobbered by
+  # backing up '/home/chloe/Mind/.obsidian/appearance.json'") and the profile
+  # stayed on the previous generation. Cause: the stylix obsidian target above
+  # writes appearance.json into the vault, but Obsidian rewrites that file
+  # itself -- a save replaces HM's symlink with a regular file -- so the next
+  # switch tried to back it up again and the September backup was already
+  # there, which checkLinkTargets treats as a hard error. Obsidian owns the
+  # runtime writes, HM owns the declaration, so let HM win: force skips the
+  # collision check and replaces the file with the styled version (the file in
+  # the way still lands in appearance.json.__backup).
+  home.file."Mind/.obsidian/appearance.json".force = true;
 
   home.packages = with pkgs; [
     base16-schemes
