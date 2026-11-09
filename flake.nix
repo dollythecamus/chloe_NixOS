@@ -50,6 +50,35 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    # Pi (pi.dev) — a second agent harness next to hermes-agent, for the case
+    # where the agent loop itself is the thing being authored (TypeScript
+    # extensions, RPC, SDK). Not a replacement: hermes keeps the gateway,
+    # memory, cron and delegation surfaces.
+    # Pinned to the COMMIT 818c42cd, not to the v1.5.0 tag. Two upstream
+    # packaging bugs make the tag unbuildable, both fixed within two days of it
+    # and both invisible until `nix build` runs:
+    #   1. v1.5.0's nix/package.nix overrides seven internal packages in
+    #      `packageSourceOverrides` while its install lock carries eight, so
+    #      `@earendil-works/pi-schema` was fetched with no integrity hash →
+    #      "attribute 'integrity' missing" at evaluation time. Fixed in d71c66e0
+    #      (2026-11-03, "fix(nix): pack pi-schema for the install lock").
+    #   2. The Nix build hydrates its model catalog from the revision pinned in
+    #      nix/model-catalog.json, offline. v1.5.0's pin predates the classifier
+    #      models, so `pi-ai` failed tsc on github-copilot.ts ("Type 'unknown[]'
+    #      is not assignable to readonly ProviderModel[]") after ~4 minutes of
+    #      building. Refreshed in a57438e9 / 818c42cd (2026-11-03/04).
+    # 818c42cd is the newest catalog-pin refresh and still reports 1.5.0.
+    # Bump this to the next release tag once upstream ships one containing both
+    # fixes; the catalog pin is what makes a tag self-contained.
+    # nixpkgs follows the unstable pin so pi builds against the node/npm already
+    # locked here rather than importing a second nixpkgs tree.
+    # A pin is needed at all because nixpkgs lags badly: on 2026-11-08 the
+    # stable nixpkgs pin carried 0.75.4 and the unstable input 0.87.1.
+    pi = {
+      url = "github:earendil-works/pi/818c42cdeb1b";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, stylix, ...} @ inputs: 

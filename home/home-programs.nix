@@ -27,6 +27,9 @@ in
         ./programs/blender.nix
        # general
         ./terminal.nix
+       # agents: hermes runs as a system unit (modules/hermes.nix); pi is a
+       # plain CLI, so it belongs in the home profile
+        ./programs/pi.nix
 
        # gaming
   	./gaming.nix
