@@ -1,7 +1,7 @@
 # Project ledger — nixos host configuration
 
-Updated: 2026-10-30 00:41 (-03) · session local-d0bb155ce9e0533d33fd1917489d460f9e0f6575ab53283d2760a90fff7bb30d · owner default
-Next review: after the switch (only the tailnet-IP question below needs an answer before it)
+Updated: 2026-11-09 · session local-13fdd66d7ff6133d3c3b38b777c07f1ff47ce13e1c8be6dfb590623ff153e4d9 · owner default
+Next review: after the switch (the tailnet-IP question below is still open)
 
 ## Goal
 
@@ -70,9 +70,31 @@ the number. Re-derive it, do not read it:
 ".#nixosConfigurations.$o.config.system.build.toplevel.drvPath"; done`.
 `/run/current-system` is still `6c9apnv4…` (activated 2026-10-29 21:32), so none of this is live.
 
+**Review + commit pass 2026-11-09 — tree clean, nothing switched.** Seventeen changed/untracked
+paths were read, checked against the built store rather than against their own comments, and
+committed as ten workstream commits: the `pi` harness (upstream flake input pinned to a commit,
+plus a `bwrap` sandbox), the headless `lmstudio` user unit on `:1234` and the `lms` binary fix in
+`modules/llm.nix`, `gaming-mode`, the VS Code markdown preview, `uv`, the stylix Obsidian `force`,
+`at-spi2-core` on the XFCE output, the scoped Jellyfin firewall rule and KDE Connect. The gnome
+toplevel was **built**, not only evaluated (34 derivations, all realised), so the switch is a copy
+plus activation. Live state is unchanged until she runs it.
+
 ## Next action
 
-**Next action (Chloe, one command):** `sudo nixos-rebuild switch --flake ~/nixos#chloe-laptop`.
+**Next action (Chloe, one command):** `sudo nixos-rebuild switch --flake ~/nixos#chloe-laptop` —
+the 2026-11-09 set (pi, the lmstudio endpoint, gaming-mode, the markdown preview, uv, kdeconnect,
+at-spi, the scoped Jellyfin rule) on top of everything below. The gnome toplevel is already built
+from this tree, so expect a copy and activation rather than the 252-derivation build the
+2026-10-30 paragraph predicts. After the switch, once:
+
+```
+systemctl --user daemon-reload && systemctl --user restart lmstudio
+```
+
+home-manager relinks that unit file about a second *after* systemd restarts it, so the first start
+runs the previous definition.
+
+**Next action as of 2026-10-30:** `sudo nixos-rebuild switch --flake ~/nixos#chloe-laptop`.
 Everything is committed (last content commit `4eb500f`, this ledger on top of it), so this one
 switch activates the whole set: native gateway
 again, the XFCE output, declarative Syncthing, `hermes-dashboard.service`, the dayboard/a2a/kanban
@@ -202,8 +224,41 @@ phone push shows up in `git -C ~/projects/ai-research-lab log -1` on the host. N
 - 2026-10-30 — **XFCE is a permanent output, not a branch experiment** (Chloe, 2026-10-29: accepted
   as part of the switch). It stays one of the four `desktop` values, gated in the five modules that
   branch on it, and `AGENTS.md` names that gate as load-bearing.
+- 2026-11-09 — **Jellyfin's 8096 is scoped to the house LAN, not opened globally** (Chloe: "scope
+  for security"). `allowedTCPPorts` would serve the library on every interface the laptop joins;
+  the rule is instead `-i wlo1 -s 192.168.0.0/24` for tcp/8096. The tailnet is unaffected —
+  `remote-access.nix` trusts `tailscale0`. Accepted failure direction: a router subnet change or a
+  wired connection stops the stick reaching Jellyfin until the prefix/interface is updated, rather
+  than the port silently being open somewhere unexpected.
+- 2026-11-09 — **`.md` opens as a rendered preview in VS Code by default** (Chloe: kept, explicitly
+  wanted). Editing therefore needs "Reopen Editor With…" or Ctrl+Shift+V. The line lives in
+  `home/vscode.nix` and deleting it reverts to text-first.
 
 ## Evidence
+
+- 2026-11-09 — **review pass.** All four outputs evaluate (`nix eval --raw
+  .#nixosConfigurations.<out>.config.system.build.toplevel.drvPath`, `XDG_CACHE_HOME` set),
+  re-run after the network edit; the gnome toplevel was then **built**: `nix build --dry-run`
+  reported 34 derivations to build and 4 paths to fetch, and `nix build` realised it.
+  Option-level checks: `services.gnome.at-spi2-core.enable` is `true` on gnome *and* xfce, and
+  `NO_AT_BRIDGE`/`GTK_A11Y` are gone from the xfce `environment.sessionVariables`; the merged VS
+  Code `userSettings` carries both Stylix's `markdown.preview.fontFamily` and this repo's
+  `markdown.styles`, so no key is defined twice; `home.file."Mind/.obsidian/appearance.json"` is
+  `{force=true, source=<stylix's appearance.json>}` — the declaration to merge into exists, so it
+  is not an orphan file entry; `firewall.allowedTCPPorts` is back to `[22, 27015, 27036, 27037]`.
+- 2026-11-09 — **the backend check that changed the Jellyfin fix.** `networking.nftables.enable` is
+  `false` on this host, and `firewall.extraInputRules` is declared by the *nftables* module only:
+  setting it evaluates clean and is silently ignored, so the first version of the scoped rule
+  would have left 8096 shut with no error anywhere. The committed rule uses `extraCommands`, and
+  the built `firewall-start` script shows it at line 138 —
+  `iptables -w -A nixos-fw -i wlo1 -s 192.168.0.0/24 -p tcp --dport 8096 -j nixos-fw-accept` —
+  two lines before the `nixos-fw-log-refuse` at 142.
+- 2026-11-09 — the `pi` claim checked at the binary, not the comment: `pi --version` → `1.5.0`
+  (`/etc/profiles/per-user/chloe/bin/pi`), and `~/.pi/agent` holds 83 sessions, so the pinned commit
+  builds and runs. The `lms` split likewise holds in the live profile: `lms` and `llmster` resolve
+  into `lmstudio-server-0.0.13-1`, `lmstudio` into `lmstudio-0.4.19-2`, one `lms` and no collision.
+- 2026-11-09 — `fish -n home/fish/gaming-mode.fish` passes; `git diff 4405adc..HEAD --check` prints
+  nothing.
 
 - 2026-10-30 00:41 — **review pass.** Evaluation, all four outputs (with
   `XDG_CACHE_HOME=$HOME/.hermes/cache/scratch/nixcache`): `nix eval --raw
@@ -339,6 +394,12 @@ Already committed by the concurrent session: `modules/config/hermes/config.yaml`
 Outside this repo, committed in their own repos: `UnityXR_3DMuseu/docs/PROJECT_LEDGER.md`,
 `chloes-2d-library/docs/PROJECT_LEDGER.md`.
 
+## Uncommitted at 2026-11-09
+
+None. `git status --porcelain -uall` printed nothing before this ledger commit: the seventeen
+reviewed paths are ten workstream commits on `4405adc`, and this file is the last commit on top.
+Branch `desktop/gnome-daily` is still **unpushed** (`origin/main` unchanged).
+
 ## Uncommitted at 2026-10-30 00:41
 
 `git status --porcelain -uall` in `~/nixos` listed only `M docs/PROJECT_LEDGER.md` before this
@@ -450,3 +511,13 @@ point; the CUA environment was untested, the kanban trial had not run, the `code
   retrofit it lacked); this ledger rewritten as the close. Small findings reported to her rather
   than fixed unilaterally: the tailnet IP versus the identifier rule, the missing dayboard token,
   the `network-online.target` ordering warning, dead `sway-prototype` conditions.
+- 2026-11-09 (session local-13fdd66d…) — "see git diff on /home/chloe/nixos with unstaged and
+  uncommited changes, review changes with me and commit" → all 17 paths read, and every comment
+  checked against the built store instead of taken at face value (`pi --version` 1.5.0 with 83
+  sessions on disk, `lms`/`llmster` resolving into `lmstudio-server`, the merged VS Code settings,
+  the obsidian file's `source`+`force`, `fish -n` on gaming-mode). One finding changed the code:
+  the Jellyfin rule first used `firewall.extraInputRules`, which this host's iptables backend
+  ignores silently — rewritten to `extraCommands` and verified in the built `firewall-start`. Three
+  questions asked, answers given: scope 8096 for security, keep `.md`-as-preview (the caveat
+  comment was the agent's, not hers), ten workstream commits. Committed as ten workstream commits
+  plus this ledger; nothing switched.
