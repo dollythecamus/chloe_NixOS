@@ -7,6 +7,11 @@
 
     ./wofi.nix
     ./vscode.nix
+
+    # 2026-11-08: headless LM Studio endpoint (llmster + :1234) for the agent
+    # tooling; the GUI stays a system package. See the header for the two env
+    # vars and the daemon/server ordering it took to make this work.
+    ./lmstudio.nix
   ] ++ (if desktop == "gnome" || desktop == "xfce"
         then [ ] # GNOME owns its desktop; XFCE is X11-only and loads no niri rice.
         else [ ./niri.nix ./eww.nix ./ironbar.nix ]);
