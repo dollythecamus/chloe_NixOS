@@ -1,0 +1,202 @@
+/* Markdown preview stylesheet.
+ *
+ * Installed to ~/.config/Code/User/markdown-theme.css by home/vscode.nix and
+ * wired in via the `markdown.styles` setting there.
+ *
+ * Colours are pulled from the active VS Code theme (Stylix / base16) through
+ * the --vscode-* custom properties, so this keeps matching when the palette
+ * changes. Only typography and spacing are hard-coded.
+ */
+
+body.vscode-body {
+  --md-border: var(--vscode-editorWidget-border, #3a3f4b);
+  --md-code-bg: var(--vscode-textCodeBlock-background, rgba(127, 127, 127, 0.12));
+  --md-muted: var(--vscode-descriptionForeground, #8b949e);
+  --md-accent: var(--vscode-textLink-foreground, #8ab4f8);
+  --md-inline-code: var(--vscode-textPreformat-foreground, inherit);
+
+  /* Comfortable measure: prose stays readable without a wide window making
+   * lines 200 characters long. Drop max-width if you prefer full-bleed. */
+  max-width: 84ch;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 7rem;
+
+  /* The Stylix VS Code target maps markdown.preview.fontFamily to the
+   * monospace face. Good for code, poor for prose, so prose gets the sans
+   * face here. Delete these two lines to follow the theme setting again. */
+  font-family: "Adwaita Sans", sans-serif !important;
+}
+
+/* ---------- headings ---------- */
+
+body.vscode-body h1,
+body.vscode-body h2 {
+  border-bottom: 1px solid var(--md-border);
+  padding-bottom: 0.3em;
+  margin-top: 2em;
+}
+
+body.vscode-body h1 {
+  font-size: 1.9em;
+  letter-spacing: -0.01em;
+}
+
+body.vscode-body h2 {
+  font-size: 1.45em;
+}
+
+body.vscode-body h3 {
+  font-size: 1.2em;
+}
+
+body.vscode-body h4 {
+  font-size: 1.05em;
+  color: var(--md-muted);
+}
+
+body.vscode-body > *:first-child {
+  margin-top: 0;
+}
+
+/* ---------- text ---------- */
+
+body.vscode-body p,
+body.vscode-body li {
+  line-height: 1.65;
+}
+
+body.vscode-body a {
+  color: var(--md-accent);
+  text-decoration: none;
+}
+
+body.vscode-body a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+body.vscode-body strong {
+  font-weight: 650;
+}
+
+/* ---------- code ---------- */
+
+body.vscode-body code {
+  background: var(--md-code-bg);
+  color: var(--md-inline-code);
+  border-radius: 4px;
+  padding: 0.15em 0.35em;
+  font-size: 0.92em;
+}
+
+body.vscode-body pre {
+  background: var(--md-code-bg);
+  border: 1px solid var(--md-border);
+  border-radius: 8px;
+  padding: 1em 1.1em;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+body.vscode-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.95em;
+}
+
+/* ---------- quotes ---------- */
+
+body.vscode-body blockquote {
+  margin: 1.2em 0;
+  padding: 0.2em 0 0.2em 1.1em;
+  border-left: 3px solid var(--md-accent);
+  color: var(--md-muted);
+  background: none;
+}
+
+body.vscode-body blockquote p {
+  margin: 0.4em 0;
+}
+
+/* ---------- tables ---------- */
+
+body.vscode-body table {
+  border-collapse: collapse;
+  margin: 1.3em 0;
+  width: auto;
+  max-width: 100%;
+  font-size: 0.96em;
+}
+
+body.vscode-body th,
+body.vscode-body td {
+  border: 1px solid var(--md-border);
+  padding: 0.45em 0.8em;
+  text-align: left;
+  vertical-align: top;
+}
+
+body.vscode-body th {
+  font-weight: 650;
+  background: var(--md-code-bg);
+}
+
+body.vscode-body tr:nth-child(2n) td {
+  background: color-mix(in srgb, var(--md-code-bg) 45%, transparent);
+}
+
+/* ---------- rules, lists, tasks ---------- */
+
+body.vscode-body hr {
+  border: none;
+  border-top: 1px solid var(--md-border);
+  margin: 2.2em 0;
+}
+
+body.vscode-body ul,
+body.vscode-body ol {
+  padding-left: 1.6em;
+}
+
+body.vscode-body li + li {
+  margin-top: 0.25em;
+}
+
+body.vscode-body li > p {
+  margin: 0.4em 0;
+}
+
+body.vscode-body input[type="checkbox"] {
+  margin-right: 0.5em;
+  vertical-align: 0.12em;
+}
+
+/* ---------- media and other blocks ---------- */
+
+body.vscode-body img {
+  max-width: 100%;
+  border-radius: 6px;
+}
+
+body.vscode-body kbd {
+  background: var(--md-code-bg);
+  border: 1px solid var(--md-border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  font-size: 0.88em;
+  font-family: var(--markdown-font-family, monospace);
+}
+
+body.vscode-body details {
+  border: 1px solid var(--md-border);
+  border-radius: 6px;
+  padding: 0.6em 0.9em;
+  margin: 1em 0;
+}
+
+body.vscode-body summary {
+  cursor: pointer;
+  font-weight: 600;
+}
