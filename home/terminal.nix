@@ -90,5 +90,13 @@ echo "i'll show you how deep the rabbit hole goes" | tte matrix
        rebuild = builtins.readFile ./fish/rebuild.fish;
     };
   };
+
+  # gaming-mode: park background services to free RAM for a gaming session
+  # (source in repo: home/fish/gaming-mode.fish). Installed verbatim instead of
+  # through programs.fish.functions because that option wraps every entry in
+  # `function <name> … end`: this file defines the command *and* its __gm_*
+  # helpers, so wrapping it would nest the definition and make the first call
+  # per shell a no-op. fish autoloads functions/<name>.fish by filename.
+  xdg.configFile."fish/functions/gaming-mode.fish".source = ./fish/gaming-mode.fish;
 }
 
