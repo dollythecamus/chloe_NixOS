@@ -19,11 +19,21 @@
       fsType = "ext4";
     };
 
-  # Shared ESP: nvme0n1p1 (also used by Fedora's /boot/efi)
+  # ESP: nvme0n1p1. Holds GRUB (EFI/NixOS-boot) plus the kernel and initrd
+  # that GRUB loads. It is no longer shared -- the Fedora install that also
+  # used it was removed on 2026-11-09.
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/1402-3C62";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
+    };
+
+  # Home partition: nvme0n1p2 (ext4, label "home"), 183.4G. Created 2026-11-09
+  # out of the sectors freed by deleting the Fedora /boot and root partitions
+  # (old p2 + p3); the disk's GPT now runs p1, p2, p4.
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/9dca4d52-1d7b-46dc-a885-7f98e0e350a2";
+      fsType = "ext4";
     };
 
   # Disk-backed swap on the root ext4 partition. The file is created,
