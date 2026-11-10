@@ -357,6 +357,18 @@ in
     XDG_CURRENT_DESKTOP = "GNOME";
   });
 
+  # ── Allow sudo / nixos-rebuild boot through the gateway approval prompt (2026-11-09) ──
+  # Upstream's module hardens the service with `NoNewPrivileges = true` and
+  # `ProtectSystem = "strict"`, which makes the kernel block setuid binaries
+  # (`sudo: The "no new privileges" flag is set`) and mounts the root
+  # filesystem read-only even after elevating. Override both so Chloe can
+  # approve `sudo` commands (and `sudo nixos-rebuild boot`) via the Hermes
+  # gateway password prompt.
+  systemd.services.hermes-agent.serviceConfig = {
+    NoNewPrivileges = lib.mkForce false;
+    ProtectSystem = lib.mkForce false;
+  };
+
   # ── Interactive users share the gateway's state store ────────────────────
   # Upstream's container branch owns the ~/.hermes -> /var/lib/hermes/.hermes
   # symlink bridge now (container.hostUsers = [ "chloe" ] above), and it also

@@ -10,8 +10,9 @@ declarative source for system config, Hermes identity, and the agent's operating
 
 ## Done when
 
-- `sudo nixos-rebuild switch --flake ~/nixos#<host>` succeeds and the running system matches
-  the built store path already produced by the tooling session.
+- `sudo nixos-rebuild boot --flake ~/nixos#<host>` succeeds and the host reboots into a
+  generation matching the built store path (switch-from-chat is deliberately not the procedure —
+  it restarts the gateway mid-turn; `boot` + reboot is the standing rule since 2026-11-09).
 - `/var/lib/hermes/.hermes/SOUL.md` matches `modules/config/hermes/SOUL.md` (diff clean).
 - The tooling plan's verification matrix passes with **real calls**: TTS, memory write, browser,
   MCP. `computer_use` is **excluded** — upstream-blocked, not fixable here (see Decisions,
@@ -68,7 +69,11 @@ revision into the system, so the path changes on every commit, including the com
 the number. Re-derive it, do not read it:
 `for o in chloe-laptop chloe-laptop-niri chloe-laptop-plasma chloe-laptop-xfce; do nix eval --raw
 ".#nixosConfigurations.$o.config.system.build.toplevel.drvPath"; done`.
-`/run/current-system` is still `6c9apnv4…` (activated 2026-10-29 21:32), so none of this is live.
+**Nightly review 2026-11-09 21:1x — the switch has run; this paragraph is superseded.** `/run/current-system`
+is `kpsjiybf2l…`, generation **130**, created 2026-11-09 **16:09** (`ls -l /nix/var/nix/profiles/system-*-link`),
+and the host booted into it at 17:10 (`uptime` 3:54 at 21:04). The 2026-11-09 set is therefore live, not
+"still `6c9apnv4…` (activated 2026-10-29 21:32)". Whether generation 130 was built from this exact tree
+(HEAD `f7d8a51`, 16:02) was not re-derived — only that the running system is that generation.
 
 **Review + commit pass 2026-11-09 — tree clean, nothing switched.** Seventeen changed/untracked
 paths were read, checked against the built store rather than against their own comments, and
@@ -81,18 +86,23 @@ plus activation. Live state is unchanged until she runs it.
 
 ## Next action
 
-**Next action (Chloe, one command):** `sudo nixos-rebuild switch --flake ~/nixos#chloe-laptop` —
-the 2026-11-09 set (pi, the lmstudio endpoint, gaming-mode, the markdown preview, uv, kdeconnect,
-at-spi, the scoped Jellyfin rule) on top of everything below. The gnome toplevel is already built
-from this tree, so expect a copy and activation rather than the 252-derivation build the
-2026-10-30 paragraph predicts. After the switch, once:
+**Nightly review 2026-11-09 21:1x — the switch this paragraph asks for has ALREADY RUN (generation 130,
+16:09, booted 17:10), so it is no longer owed.** What is owed now:
 
-```
-systemctl --user daemon-reload && systemctl --user restart lmstudio
-```
+1. **The uncommitted GRUB change is wrong until the partition is actually gone.** `host_chloe-laptop.nix`
+   (uncommitted, 4+/1−) sets `boot.loader.grub.useOSProber = false` with a comment saying the Fedora
+   partition "was deleted on 2026-11-09". At 21:15 `lsblk` shows **`nvme0n1p3` 181.4 G btrfs label `fedora`
+   still present**, and `/home` is still `nvme0n1p4` at 36 G free — nothing was reused. Commit and switch
+   that edit only after the partition is gone (or fix the comment), otherwise the menu loses a live entry.
+2. **Phone-side Syncthing pairing** — still owed, needs her hands (below).
+3. **The tailnet-IP question** — still hers, still open.
 
-home-manager relinks that unit file about a second *after* systemd restarts it, so the first start
-runs the previous definition.
+**Superseded (2026-11-09 16:09 switch): the 2026-11-09 instruction below, kept as history.**
+`sudo nixos-rebuild switch --flake ~/nixos#chloe-laptop` — the 2026-11-09 set (pi, the lmstudio endpoint,
+gaming-mode, the markdown preview, uv, kdeconnect, at-spi, the scoped Jellyfin rule). The gnome toplevel was
+already built, so it was a copy plus activation rather than the 252-derivation build the 2026-10-30 paragraph
+predicts. The `systemctl --user daemon-reload && systemctl --user restart lmstudio` step that followed it is
+**unverified by this review** (no check was run against the user unit).
 
 **Next action as of 2026-10-30:** `sudo nixos-rebuild switch --flake ~/nixos#chloe-laptop`.
 Everything is committed (last content commit `4eb500f`, this ledger on top of it), so this one
@@ -394,8 +404,16 @@ Already committed by the concurrent session: `modules/config/hermes/config.yaml`
 Outside this repo, committed in their own repos: `UnityXR_3DMuseu/docs/PROJECT_LEDGER.md`,
 `chloes-2d-library/docs/PROJECT_LEDGER.md`.
 
+## Uncommitted at 2026-11-09 (nightly review, 21:1x)
+
+`git status --porcelain -uall` lists **`M host_chloe-laptop.nix`** — the `useOSProber = false` edit made
+while the Fedora-partition session (`local-9e985f…`, still running at 21:0x) was working. Not mine, not
+committed, not switched; its comment's claim is falsified above. Nothing else is dirty. This review wrote
+only this ledger file and committed nothing.
+
 ## Uncommitted at 2026-11-09
 
+**Superseded 2026-11-09 21:1x (nightly review): "None" is no longer true — see the block above.**
 None. `git status --porcelain -uall` printed nothing before this ledger commit: the seventeen
 reviewed paths are ten workstream commits on `4405adc`, and this file is the last commit on top.
 Branch `desktop/gnome-daily` is still **unpushed** (`origin/main` unchanged).
@@ -537,3 +555,16 @@ point; the CUA environment was untested, the kanban trial had not run, the `code
   (PID 4071, `app-hermes-3932.scope`) owns the host lock — "Attach is impossible: PID 4071
   published no usable host record" — so cron/Discord are not running; which gateway should own
   the host was asked and not answered. Switch not yet run.
+- 2026-11-09 23:53 (session local-78145ecc…) — "SOUL.md communication rules: explanation one
+  step above foothold (not dumbed down, not jargon wall); never bare ledger IDs in chat (P1/Q5/I2
+  always with their name); two intentional project modes (offloading vs integration) named in
+  SOUL, skills authored separately; tools-for-fixes vs architecture-for-new-capabilities framing;
+  agent may run sudo after a brief explanation, nixos-rebuild `boot` never `switch` + reboot when
+  convenient" → SOUL.md rewritten from the accepted draft; `modules/hermes.nix` gained
+  `NoNewPrivileges`/`ProtectSystem` mkForce-false overrides so the gateway password prompt can
+  actually elevate (verified by `nix eval` on serviceConfig; runtime copy synced to
+  `/var/lib/hermes/.hermes/SOUL.md` so it applies before activation — next switch re-installs the
+  same bytes); skills patched: `project-ledger` (Phase/Question/Issue standard + lazy migration,
+  bare-ID ban), `nixos-flake-config` (division of labour now names the boot-not-switch rule).
+  Ledger standardization adopted as lazy option A (rename on touch). The two mode skills are NOT
+  yet authored — definition questions owed by Chloe.
