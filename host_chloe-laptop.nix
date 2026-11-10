@@ -118,7 +118,10 @@
   boot.loader = {
   	grub.enable = true;
   	grub.device = "nodev";
-  	grub.useOSProber = true;
+  	# os-prober used to pick up the old Fedora install on nvme0n1p2/p3. That
+  	# partition was deleted on 2026-11-09 (space reused for /home), so the menu
+  	# entries it produced pointed at nothing. Disabled 2026-11-09.
+  	grub.useOSProber = false;
   	grub.efiSupport = true;
   	# Keep the boot menu to 10 entries (GRUB's default is 100). The store keeps
   	# generations for 14 days per nix.gc above -- the two limits are independent.
